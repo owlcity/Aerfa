@@ -2323,6 +2323,11 @@ dargs@^7.0.0:
   resolved "https://registry.npmjs.org/dargs/-/dargs-7.0.0.tgz#04015c41de0bcb69ec84050f3d9be0caf8d6d5cc"
   integrity sha512-2iy1EkLdlBzQGvbweYRFxmFath8+K7+AKB0TlhHWkNuH+TmovaMH/Wp7V7R4u7f4SnX3OgLsU9t1NI9ioDnUpg==
 
+date-fns-tz@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/date-fns-tz/-/date-fns-tz-1.1.6.tgz#93cbf354e2aeb2cd312ffa32e462c1943cf20a8e"
+  integrity sha512-nyy+URfFI3KUY7udEJozcoftju+KduaqkVfwyTIE0traBiVye09QnyWKLZK7drRr5h9B7sPJITmQnS3U6YOdQg==
+
 date-fns@^2.19.0:
   version "2.22.1"
   resolved "https://registry.nlark.com/date-fns/download/date-fns-2.22.1.tgz#1e5af959831ebb1d82992bf67b765052d8f0efc4"
@@ -4481,10 +4486,10 @@ mute-stream@0.0.7:
   resolved "https://registry.npmjs.org/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
   integrity sha1-MHXOk7whuPq0PhvE2n6BFe0ee6s=
 
-naive-ui@^2.18.1:
-  version "2.18.1"
-  resolved "https://registry.yarnpkg.com/naive-ui/-/naive-ui-2.18.1.tgz#f6f20b6881d4725c4a7cf6aa75c0708fa787d36f"
-  integrity sha512-oC/xvEYydCkyDRAiXVFh7J/NZ10XlntxxUBn8UtTiwkqmpmNXYQSN/0ULh4Db6hz6that4nEy59bBQ21+7b6bQ==
+naive-ui@^2.18.2:
+  version "2.18.2"
+  resolved "https://registry.yarnpkg.com/naive-ui/-/naive-ui-2.18.2.tgz#82933bb51ebd44f433075ee77bce3b79faab6139"
+  integrity sha512-BiVq9ME4+zp2DOhqpnkQLBAE69T6x4OqImZ6FLoNs0HgvP8r8nq4+fumdxHWi7bp+QaLVIXkHh8Bb3IP4Gl1KA==
   dependencies:
     "@css-render/plugin-bem" "^0.15.6"
     "@css-render/vue3-ssr" "^0.15.6"
@@ -4493,6 +4498,7 @@ naive-ui@^2.18.1:
     async-validator "^4.0.1"
     css-render "^0.15.6"
     date-fns "^2.19.0"
+    date-fns-tz "^1.1.6"
     evtd "^0.2.2"
     highlight.js "^11.0.1"
     lodash "^4.17.21"
