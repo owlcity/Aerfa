@@ -154,6 +154,14 @@ const routes: Array<RouteRecordRaw> = [
         },
         component: () => import('@/views/comp/password/index.vue'),
       },
+      {
+        path: 'select',
+        name: `Select`,
+        meta: {
+          title: '选择器',
+        },
+        component: () => import('@/views/comp/select/select.vue'),
+      },
     ],
   },
 ];
