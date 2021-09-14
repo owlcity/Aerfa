@@ -1,0 +1,608 @@
+<template>
+  <div
+    :class="{
+      'tabs-view-fix': multiTabsSetting.fixed,
+      'tabs-view-fixed-header': isMultiHeaderFixed,
+      'tabs-view-default-background': getDarkTheme === false,
+      'tabs-view-dark-background': getDarkTheme === true,
+    }"
+    :style="getChangeStyle"
+    class="tabs-view"
+  >
+    <div class="tabs-view-main">
+      <div ref="navWrap" :class="{ 'tabs-card-scrollable': scrollable }" class="tabs-card">
+        <span
+          :class="{ 'tabs-card-prev-hide': !scrollable }"
+          class="tabs-card-prev"
+          @click="scrollPrev"
+        >
+          <n-icon color="#515a6e" size="16">
+            <LeftOutlined />
+          </n-icon>
+        </span>
+        <span
+          :class="{ 'tabs-card-next-hide': !scrollable }"
+          class="tabs-card-next"
+          @click="scrollNext"
+        >
+          <n-icon color="#515a6e" size="16">
+            <RightOutlined />
+          </n-icon>
+        </span>
+        <div ref="navScroll" class="tabs-card-scroll">
+          <Draggable :list="tabsList" animation="300" class="flex" item-key="fullPath">
+            <template #item="{ element }">
+              <div
+                :id="`tag${element.fullPath.split('/').join('\/')}`"
+                :class="{ 'active-item': activeKey === element.path }"
+                class="tabs-card-scroll-item"
+                @contextmenu="handleContextMenu($event, element)"
+                @click.stop="goPage(element)"
+              >
+                <span>{{ element.meta.title }}</span>
+                <n-icon
+                  v-if="element.path !== baseHome"
+                  size="14"
+                  @click.stop="closeTabItem(element)"
+                >
+                  <CloseOutlined />
+                </n-icon>
+              </div>
+            </template>
+          </Draggable>
+        </div>
+      </div>
+      <div class="tabs-close">
+        <n-dropdown
+          :options="TabsMenuOptions"
+          placement="bottom-end"
+          trigger="hover"
+          @select="closeHandleSelect"
+        >
+          <div class="tabs-close-btn">
+            <n-icon color="#515a6e" size="16">
+              <DownOutlined />
+            </n-icon>
+          </div>
+        </n-dropdown>
+      </div>
+      <n-dropdown
+        :options="TabsMenuOptions"
+        :show="showDropdown"
+        :x="dropdownX"
+        :y="dropdownY"
+        placement="bottom-start"
+        @clickoutside="onClickOutside"
+        @select="closeHandleSelect"
+      />
+    </div>
+  </div>
+</template>
+
+<script lang="ts" setup>
+  import { computed, ref, unref, provide, watch, onMounted, nextTick } from 'vue';
+  import { useRoute, useRouter } from 'vue-router';
+  import { storage } from '@/utils/Storage';
+  import { TABS_ROUTES } from '@/store/mutation-types';
+  import { useTabsViewStore } from '@/store/modules/tabsView';
+  import { useAsyncRouteStore } from '@/store/modules/asyncRoute';
+  import { RouteItem } from '@/store/modules/tabsView';
+  import { useProjectSetting } from '@/hooks/setting/useProjectSetting';
+  import { useMessage } from 'naive-ui';
+  import Draggable from 'vuedraggable';
+  import { PageEnum } from '@/enums/pageEnum';
+  import {
+    DownOutlined,
+    ReloadOutlined,
+    CloseOutlined,
+    SwapOutlined,
+    LeftOutlined,
+    RightOutlined,
+    DoubleLeftOutlined,
+    DoubleRightOutlined,
+    MinusOutlined,
+  } from '@vicons/antd';
+  import { renderIcon } from '@/utils/index';
+  import elementResizeDetectorMaker from 'element-resize-detector';
+  import { useDesignSetting } from '@/hooks/setting/useDesignSetting';
+  import { useProjectSettingStore } from '@/store/modules/projectSetting';
+
+  const props = defineProps({
+    collapsed: {
+      type: Boolean,
+    },
+  });
+
+  const { getDarkTheme, getAppTheme } = useDesignSetting();
+  const { getNavMode, getHeaderSetting, getMenuSetting, getMultiTabsSetting } = useProjectSetting();
+  const settingStore = useProjectSettingStore();
+  const message = useMessage();
+  const route = useRoute();
+  const router = useRouter();
+  const tabsViewStore = useTabsViewStore();
+  const asyncRouteStore = useAsyncRouteStore();
+  const navScroll: any = ref(null);
+  const navWrap: any = ref(null);
+  const isCurrent = ref(false);
+  const activeKey = ref(route.fullPath);
+  const scrollable = ref(false);
+  const dropdownX = ref(0);
+  const dropdownY = ref(0);
+  const showDropdown = ref(false);
+  const isMultiHeaderFixed = ref(false);
+  const multiTabsSetting = getMultiTabsSetting.value;
+  const baseHome = PageEnum.BASE_HOME_REDIRECT;
+
+  // 获取简易的路由对象
+  const getSimpleRoute = (route): RouteItem => {
+    const { fullPath, hash, meta, name, params, path, query } = route;
+    return { fullPath, hash, meta, name, params, path, query };
+  };
+  const isMixMenuNoneSub = computed(() => {
+    const mixMenu = settingStore.menuSetting.mixMenu;
+    const currentRoute = useRoute();
+    const navMode = unref(getNavMode);
+    if (unref(navMode) != 'horizontal-mix') return true;
+    if (unref(navMode) === 'horizontal-mix' && mixMenu && currentRoute.meta.isRoot) {
+      return false;
+    }
+    return true;
+  });
+
+  //动态组装样式 菜单缩进
+  const getChangeStyle = computed(() => {
+    const { collapsed } = props;
+    const navMode = unref(getNavMode);
+    const { minMenuWidth, menuWidth }: any = unref(getMenuSetting);
+    const { fixed }: any = unref(getMultiTabsSetting);
+    let lenNum =
+      navMode === 'horizontal' || !isMixMenuNoneSub.value
+        ? '0px'
+        : collapsed
+        ? `${minMenuWidth}px`
+        : `${menuWidth}px`;
+    return {
+      left: lenNum,
+      width: `calc(100% - ${!fixed ? '0px' : lenNum})`,
+    };
+  });
+
+  //tags 右键右侧下拉菜单
+  const TabsMenuOptions = computed(() => {
+    const isDisabled = unref(tabsList).length <= 1 ? true : false;
+    return [
+      {
+        label: '刷新当前',
+        key: '1',
+        icon: renderIcon(ReloadOutlined),
+      },
+      {
+        label: `关闭当前`,
+        key: '2',
+        disabled: unref(isCurrent) || isDisabled,
+        icon: renderIcon(MinusOutlined),
+      },
+      {
+        label: '关闭其他',
+        key: '3',
+        disabled: isDisabled,
+        icon: renderIcon(SwapOutlined),
+      },
+      {
+        label: '关闭左侧',
+        key: '5',
+        disabled: isDisabled,
+        icon: renderIcon(DoubleLeftOutlined),
+      },
+      {
+        label: '关闭右侧',
+        key: '6',
+        disabled: isDisabled,
+        icon: renderIcon(DoubleRightOutlined),
+      },
+      {
+        label: '关闭全部',
+        key: '4',
+        disabled: isDisabled,
+        icon: renderIcon(CloseOutlined),
+      },
+    ];
+  });
+
+  let routes: RouteItem[] = [];
+  try {
+    const routesStr = storage.get(TABS_ROUTES) as string | null | undefined;
+    routes = routesStr ? JSON.parse(routesStr) : [getSimpleRoute(route)];
+  } catch (e) {
+    routes = [getSimpleRoute(route)];
+  }
+  // 初始化标签页
+  tabsViewStore.initTabs(routes);
+
+  //监听滚动条
+  function onScroll(e) {
+    let scrollTop =
+      e.target.scrollTop ||
+      document.documentElement.scrollTop ||
+      window.pageYOffset ||
+      document.body.scrollTop; // 滚动条偏移量
+    if (!unref(getHeaderSetting).fixed && unref(getMultiTabsSetting).fixed && scrollTop >= 64) {
+      isMultiHeaderFixed.value = true;
+    } else {
+      isMultiHeaderFixed.value = false;
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, true);
+  // 移除缓存组件名称
+  const delKeepAliveCompName = () => {
+    if (route.meta.keepAlive) {
+      const name = router.currentRoute.value.matched.find((item) => item.name == route.name)
+        ?.components?.default.name;
+      if (name) {
+        asyncRouteStore.keepAliveComponents = asyncRouteStore.keepAliveComponents.filter(
+          (item) => item != name
+        );
+      }
+    }
+  };
+  // 标签页列表
+  const tabsList: any = computed(() => tabsViewStore.tabsList);
+  const whiteList: string[] = [
+    PageEnum.BASE_LOGIN_NAME,
+    PageEnum.REDIRECT_NAME,
+    PageEnum.ERROR_PAGE_NAME,
+  ];
+  watch(
+    () => route.fullPath,
+    (to) => {
+      if (whiteList.includes(route.name as string)) return;
+      activeKey.value = to;
+      tabsViewStore.addTabs(getSimpleRoute(route));
+      nextTick().then(() => {
+        updateNavScroll(true);
+      });
+    },
+    { immediate: true }
+  );
+  // 在页面关闭或刷新之前，保存数据
+  window.addEventListener('beforeunload', () => {
+    storage.set(TABS_ROUTES, JSON.stringify(tabsList.value));
+  });
+  // 关闭当前页面
+  const removeTab = (route) => {
+    if (tabsList.value.length === 1) {
+      return message.warning('这已经是最后一页，不能再关闭了！');
+    }
+    delKeepAliveCompName();
+    tabsViewStore.closeCurrentTab(route);
+    // 如果关闭的是当前页
+    if (activeKey.value === route.fullPath) {
+      const currentRoute = tabsList.value[Math.max(0, tabsList.value.length - 1)];
+      activeKey.value = currentRoute.fullPath;
+      router.push(currentRoute);
+    }
+    updateNavScroll();
+  };
+  // 刷新页面
+  const reloadPage = () => {
+    delKeepAliveCompName();
+    router.push({
+      path: '/redirect' + unref(route).fullPath,
+    });
+  };
+  // 注入刷新页面方法
+  provide('reloadPage', reloadPage);
+
+  // 关闭左侧
+  const closeLeft = (route) => {
+    tabsViewStore.closeLeftTabs(route);
+    activeKey.value = route.fullPath;
+    router.replace(route.fullPath);
+    updateNavScroll();
+  };
+
+  // 关闭右侧
+  const closeRight = (route) => {
+    tabsViewStore.closeRightTabs(route);
+    activeKey.value = route.fullPath;
+    router.replace(route.fullPath);
+    updateNavScroll();
+  };
+  // 关闭其他
+  const closeOther = (route) => {
+    tabsViewStore.closeOtherTabs(route);
+    activeKey.value = route.fullPath;
+    router.replace(route.fullPath);
+    updateNavScroll();
+  };
+  // 关闭全部
+  const closeAll = () => {
+    localStorage.removeItem('routes');
+    tabsViewStore.closeAllTabs();
+    router.replace(PageEnum.BASE_HOME);
+    reloadPage();
+    updateNavScroll();
+  };
+  //tab 操作
+  const closeHandleSelect = (key) => {
+    switch (key) {
+      //刷新
+      case '1':
+        reloadPage();
+        break;
+      //关闭
+      case '2':
+        removeTab(route);
+        break;
+      //关闭其他
+      case '3':
+        closeOther(route);
+        break;
+      //关闭所有
+      case '4':
+        closeAll();
+        break;
+      //关闭左侧
+      case '5':
+        closeLeft(route);
+        break;
+      //关闭右侧
+      case '6':
+        closeRight(route);
+        break;
+    }
+    updateNavScroll();
+    showDropdown.value = false;
+  };
+
+  /**
+   * @param value 要滚动到的位置
+   * @param amplitude 每次滚动的长度
+   */
+  function scrollTo(value: number, amplitude: number) {
+    const currentScroll = navScroll.value.scrollLeft;
+    const scrollWidth =
+      (amplitude > 0 && currentScroll + amplitude >= value) ||
+      (amplitude < 0 && currentScroll + amplitude <= value)
+        ? value
+        : currentScroll + amplitude;
+    navScroll.value && navScroll.value.scrollTo(scrollWidth, 0);
+    if (scrollWidth === value) return;
+    return window.requestAnimationFrame(() => scrollTo(value, amplitude));
+  }
+
+  function scrollPrev() {
+    const containerWidth = navScroll.value.offsetWidth;
+    const currentScroll = navScroll.value.scrollLeft;
+    if (!currentScroll) return;
+    const scrollLeft = currentScroll > containerWidth ? currentScroll - containerWidth : 0;
+    scrollTo(scrollLeft, (scrollLeft - currentScroll) / 20);
+  }
+
+  function scrollNext() {
+    const containerWidth = navScroll.value.offsetWidth;
+    const navWidth = navScroll.value.scrollWidth;
+    const currentScroll = navScroll.value.scrollLeft;
+    if (navWidth - currentScroll <= containerWidth) return;
+    const scrollLeft =
+      navWidth - currentScroll > containerWidth * 2
+        ? currentScroll + containerWidth
+        : navWidth - containerWidth;
+    scrollTo(scrollLeft, (scrollLeft - currentScroll) / 20);
+  }
+
+  /**
+   * @param autoScroll 是否开启自动滚动功能
+   */
+  function updateNavScroll(autoScroll?: boolean) {
+    if (!navScroll.value) return;
+    const containerWidth = navScroll.value.offsetWidth;
+    const navWidth = navScroll.value.scrollWidth;
+    if (containerWidth < navWidth) {
+      scrollable.value = true;
+      if (autoScroll) {
+        let tagList = navScroll.value.querySelectorAll('.tabs-card-scroll-item') || [];
+        [...tagList].forEach((tag: HTMLElement) => {
+          // fix SyntaxError
+          if (tag.id === `tag${activeKey.value.split('/').join('\/')}`) {
+            tag.scrollIntoView && tag.scrollIntoView();
+          }
+        });
+      }
+    } else {
+      scrollable.value = false;
+    }
+  }
+
+  function handleResize() {
+    updateNavScroll(true);
+  }
+
+  function handleContextMenu(e, item) {
+    e.preventDefault();
+    isCurrent.value = PageEnum.BASE_HOME_REDIRECT === item.path;
+    showDropdown.value = false;
+    nextTick().then(() => {
+      showDropdown.value = true;
+      dropdownX.value = e.clientX;
+      dropdownY.value = e.clientY;
+    });
+  }
+
+  function onClickOutside() {
+    showDropdown.value = false;
+  }
+
+  //tags 跳转页面
+  function goPage(e) {
+    const { fullPath } = e;
+    if (fullPath === route.fullPath) return;
+    activeKey.value = fullPath;
+    router.push({ path: fullPath });
+  }
+
+  //删除tab
+  function closeTabItem(e) {
+    const { fullPath } = e;
+    const routeInfo = tabsList.value.find((item) => item.fullPath == fullPath);
+    removeTab(routeInfo);
+  }
+
+  onMounted(() => {
+    onElementResize();
+  });
+
+  function onElementResize() {
+    let observer;
+    observer = elementResizeDetectorMaker();
+    observer.listenTo(navWrap.value, handleResize);
+  }
+</script>
+
+<style lang="less" scoped>
+  .tabs-view {
+    width: 100%;
+    padding: 6px 0;
+    display: flex;
+    transition: all 0.2s ease-in-out;
+
+    &-main {
+      height: 32px;
+      display: flex;
+      max-width: 100%;
+      min-width: 100%;
+
+      .tabs-card {
+        -webkit-box-flex: 1;
+        flex-grow: 1;
+        flex-shrink: 1;
+        overflow: hidden;
+        position: relative;
+
+        .tabs-card-prev,
+        .tabs-card-next {
+          width: 32px;
+          text-align: center;
+          position: absolute;
+          line-height: 32px;
+          cursor: pointer;
+
+          .n-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 32px;
+            width: 32px;
+          }
+        }
+
+        .tabs-card-prev {
+          left: 0;
+        }
+
+        .tabs-card-next {
+          right: 0;
+        }
+
+        .tabs-card-next-hide,
+        .tabs-card-prev-hide {
+          display: none;
+        }
+
+        &-scroll {
+          white-space: nowrap;
+          overflow: hidden;
+
+          &-item {
+            background: var(--color);
+            color: var(--text-color);
+            height: 32px;
+            padding: 6px 16px 4px;
+            border-radius: 3px;
+            margin-right: 6px;
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            flex: 0 0 auto;
+
+            span {
+              float: left;
+              vertical-align: middle;
+            }
+
+            &:hover {
+              color: #515a6e;
+            }
+
+            .n-icon {
+              height: 22px;
+              width: 21px;
+              margin-right: -6px;
+              position: relative;
+              vertical-align: middle;
+              text-align: center;
+              color: #808695;
+
+              &:hover {
+                color: #515a6e !important;
+              }
+
+              svg {
+                height: 21px;
+                display: inline-block;
+              }
+            }
+          }
+
+          .active-item {
+            color: v-bind(getAppTheme);
+          }
+        }
+      }
+
+      .tabs-card-scrollable {
+        padding: 0 32px;
+        overflow: hidden;
+      }
+    }
+
+    .tabs-close {
+      min-width: 32px;
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
+      text-align: center;
+      background: var(--color);
+      border-radius: 2px;
+      cursor: pointer;
+      //margin-right: 10px;
+      &-btn {
+        color: var(--color);
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+
+  .tabs-view-default-background {
+    background: #f5f7f9;
+  }
+
+  .tabs-view-dark-background {
+    background: #101014;
+  }
+
+  .tabs-view-fix {
+    position: fixed;
+    z-index: 5;
+    padding: 6px 19px 6px 10px;
+    left: 200px;
+  }
+
+  .tabs-view-fixed-header {
+    top: 0;
+  }
+</style>
