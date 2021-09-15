@@ -78,7 +78,14 @@
     </n-form-item>
 
     <n-form-item :show-label="false">
-      <n-button type="primary" @click="handleSubmit" size="large" :loading="loading" block>
+      <n-button
+        type="primary"
+        @click="handleSubmit"
+        @keyup.enter="handleSubmit"
+        size="large"
+        :loading="loading"
+        block
+      >
         注册
       </n-button>
     </n-form-item>
