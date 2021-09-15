@@ -1,5 +1,11 @@
 <template>
-  <n-popover v-if="badgeValue > 0" :show-arrow="false" placement="bottom-end" trigger="click">
+  <n-popover
+    v-if="badgeValue > 0"
+    :style="{ paddingBottom: '0px' }"
+    :show-arrow="false"
+    placement="bottom-end"
+    trigger="click"
+  >
     <template #trigger>
       <n-badge :max="15" :value="badgeValue" class="news-badge">
         <n-icon size="18">
@@ -91,7 +97,7 @@
         <n-list>
           <n-list-item>
             <template #prefix>
-              <n-avatar round size="large" src="/src/assets/images/schoolboy.png" />
+              <n-avatar round size="large" :src="schoolboy" />
             </template>
             <n-thing title="约翰.维尔逊关注了你">
               <template #description
@@ -101,7 +107,7 @@
           </n-list-item>
           <n-list-item>
             <template #prefix>
-              <n-avatar round size="large" src="/src/assets/images/schoolboy.png" />
+              <n-avatar round size="large" :src="schoolboy" />
             </template>
             <n-thing title="约翰.维廉关注了你">
               <template #description
@@ -111,7 +117,7 @@
           </n-list-item>
           <n-list-item>
             <template #prefix>
-              <n-avatar round size="large" src="/src/assets/images/schoolboy.png" />
+              <n-avatar round size="large" :src="schoolboy" />
             </template>
             <n-thing title="罗德里格斯关注了你">
               <template #description
@@ -197,15 +203,16 @@
     MailOutlined,
     TagsOutlined,
   } from '@vicons/antd';
+  import schoolboy from '@/assets/images/schoolboy.png';
 
   import { useMessage } from 'naive-ui';
 
   const message = useMessage();
-  
+
   const badgeValue = ref(28);
 
   function notifierProClick() {
-    message.warning('还没有新消息呢！')
+    message.warning('还没有新消息呢！');
   }
 </script>
 

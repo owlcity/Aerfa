@@ -102,7 +102,7 @@
       <div class="layout-header-trigger layout-header-trigger-min">
         <n-dropdown :options="avatarOptions" trigger="hover" @select="avatarSelect">
           <div class="avatar">
-            <n-avatar round src="/src/assets/images/schoolboy.png" />
+            <n-avatar round :src="schoolboy" />
           </div>
         </n-dropdown>
       </div>
@@ -161,6 +161,7 @@
   } from '@vicons/antd';
   import { LockClosedOutline } from '@vicons/ionicons5';
   import { PageEnum } from '@/enums/pageEnum';
+  import schoolboy from '@/assets/images/schoolboy.png';
 
   const userStore = useUserStore();
   const useLockscreen = useLockscreenStore();

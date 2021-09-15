@@ -30,9 +30,10 @@
 </template>
 
 <script lang="ts" setup>
+  import { ref } from 'vue';
   import { Region } from '@/components/Region';
 
-  const regionIds = [1, 11, 111];
+  const regionIds = ref([1, 11, 111]);
 
   //地区变动回调
   function regionChange(result) {

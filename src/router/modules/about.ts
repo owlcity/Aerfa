@@ -9,7 +9,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'about',
     component: Layout,
     meta: {
-      sort: 11,
+      sort: 10,
       isRoot: true,
       activeMenu: 'about_index',
       icon: renderIcon(ProjectOutlined),

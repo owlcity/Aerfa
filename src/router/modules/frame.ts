@@ -13,7 +13,7 @@ const routes: Array<RouteRecordRaw> = [
     component: Layout,
     meta: {
       title: '外部页面',
-      sort: 8,
+      sort: 9,
       icon: renderIcon(DesktopOutline),
     },
     children: [
@@ -22,7 +22,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'frame-docs',
         meta: {
           title: '项目文档(内嵌)',
-          frameSrc: 'https://naive-ui-admin-docs.vercel.app',
+          frameSrc: 'https://naiveadmin.com',
         },
         component: IFrame,
       },

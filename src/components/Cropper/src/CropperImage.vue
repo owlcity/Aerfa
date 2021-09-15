@@ -175,9 +175,7 @@
   });
 </script>
 <style lang="less">
-  @prefix-cls: 'cropper-image';
-
-  .@{prefix-cls} {
+  .cropper-image {
     &--circled {
       .cropper-view-box,
       .cropper-face {

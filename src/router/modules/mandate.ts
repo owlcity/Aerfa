@@ -1,17 +1,17 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { DocumentTextOutline } from '@vicons/ionicons5';
+import { DiamondOutline } from '@vicons/ionicons5';
 import { renderIcon } from '@/utils/index';
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/external',
-    name: 'https://naiveadmin.com',
+    path: '/mandate',
+    name: 'https://naiveadmin.com/price/index',
     component: Layout,
     meta: {
-      title: '项目文档',
-      icon: renderIcon(DocumentTextOutline),
-      sort: 11,
+      title: '获取授权',
+      icon: renderIcon(DiamondOutline),
+      sort: 12,
     },
   },
 ];

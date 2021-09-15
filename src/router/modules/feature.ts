@@ -80,6 +80,14 @@ const routes: Array<RouteRecordRaw> = [
           },
         ],
       },
+      {
+        path: 'index',
+        name: 'setup-index',
+        meta: {
+          title: '引导页',
+        },
+        component: () => import('@/views/setup/index.vue'),
+      },
     ],
   },
 ];
