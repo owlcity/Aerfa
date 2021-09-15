@@ -43,7 +43,6 @@
     "intro.js": "^4.2.2",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
-    "makeit-captcha": "^1.2.5",
     "mockjs": "^1.1.0",
     "naive-ui": "^2.18.2",
     "perfect-scrollbar": "^1.5.2",

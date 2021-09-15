@@ -30,11 +30,6 @@
         </template>
       </n-input>
     </n-form-item>
-    <n-form-item path="isCaptcha">
-      <div class="w-full">
-        <mi-captcha width="100%" theme-color="#2d8cf0" :logo="logo" @success="onAuthCode" />
-      </div>
-    </n-form-item>
     <div class="default-color mb-6">
       <div class="flex justify-between">
         <div class="flex-initial">
@@ -99,19 +94,11 @@
   const formInline = reactive({
     username: 'admin',
     password: '123456',
-    isCaptcha: false,
   });
 
   const rules = {
     username: { required: true, message: '请输入用户名', trigger: 'blur' },
     password: { required: true, message: '请输入密码', trigger: 'blur' },
-    isCaptcha: {
-      required: true,
-      type: 'boolean',
-      trigger: 'change',
-      message: '请点击按钮进行验证码校验',
-      validator: (_, value) => value === true,
-    },
   };
   const emit = defineEmits(['goRegister']);
   const userStore = useUserStore();
@@ -149,10 +136,6 @@
         message.error('请填写完整信息，并且进行验证码校验');
       }
     });
-  };
-
-  const onAuthCode = () => {
-    formInline.isCaptcha = true;
   };
 
   function goRegister() {

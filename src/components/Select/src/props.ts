@@ -8,10 +8,6 @@ export const basicProps = {
     default: null,
     required: true,
   },
-  width: {
-    type: Number as PropType<number>,
-    default: 104,
-  },
   //是否缓存数据
   cache: {
     type: Boolean,

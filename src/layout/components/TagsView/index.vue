@@ -35,7 +35,7 @@
               <div
                 :id="`tag${element.fullPath.split('/').join('\/')}`"
                 :class="{ 'active-item': activeKey === element.path }"
-                class="tabs-card-scroll-item"
+                class="shadow-sm tabs-card-scroll-item"
                 @contextmenu="handleContextMenu($event, element)"
                 @click.stop="goPage(element)"
               >

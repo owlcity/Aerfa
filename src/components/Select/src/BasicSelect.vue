@@ -52,7 +52,7 @@
     fetch();
   }
 
-  //取新数据
+  //触发取新数据
   async function fetch() {
     loading.value = true;
     const { request, cacheKey } = props;
@@ -66,6 +66,7 @@
     }
   }
 
+  //获取数据源
   function getData() {
     const { cache, cacheKey } = props;
     return cache && cacheKey ? Storage.get(props.cacheKey) : options.value;

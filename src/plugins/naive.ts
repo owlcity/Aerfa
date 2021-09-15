@@ -74,6 +74,7 @@ import {
   NText,
   NP,
   NStatistic,
+  NImage,
 } from 'naive-ui';
 
 const naive = create({
@@ -151,6 +152,7 @@ const naive = create({
     NText,
     NP,
     NStatistic,
+    NImage,
   ],
 });
 
