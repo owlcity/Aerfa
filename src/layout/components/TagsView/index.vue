@@ -318,9 +318,7 @@
   };
   // 关闭全部
   const closeAll = () => {
-    localStorage.removeItem('routes');
     tabsViewStore.closeAllTabs();
-    router.replace(PageEnum.BASE_HOME);
     reloadPage();
     updateNavScroll();
   };
@@ -384,7 +382,7 @@
     const containerWidth = navScroll.value.offsetWidth;
     const navWidth = navScroll.value.scrollWidth;
     const currentScroll = navScroll.value.scrollLeft;
-    if (navWidth - currentScroll <= containerWidth) return;
+    if (navWidth - currentScroll / 2 <= containerWidth) return;
     const scrollLeft =
       navWidth - currentScroll > containerWidth * 2
         ? currentScroll + containerWidth

@@ -168,7 +168,7 @@
       if (!meta?.hidden && reg.test(title) && !children?.length) {
         ret.push({
           name: parent?.title ? `${parent.title} > ${title}` : title,
-          path,
+          path: parent?.path ? `${parent.path}/${path}` : path,
           icon,
           key,
         });
