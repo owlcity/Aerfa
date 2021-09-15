@@ -9,30 +9,34 @@ import { useEventListener } from '@/hooks/event/useEventListener';
 import { useBreakpoint } from '@/hooks/event/useBreakpoint';
 
 import echarts from '@/utils/lib/echarts';
-
-// import { useRootSetting } from '@/hooks/setting/useRootSetting';
+import { useDesignSetting } from "@/hooks/setting/useDesignSetting";
 
 export function useECharts(
   elRef: Ref<HTMLDivElement>,
   theme: 'light' | 'dark' | 'default' = 'light'
 ) {
-  // const { getDarkMode } = useRootSetting();
-  const getDarkMode = 'light';
+  const { getDarkTheme } = useDesignSetting();
+
+  const getDarkMode = computed(() => {
+    const appTheme = getDarkTheme.value ? 'dark' : 'light';
+    return  theme === 'default' ? appTheme : theme;
+  });
+
   let chartInstance: echarts.ECharts | null = null;
   let resizeFn: Fn = resize;
-  const cacheOptions = ref<EChartsOption>({});
+  const cacheOptions = ref({}) as Ref<EChartsOption>;
   let removeResizeFn: Fn = () => {};
 
   resizeFn = useDebounceFn(resize, 200);
 
   const getOptions = computed((): EChartsOption => {
-    if (getDarkMode !== 'dark') {
-      return cacheOptions.value;
+    if (getDarkMode.value !== 'dark') {
+      return cacheOptions.value as EChartsOption;
     }
     return {
       backgroundColor: 'transparent',
       ...cacheOptions.value,
-    };
+    } as EChartsOption;
   });
 
   function initCharts(t = theme) {

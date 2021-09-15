@@ -127,6 +127,9 @@
 
   <!-- 搜索 -->
   <AppSearch ref="appSearchRef" />
+
+  <!--修改密码-->
+  <AmendPwd ref="amendPwdRef" />
 </template>
 
 <script lang="ts" setup>
@@ -142,6 +145,7 @@
   import { renderIcon } from '@/utils';
   import ProjectSetting from './ProjectSetting.vue';
   import NotifierProPlus from './NotifierProPlus.vue';
+  import AmendPwd from './AmendPwd.vue';
   import {
     FullscreenExitOutlined,
     FullscreenOutlined,
@@ -155,6 +159,7 @@
     SettingOutlined,
     UserSwitchOutlined,
   } from '@vicons/antd';
+  import { LockClosedOutline } from '@vicons/ionicons5';
   import { PageEnum } from '@/enums/pageEnum';
 
   const userStore = useUserStore();
@@ -177,6 +182,8 @@
   const BASE_LOGIN_NAME = PageEnum.BASE_LOGIN_NAME;
 
   const drawerSetting = ref();
+
+  const amendPwdRef = ref();
 
   // const username = userStore?.info ? ref(userStore?.info.username) : '';
 
@@ -310,6 +317,11 @@
       icon: renderIcon(UserSwitchOutlined),
     },
     {
+      label: '修改密码',
+      key: 3,
+      icon: renderIcon(LockClosedOutline),
+    },
+    {
       label: '退出登录',
       key: 2,
       icon: renderIcon(LogoutOutlined),
@@ -324,6 +336,9 @@
         break;
       case 2:
         doLogout();
+        break;
+      case 3:
+        amendPwdRef.value.showModal();
         break;
     }
   };

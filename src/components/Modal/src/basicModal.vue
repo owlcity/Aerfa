@@ -23,99 +23,103 @@
   </n-modal>
 </template>
 <script lang="ts" setup>
-import {
-  getCurrentInstance,
-  ref,
-  nextTick,
-  unref,
-  computed,
-  useAttrs,
-  defineEmits,
-  defineProps,
-} from 'vue';
-import {basicProps} from './props';
-import startDrag from '@/utils/Drag';
-import {deepMerge} from '@/utils';
-import {FormProps} from '@/components/Form';
-import {ModalProps, ModalMethods} from './type';
+  import {
+    getCurrentInstance,
+    ref,
+    nextTick,
+    unref,
+    computed,
+    useAttrs,
+    defineEmits,
+    defineProps,
+  } from 'vue';
+  import { basicProps } from './props';
+  import startDrag from '@/utils/Drag';
+  import { deepMerge } from '@/utils';
+  import { FormProps } from '@/components/Form';
+  import { ModalProps, ModalMethods } from './type';
 
-const attrs = useAttrs();
-const props = defineProps({...basicProps});
-const subBtuText = ref(props.subBtuText);
-const emit = defineEmits(['on-close', 'on-ok', 'register']);
+  const attrs = useAttrs();
+  const props = defineProps({ ...basicProps });
 
-const propsRef = ref(<Partial<ModalProps> | null>null);
+  const emit = defineEmits(['on-close', 'on-ok', 'register']);
 
-const isModal = ref(false);
-const subLoading = ref(false);
+  const propsRef = ref(<Partial<ModalProps> | null>null);
 
-const getProps = computed((): FormProps => {
-  return {...props, ...(unref(propsRef) as any)};
-});
+  const isModal = ref(false);
+  const subLoading = ref(false);
 
-async function setProps(modalProps: Partial<ModalProps>): Promise<void> {
-  propsRef.value = deepMerge(unref(propsRef) || ({} as any), modalProps);
-}
-
-const getBindValue = computed(() => {
-  return {
-    ...attrs,
-    ...unref(getProps),
-  };
-});
-
-function setSubLoading(status: boolean) {
-  subLoading.value = status;
-}
-
-function openModal() {
-  isModal.value = true;
-  if (!unref(getProps).draggable) return;
-  nextTick(() => {
-    const oBox = document.getElementById('basic-modal');
-    const oBar = document.getElementById('basic-modal-bar');
-    if (!oBox || !oBar) {
-      console.warn('not found modal');
-      return
-    }
-    startDrag(oBar, oBox);
+  const getProps = computed((): FormProps => {
+    return { ...props, ...(unref(propsRef) as any) };
   });
-}
 
-function closeModal() {
-  isModal.value = false;
-  subLoading.value = false;
-  emit('on-close');
-}
+  const subBtuText = computed(() => {
+    return propsRef.value.subBtuText;
+  })
 
-function onCloseModal() {
-  isModal.value = false;
-  emit('on-close');
-}
+  async function setProps(modalProps: Partial<ModalProps>): Promise<void> {
+    propsRef.value = deepMerge(unref(propsRef) || ({} as any), modalProps);
+  }
 
-function handleSubmit() {
-  subLoading.value = true;
-  emit('on-ok');
-}
+  const getBindValue = computed(() => {
+    return {
+      ...attrs,
+      ...unref(getProps),
+    };
+  });
 
-const modalMethods: ModalMethods = {
-  setProps,
-  openModal,
-  closeModal,
-  setSubLoading,
-};
+  function setSubLoading(status: boolean) {
+    subLoading.value = status;
+  }
 
-const instance = getCurrentInstance();
-if (instance) {
-  emit('register', modalMethods);
-}
+  function openModal() {
+    isModal.value = true;
+    if (!unref(getProps).draggable) return;
+    nextTick(() => {
+      const oBox = document.getElementById('basic-modal');
+      const oBar = document.getElementById('basic-modal-bar');
+      if (!oBox || !oBar) {
+        console.warn('not found modal');
+        return
+      }
+      startDrag(oBar, oBox);
+    });
+  }
 
-defineExpose({
-  openModal,
-  closeModal,
-  setProps,
-  setSubLoading
-})
+  function closeModal() {
+    isModal.value = false;
+    subLoading.value = false;
+    emit('on-close');
+  }
+
+  function onCloseModal() {
+    isModal.value = false;
+    emit('on-close');
+  }
+
+  function handleSubmit() {
+    subLoading.value = true;
+    emit('on-ok');
+  }
+
+  const modalMethods: ModalMethods = {
+    setProps,
+    openModal,
+    closeModal,
+    setSubLoading,
+  };
+
+  const instance = getCurrentInstance();
+  if (instance) {
+    emit('register', modalMethods);
+  }
+
+  defineExpose({
+    openModal,
+    closeModal,
+    setProps,
+    setSubLoading
+  })
 
 </script>
 

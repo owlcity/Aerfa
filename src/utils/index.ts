@@ -173,7 +173,6 @@ export function getDynamicProps<T, U>(props: T): Partial<U> {
   Object.keys(props).map((key) => {
     ret[key] = unref((props as Recordable)[key]);
   });
-
   return ret as Partial<U>;
 }
 
@@ -228,6 +227,8 @@ export function openWindow(
 /**
  * 处理css单位
  * */
-export function cssUnit(value:string|number,  unit='px'){
-  return (isNumber(value) || (isString(value) && value.indexOf(unit as string) === -1)) ? `${value}${unit}` : value;
+export function cssUnit(value: string | number, unit = 'px') {
+  return isNumber(value) || (isString(value) && value.indexOf(unit as string) === -1)
+    ? `${value}${unit}`
+    : value;
 }
