@@ -1,8 +1,6 @@
 <template>
   <div
     :class="{
-      'tabs-view-fix': multiTabsSetting.fixed,
-      'tabs-view-fixed-header': isMultiHeaderFixed,
       'tabs-view-default-background': getDarkTheme === false,
       'tabs-view-dark-background': getDarkTheme === true,
     }"
@@ -30,28 +28,26 @@
           </n-icon>
         </span>
         <div ref="navScroll" class="tabs-card-scroll">
-          <n-scrollbar ref="scrollbar" xScrollable>
-            <Draggable :list="tabsList" animation="300" class="flex" item-key="fullPath">
-              <template #item="{ element }">
-                <div
-                  :id="`tag${element.fullPath.split('/').join('\/')}`"
-                  :class="{ 'active-item': activeKey === element.path }"
-                  class="shadow-sm tabs-card-scroll-item"
-                  @contextmenu="handleContextMenu($event, element)"
-                  @click.stop="goPage(element)"
+          <Draggable :list="tabsList" animation="300" class="flex" item-key="fullPath">
+            <template #item="{ element }">
+              <div
+                :id="`tag${element.fullPath.split('/').join('\/')}`"
+                :class="{ 'active-item': activeKey === element.path }"
+                class="shadow-sm tabs-card-scroll-item"
+                @contextmenu="handleContextMenu($event, element)"
+                @click.stop="goPage(element)"
+              >
+                <span>{{ element.meta.title }}</span>
+                <n-icon
+                  v-if="element.path !== baseHome"
+                  size="14"
+                  @click.stop="closeTabItem(element)"
                 >
-                  <span>{{ element.meta.title }}</span>
-                  <n-icon
-                    v-if="element.path !== baseHome"
-                    size="14"
-                    @click.stop="closeTabItem(element)"
-                  >
-                    <CloseOutlined />
-                  </n-icon>
-                </div>
-              </template>
-            </Draggable>
-          </n-scrollbar>
+                  <CloseOutlined />
+                </n-icon>
+              </div>
+            </template>
+          </Draggable>
         </div>
       </div>
       <div class="tabs-close">
@@ -116,7 +112,7 @@
   });
 
   const { getDarkTheme, getAppTheme } = useDesignSetting();
-  const { getNavMode, getHeaderSetting, getMenuSetting, getMultiTabsSetting } = useProjectSetting();
+  const { getNavMode, getMenuSetting, getMultiTabsSetting } = useProjectSetting();
   const settingStore = useProjectSettingStore();
   const message = useMessage();
   const route = useRoute();
@@ -132,7 +128,6 @@
   const dropdownY = ref(0);
   const showDropdown = ref(false);
   const isMultiHeaderFixed = ref(false);
-  const multiTabsSetting = getMultiTabsSetting.value;
   const baseHome = PageEnum.BASE_HOME_REDIRECT;
 
   // 获取简易的路由对象
@@ -140,6 +135,11 @@
     const { fullPath, hash, meta, name, params, path, query } = route;
     return { fullPath, hash, meta, name, params, path, query };
   };
+
+  const tagItemBg = computed(() => {
+    return getDarkTheme.value ? 'rgba(38, 38, 42, 1)' : '#fff';
+  });
+
   const isMixMenuNoneSub = computed(() => {
     const mixMenu = settingStore.menuSetting.mixMenu;
     const currentRoute = useRoute();
@@ -156,7 +156,6 @@
     const { collapsed } = props;
     const navMode = unref(getNavMode);
     const { minMenuWidth, menuWidth }: any = unref(getMenuSetting);
-    const { fixed }: any = unref(getMultiTabsSetting);
     let lenNum =
       navMode === 'horizontal' || !isMixMenuNoneSub.value
         ? '0px'
@@ -165,7 +164,7 @@
         : `${menuWidth}px`;
     return {
       left: lenNum,
-      width: `calc(100% - ${!fixed ? '0px' : lenNum})`,
+      width: `calc(100%)`,
     };
   });
 
@@ -221,21 +220,6 @@
   // 初始化标签页
   tabsViewStore.initTabs(routes);
 
-  //监听滚动条
-  function onScroll(e) {
-    let scrollTop =
-      e.target.scrollTop ||
-      document.documentElement.scrollTop ||
-      window.pageYOffset ||
-      document.body.scrollTop; // 滚动条偏移量
-    if (!unref(getHeaderSetting).fixed && unref(getMultiTabsSetting).fixed && scrollTop >= 64) {
-      isMultiHeaderFixed.value = true;
-    } else {
-      isMultiHeaderFixed.value = false;
-    }
-  }
-
-  window.addEventListener('scroll', onScroll, true);
   // 移除缓存组件名称
   const delKeepAliveCompName = () => {
     if (route.meta.keepAlive) {
@@ -472,6 +456,7 @@
       display: flex;
       max-width: 100%;
       min-width: 100%;
+      padding: 0 10px;
 
       .tabs-card {
         -webkit-box-flex: 1;

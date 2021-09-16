@@ -20,7 +20,7 @@
                 </template>
               </n-switch>
             </template>
-            <span>深色主题</span>
+            <span>{{ designStore.darkTheme ? '切换浅色主题' : '切换深色主题' }}</span>
           </n-tooltip>
         </div>
 
@@ -152,20 +152,25 @@
         </div>
 
         <!--        <div class="drawer-setting-item">-->
-        <!--          <div class="drawer-setting-item-title">-->
-        <!--            固定侧边栏-->
-        <!--          </div>-->
+        <!--          <div class="drawer-setting-item-title"> 固定侧边栏 </div>-->
         <!--          <div class="drawer-setting-item-action">-->
         <!--            <n-switch v-model:value="settingStore.menuSetting.fixed" />-->
         <!--          </div>-->
         <!--        </div>-->
 
         <div class="drawer-setting-item">
-          <div class="drawer-setting-item-title"> 固定多页签</div>
+          <div class="drawer-setting-item-title"> 固定主体区域 </div>
           <div class="drawer-setting-item-action">
-            <n-switch v-model:value="settingStore.multiTabsSetting.fixed" />
+            <n-switch v-model:value="settingStore.bodySetting.fixed" />
           </div>
         </div>
+
+        <!--        <div class="drawer-setting-item">-->
+        <!--          <div class="drawer-setting-item-title"> 固定多页签</div>-->
+        <!--          <div class="drawer-setting-item-action">-->
+        <!--            <n-switch v-model:value="settingStore.multiTabsSetting.fixed" />-->
+        <!--          </div>-->
+        <!--        </div>-->
 
         <n-divider title-placement="center">界面显示</n-divider>
 

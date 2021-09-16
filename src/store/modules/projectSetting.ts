@@ -1,12 +1,19 @@
 import { defineStore } from 'pinia';
 import { store } from '@/store';
 import projectSetting from '@/settings/projectSetting';
-import type { IheaderSetting, ImenuSetting, ImultiTabsSetting, IcrumbsSetting } from '/#/config';
+import type {
+  IbodySetting,
+  IheaderSetting,
+  ImenuSetting,
+  ImultiTabsSetting,
+  IcrumbsSetting,
+} from '/#/config';
 
 const {
   navMode,
   navTheme,
   headerSetting,
+  bodySetting,
   showFooter,
   menuSetting,
   multiTabsSetting,
@@ -20,6 +27,7 @@ interface ProjectSettingState {
   navMode: string; //导航模式
   navTheme: string; //导航风格
   headerSetting: IheaderSetting; //顶部设置
+  bodySetting: IbodySetting; //主体区域
   showFooter: boolean; //页脚
   menuSetting: ImenuSetting; //多标签
   multiTabsSetting: ImultiTabsSetting; //多标签
@@ -35,6 +43,7 @@ export const useProjectSettingStore = defineStore({
     navMode: navMode,
     navTheme,
     headerSetting,
+    bodySetting,
     showFooter,
     menuSetting,
     multiTabsSetting,
@@ -52,6 +61,9 @@ export const useProjectSettingStore = defineStore({
     },
     getHeaderSetting(): object {
       return this.headerSetting;
+    },
+    getBodySetting(): object {
+      return this.bodySetting;
     },
     getShowFooter(): boolean {
       return this.showFooter;

@@ -54,6 +54,9 @@
       LoadingBar: {
         colorLoading: appTheme,
       },
+      Layout: {
+        colorEmbedded: '#f5f7f9',
+      },
     };
   });
 

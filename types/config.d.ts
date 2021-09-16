@@ -17,6 +17,10 @@ export interface ProjectSettingState {
   permissionMode: string;
 }
 
+export interface IbodySetting {
+  fixed: boolean;
+}
+
 export interface IheaderSetting {
   bgColor: string;
   fixed: boolean;

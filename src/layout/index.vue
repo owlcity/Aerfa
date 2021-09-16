@@ -1,10 +1,10 @@
 <template>
-  <n-layout embedded class="layout" position="absolute" has-sider>
+  <n-layout embedded class="layout" :position="fixeBody" has-sider>
     <n-layout-sider
       v-if="isMixMenuNoneSub && (navMode === 'vertical' || navMode === 'horizontal-mix')"
       show-trigger
       @collapse="collapsed = true"
-      position="absolute"
+      :position="fixeLeftSider"
       @expand="collapsed = false"
       :collapsed="collapsed"
       collapse-mode="width"
@@ -18,32 +18,24 @@
       <AsideMenu v-model:collapsed="collapsed" v-model:location="getMenuLocation" />
     </n-layout-sider>
 
-    <n-layout :inverted="inverted">
+    <n-layout embedded :inverted="inverted">
       <n-layout-header :inverted="getHeaderInverted" :position="fixedHeader">
         <PageHeader v-model:collapsed="collapsed" :inverted="inverted" />
+        <TabsView v-if="isMultiTabs" v-model:collapsed="collapsed" />
       </n-layout-header>
 
       <n-layout
         embedded
+        :inverted="inverted"
+        :native-scrollbar="false"
         class="layout-content"
-        :class="{ 'layout-default-background': getDarkTheme === false }"
+        :class="{
+          'layout-content-fix': fixedHeader === 'absolute',
+          'layout-content-inverted': getDarkTheme,
+        }"
       >
-        <div
-          class="layout-content-main"
-          :class="{
-            'layout-content-main-fix': fixedMulti,
-            'fluid-header': fixedHeader === 'static',
-          }"
-        >
-          <TabsView v-if="isMultiTabs" v-model:collapsed="collapsed" />
-          <div
-            class="main-view"
-            :class="{
-              'main-view-fix': fixedMulti,
-              noMultiTabs: !isMultiTabs,
-              'mt-3': !isMultiTabs,
-            }"
-          >
+        <div class="layout-content-main">
+          <div class="main-view">
             <MainView />
           </div>
         </div>
@@ -76,6 +68,7 @@
     getNavMode,
     getNavTheme,
     getHeaderSetting,
+    getBodySetting,
     getMenuSetting,
     getMultiTabsSetting,
   } = useProjectSetting();
@@ -86,8 +79,21 @@
 
   const collapsed = ref<boolean>(false);
 
+  //固定顶部
   const fixedHeader = computed(() => {
     const { fixed } = unref(getHeaderSetting);
+    return fixed ? 'absolute' : 'static';
+  });
+
+  //固定主体区域
+  const fixeBody = computed(() => {
+    const { fixed } = unref(getBodySetting);
+    return fixed ? 'absolute' : 'static';
+  });
+
+  //固定侧边栏
+  const fixeLeftSider = computed(() => {
+    const { fixed } = unref(getMenuSetting);
     return fixed ? 'absolute' : 'static';
   });
 
@@ -194,6 +200,15 @@
       min-height: 100vh;
     }
 
+    .layout-content-fix {
+      top: 64px;
+      padding-top: 44px;
+    }
+
+    .layout-content-inverted {
+      background: rgb(16, 16, 20);
+    }
+
     .n-layout-header.n-layout-header--absolute-positioned {
       z-index: 11;
     }
@@ -206,15 +221,14 @@
   .layout-content-main {
     margin: 0 10px 10px;
     position: relative;
-    padding-top: 64px;
   }
 
   .layout-content-main-fix {
-    padding-top: 64px;
+    padding-top: 44px;
   }
 
   .fluid-header {
-    padding-top: 0px;
+    padding-top: 0;
   }
 
   .main-view-fix {

@@ -10,6 +10,8 @@ export function useProjectSetting() {
 
   const getHeaderSetting = computed(() => projectStore.headerSetting);
 
+  const getBodySetting = computed(() => projectStore.bodySetting);
+
   const getMultiTabsSetting = computed(() => projectStore.multiTabsSetting);
 
   const getMenuSetting = computed(() => projectStore.menuSetting);
@@ -28,6 +30,7 @@ export function useProjectSetting() {
     getNavMode,
     getNavTheme,
     getHeaderSetting,
+    getBodySetting,
     getMultiTabsSetting,
     getMenuSetting,
     getCrumbsSetting,
