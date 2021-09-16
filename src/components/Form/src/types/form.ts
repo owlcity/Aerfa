@@ -24,6 +24,9 @@ export interface FormSchema {
   giProps?: GridItemProps;
   isFull?: boolean;
   suffix?: string;
+  showFeedback?: boolean;
+  showLabel?: boolean;
+  requireMarkPlacement?: string;
 }
 
 export interface FormProps {

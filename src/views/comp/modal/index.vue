@@ -65,7 +65,7 @@
   import { basicModal, useModal } from '@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '@/components/Form/index';
 
-  const schemas: FormSchema[] = [
+  const createSchemas: FormSchema[] = [
     {
       field: 'name',
       component: 'NInput',
@@ -242,7 +242,7 @@
         layout: 'horizontal',
         submitButtonText: '提交预约',
         showActionButtonGroup: false,
-        schemas,
+        createSchemas,
       });
 
       const state = reactive({

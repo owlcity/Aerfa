@@ -11,7 +11,7 @@
           submitButtonText="提交预约"
           layout="horizontal"
           :gridProps="{ cols: 1 }"
-          :schemas="schemas"
+          :createSchemas="createSchemas"
           @submit="handleSubmit"
           @reset="handleReset"
         >
@@ -39,7 +39,7 @@
   import { useMessage } from 'naive-ui';
   import { Password } from '@/components/Password';
 
-  const schemas = [
+  const createSchemas = [
     {
       field: 'name',
       component: 'NInput',

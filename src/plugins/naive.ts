@@ -76,6 +76,7 @@ import {
   NP,
   NStatistic,
   NImage,
+  NPopconfirm,
 } from 'naive-ui';
 
 const naive = create({
@@ -155,6 +156,7 @@ const naive = create({
     NP,
     NStatistic,
     NImage,
+    NPopconfirm,
   ],
 });
 

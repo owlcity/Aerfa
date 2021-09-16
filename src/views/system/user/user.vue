@@ -12,7 +12,7 @@
         :columns="columns"
         :request="loadDataTable"
         :row-key="(row) => row.id"
-        ref="actionRef"
+        ref="basicTableRef"
         :actionColumn="actionColumn"
         @update:checked-row-keys="onCheckedRow"
         scroll-x="1200"
@@ -28,7 +28,8 @@
               </template>
               新建
             </n-button>
-            <n-button type="error" @click="addTable">
+
+            <n-button type="error" @click="openRemoveModal" :disabled="!rowKeys.length">
               <template #icon>
                 <n-icon>
                   <DeleteOutlined />
@@ -50,32 +51,34 @@
     </n-card>
 
     <basicModal
-      @register="modalRegister"
+      @register="lightModalRegister"
+      class="basicModalLight"
       ref="modalRef"
-      class="basicModal basicFormModal"
-      @on-ok="okModal"
+      @on-ok="removeOkModal"
     >
       <template #default>
-        <BasicForm @register="registerForm" @reset="handleReset" class="basicForm">
-          <template #statusSlot="{ model, field }">
-            <n-input v-model:value="model[field]" />
-          </template>
-        </BasicForm>
+        <p class="text-gray-600" style="padding-left: 35px"
+          >您确认要删除用户，<n-text strong>{{ rowKeysName }}?</n-text></p
+        >
       </template>
     </basicModal>
+
+    <CreateModal ref="createModalRef" :title="createModalTitle" :isEdit="isEdit" />
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { h, reactive, ref } from 'vue';
+  import { h, nextTick, reactive, ref, unref } from 'vue';
   import { useMessage } from 'naive-ui';
   import { BasicTable, TableAction } from '@/components/Table';
   import { BasicForm, useForm } from '@/components/Form/index';
   import { getUserList } from '@/api/system/user';
   import { columns } from './columns';
   import { PlusOutlined, DeleteOutlined, ToTopOutlined } from '@vicons/antd';
+  import CreateModal from './CreateModal.vue';
   import { useRouter } from 'vue-router';
   import { basicModal, useModal } from '@/components/Modal';
+  import schemas from './querySchemas';
 
   const rules = {
     name: {
@@ -96,94 +99,18 @@
     },
   };
 
-  const schemas = [
-    {
-      field: 'username',
-      component: 'NInput',
-      label: '用户名',
-      componentProps: {
-        placeholder: '请输入用户名',
-      },
-    },
-    {
-      field: 'account',
-      component: 'NInput',
-      label: '登录账号',
-      componentProps: {
-        placeholder: '请输入登录账号',
-      },
-    },
-    {
-      field: 'mobile',
-      component: 'NInputNumber',
-      label: '手机',
-      componentProps: {
-        placeholder: '请输入手机号码',
-        showButton: false,
-      },
-    },
-    {
-      field: 'role',
-      component: 'NSelect',
-      label: '角色',
-      componentProps: {
-        placeholder: '请选择角色',
-        options: [
-          {
-            label: '普通用户',
-            value: 1,
-          },
-          {
-            label: '推广管理员',
-            value: 2,
-          },
-          {
-            label: '发货管理员',
-            value: 3,
-          },
-          {
-            label: '财务管理员',
-            value: 4,
-          },
-        ],
-      },
-    },
-    {
-      field: 'email',
-      component: 'NInput',
-      label: '邮箱',
-      componentProps: {
-        placeholder: '请输入邮箱',
-        showButton: false,
-      },
-    },
-    {
-      field: 'status',
-      component: 'NSelect',
-      label: '状态',
-      componentProps: {
-        placeholder: '请选择角色',
-        options: [
-          {
-            label: '正常',
-            value: 'normal',
-          },
-          {
-            label: '禁用',
-            value: 'disable',
-          },
-        ],
-      },
-    },
-  ];
-
   const router = useRouter();
-  const formRef: any = ref(null);
+
   const message = useMessage();
-  const actionRef = ref();
+  const basicTableRef = ref();
+  const createModalRef = ref();
+  const rowKeys = ref([]);
+  const rowKeysName = ref([]);
+  const tableData = ref();
+  const isEdit = ref(false);
+  const createModalTitle = ref('添加用户');
 
   const showModal = ref(false);
-  const formBtnLoading = ref(false);
   const formParams = reactive({
     name: '',
     address: '',
@@ -209,37 +136,20 @@
             label: '删除',
             icon: 'ic:outline-delete-outline',
             onClick: handleDelete.bind(null, record),
-            // 根据业务控制是否显示 isShow 和 auth 是并且关系
-            ifShow: () => {
-              return true;
-            },
-            // 根据权限控制是否显示: 有权限，会显示，支持多个
-            auth: ['basic_list'],
           },
           {
             label: '编辑',
             onClick: handleEdit.bind(null, record),
-            ifShow: () => {
-              return true;
-            },
-            auth: ['basic_list'],
           },
         ],
         dropDownActions: [
           {
             label: '启用',
             key: 'enabled',
-            // 根据业务控制是否显示: 非enable状态的不显示启用按钮
-            ifShow: () => {
-              return true;
-            },
           },
           {
             label: '禁用',
             key: 'disabled',
-            ifShow: () => {
-              return true;
-            },
           },
         ],
         select: (key) => {
@@ -249,53 +159,47 @@
     },
   });
 
-  const [register, {}] = useForm({
-    gridProps: { cols: '1 s:1 m:2 l:3 xl:4 2xl:4' },
-    labelWidth: 80,
-    schemas,
-  });
-
   function addTable() {
     showModal.value = true;
   }
 
   const loadDataTable = async (res) => {
-    return await getUserList({ ...res, ...formParams, ...params.value });
+    const result = await getUserList({ ...res, ...formParams, ...params.value });
+    tableData.value = result.list;
+    return result;
   };
 
-  function onCheckedRow(rowKeys) {
-    console.log(rowKeys);
+  function onCheckedRow(keys) {
+    rowKeys.value = keys;
+    rowKeysName.value = tableData.value
+      .filter((item) => {
+        return keys.includes(item.id);
+      })
+      .map((item) => {
+        return item.username;
+      })
+      .join(',');
   }
 
   function reloadTable() {
-    actionRef.value.reload();
-  }
-
-  function confirmForm(e) {
-    e.preventDefault();
-    formBtnLoading.value = true;
-    formRef.value.validate((errors) => {
-      if (!errors) {
-        message.success('新建成功');
-        setTimeout(() => {
-          showModal.value = false;
-          reloadTable();
-        });
-      } else {
-        message.error('请填写完整信息');
-      }
-      formBtnLoading.value = false;
-    });
+    basicTableRef.value.reload();
   }
 
   function handleEdit(record: Recordable) {
-    console.log('点击了编辑', record);
-    router.push({ name: 'basic-info', params: { id: record.id } });
+    record.mobile = parseInt(record.mobile);
+    addUser();
+    nextTick(() => {
+      isEdit.value = true;
+      createModalRef.value.setProps({ title: '编辑用户' });
+      createModalRef.value.setFieldsValue({
+        ...unref(record),
+      });
+    });
   }
 
   function handleDelete(record: Recordable) {
-    console.log('点击了删除', record);
-    message.info('点击了删除');
+    rowKeysName.value = record.username;
+    openRemoveModal();
   }
 
   function handleSubmit(values: Recordable) {
@@ -307,34 +211,40 @@
     console.log(values);
   }
 
-  const [registerForm, { submit }] = useForm({
-    gridProps: { cols: 2 },
-    collapsed: false,
-    collapsedRows: 12,
+  const [register, {}] = useForm({
+    gridProps: { cols: '1 s:1 m:2 l:3 xl:4 2xl:4' },
     labelWidth: 80,
-    layout: 'horizontal',
-    submitButtonText: '确定',
-    showActionButtonGroup: false,
     schemas,
   });
 
-  const [modalRegister, { openModal, closeModal, setSubLoading }] = useModal({
-    title: '添加会员',
-    width: 650,
+  const [
+    lightModalRegister,
+    { openModal: lightOpenModal, closeModal: lightCloseModal, setSubLoading: lightSetSubLoading },
+  ] = useModal({
+    title: '删除确认',
+    showIcon: true,
+    type: 'warning',
+    closable: false,
+    maskClosable: true,
+    width: 380,
   });
 
-  function addUser() {
-    openModal();
+  //删除
+  function openRemoveModal() {
+    lightOpenModal();
   }
-  async function okModal() {
-    const formRes = await submit();
-    if (formRes) {
-      closeModal();
-      message.success('提交成功');
-    } else {
-      message.error('验证失败，请填写完整信息');
-      setSubLoading(false);
-    }
+
+  //添加
+  function addUser() {
+    isEdit.value = false;
+    createModalRef.value.setProps({ title: '添加用户' });
+    createModalRef.value.openModal();
+  }
+
+  //确认删除
+  function removeOkModal() {
+    lightCloseModal();
+    lightSetSubLoading();
   }
 </script>
 

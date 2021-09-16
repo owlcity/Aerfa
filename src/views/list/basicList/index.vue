@@ -92,7 +92,7 @@
     },
   };
 
-  const schemas = [
+  const createSchemas = [
     {
       field: 'name',
       labelMessage: '这是一个提示',
@@ -104,7 +104,7 @@
           console.log(e);
         },
       },
-     // rules: [{ required: true, message: '请输入姓名', trigger: ['blur'] }],
+      // rules: [{ required: true, message: '请输入姓名', trigger: ['blur'] }],
     },
     {
       field: 'mobile',
@@ -290,7 +290,7 @@
   const [register, {}] = useForm({
     gridProps: { cols: '1 s:1 m:2 l:3 xl:4 2xl:4' },
     labelWidth: 80,
-    schemas,
+    createSchemas,
   });
 
   function addTable() {
@@ -298,7 +298,7 @@
   }
 
   const loadDataTable = async (res) => {
-    return await getTableList({...res, ...formParams, ...params.value});
+    return await getTableList({ ...res, ...formParams, ...params.value });
   };
 
   function onCheckedRow(rowKeys) {

@@ -4,6 +4,11 @@ export const basicProps = {
     type: [Number, String],
     default: '',
   },
+  //是否必填
+  required: {
+    type: Boolean,
+    default: true,
+  },
   //是否为复杂密码
   // 数字、字母和字符两种或以上组合
   complexity: {

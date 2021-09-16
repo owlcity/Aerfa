@@ -70,6 +70,7 @@
     return {
       ...attrs,
       ...unref(getProps),
+      ...unref(propsRef),
     };
   });
 

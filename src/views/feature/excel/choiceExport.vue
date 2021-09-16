@@ -48,7 +48,7 @@
   import { jsonToSheetXlsx } from '@/components/Excel';
   import { useDialog, useMessage } from 'naive-ui';
 
-  const schemas: FormSchema[] = [
+  const createSchemas: FormSchema[] = [
     {
       field: 'filename',
       component: 'NInput',
@@ -122,7 +122,7 @@
         layout: 'horizontal',
         // submitButtonText: '提交预约',
         showActionButtonGroup: false,
-        schemas,
+        createSchemas,
       });
 
       const actionColumn = reactive({

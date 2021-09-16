@@ -7,7 +7,7 @@
       :class="{ 'block-box': block }"
     >
       <template #trigger>
-        <n-form :model="formValue" :show-label="false" :rules="rules" ref="formRef">
+        <n-form :model="formValue" inline :show-label="false" :rules="rules" ref="formRef">
           <n-form-item path="password">
             <n-input
               type="password"
@@ -107,6 +107,10 @@
   }
 
   function checkPasswordVal(_, value) {
+    if (!props.required && !value) {
+      isSuccess.value = true;
+      return true;
+    }
     if (!value) {
       password.value = {
         strength: 0,
@@ -155,6 +159,10 @@
   }
 
   function checkRepeat(_, value) {
+    if (!props.required && !value) {
+      isSuccess.value = true;
+      return true;
+    }
     if (!value) {
       return new Error('请再次输入密码');
     } else {

@@ -41,6 +41,17 @@ export const columns = [
     title: '性别',
     key: 'gender',
     width: 100,
+    render(row) {
+      return h(
+        NTag,
+        {
+          type: row.gender === 1 ? 'info' : 'error',
+        },
+        {
+          default: () => (row.gender === 1 ? '男' : '女'),
+        }
+      );
+    },
   },
   {
     title: '角色',

@@ -32,16 +32,16 @@ export function useFormEvents({
   }
 
   // 提交
-  async function handleSubmit(e?: Event): Promise<void> {
+  async function handleSubmit(e?: Event): Promise<boolean> {
     e && e.preventDefault();
     loadingSub.value = true;
     const { submitFunc } = unref(getProps);
     if (submitFunc && isFunction(submitFunc)) {
       await submitFunc();
-      return;
+      return false;
     }
     const formEl = unref(formElRef);
-    if (!formEl) return;
+    if (!formEl) return false;
     try {
       await validate();
       loadingSub.value = false;
