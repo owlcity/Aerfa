@@ -64,3 +64,14 @@ export function logout(params) {
     params,
   });
 }
+
+/**
+ * @description: 获取用户列表
+ */
+export function getUserList(params) {
+  return http.request({
+    url: '/user_list',
+    method: 'get',
+    params,
+  });
+}

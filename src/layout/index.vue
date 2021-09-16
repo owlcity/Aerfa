@@ -201,8 +201,7 @@
     }
 
     .layout-content-fix {
-      top: 64px;
-      padding-top: 44px;
+      padding-top: 108px;
     }
 
     .layout-content-inverted {

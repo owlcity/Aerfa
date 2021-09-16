@@ -1,5 +1,5 @@
 <template>
-  <n-modal id="basic-modal" v-bind="getBindValue" v-model:show="isModal" @close="onCloseModal">
+  <n-modal id="basic-modal" v-bind="getBindValue" :style="getWidth" v-model:show="isModal" @close="onCloseModal">
     <template #header>
       <div id="basic-modal-bar" class="w-full" :class="{'cursor-move':draggable === true}">
         {{ getBindValue.title }}
@@ -30,7 +30,6 @@
     unref,
     computed,
     useAttrs,
-    defineEmits,
     defineProps,
   } from 'vue';
   import { basicProps } from './props';
@@ -52,6 +51,11 @@
   const getProps = computed((): FormProps => {
     return { ...props, ...(unref(propsRef) as any) };
   });
+
+  const getWidth = computed(() => {
+    const { width } = unref(propsRef) as any;
+    return { width: `${width || props.width}px` }
+  })
 
   const subBtuText = computed(() => {
     const { subBtuText } = propsRef.value as any
