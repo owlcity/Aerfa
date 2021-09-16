@@ -45,7 +45,7 @@
         type="primary"
         @click="handleSubmit"
         @keyup.enter="handleSubmit"
-        　size="large"
+        size="large"
         :loading="loading"
         block
       >

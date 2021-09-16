@@ -1,10 +1,10 @@
 <template>
-  <n-layout class="layout" :position="fixedMenu" has-sider>
+  <n-layout embedded class="layout" position="absolute" has-sider>
     <n-layout-sider
       v-if="isMixMenuNoneSub && (navMode === 'vertical' || navMode === 'horizontal-mix')"
       show-trigger
       @collapse="collapsed = true"
-      :position="fixedMenu"
+      position="absolute"
       @expand="collapsed = false"
       :collapsed="collapsed"
       collapse-mode="width"
@@ -23,7 +23,8 @@
         <PageHeader v-model:collapsed="collapsed" :inverted="inverted" />
       </n-layout-header>
 
-      <n-layout-content
+      <n-layout
+        embedded
         class="layout-content"
         :class="{ 'layout-default-background': getDarkTheme === false }"
       >
@@ -50,7 +51,7 @@
         <!--        <NLayoutFooter v-if="getShowFooter">-->
         <!--          <PageFooter />-->
         <!--        </NLayoutFooter>-->
-      </n-layout-content>
+      </n-layout>
       <n-back-top :right="100" />
     </n-layout>
   </n-layout>
@@ -155,13 +156,13 @@
 
 <style lang="less" scoped>
   .layout {
-    display: flex;
-    flex-direction: row;
-    flex: auto;
-
-    &-default-background {
-      background: #f5f7f9;
-    }
+    //display: flex;
+    //flex-direction: row;
+    //flex: auto;
+    //
+    //&-default-background {
+    //  background: #f5f7f9;
+    //}
 
     .layout-sider {
       min-height: 100vh;

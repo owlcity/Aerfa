@@ -30,26 +30,28 @@
           </n-icon>
         </span>
         <div ref="navScroll" class="tabs-card-scroll">
-          <Draggable :list="tabsList" animation="300" class="flex" item-key="fullPath">
-            <template #item="{ element }">
-              <div
-                :id="`tag${element.fullPath.split('/').join('\/')}`"
-                :class="{ 'active-item': activeKey === element.path }"
-                class="shadow-sm tabs-card-scroll-item"
-                @contextmenu="handleContextMenu($event, element)"
-                @click.stop="goPage(element)"
-              >
-                <span>{{ element.meta.title }}</span>
-                <n-icon
-                  v-if="element.path !== baseHome"
-                  size="14"
-                  @click.stop="closeTabItem(element)"
+          <n-scrollbar ref="scrollbar" xScrollable>
+            <Draggable :list="tabsList" animation="300" class="flex" item-key="fullPath">
+              <template #item="{ element }">
+                <div
+                  :id="`tag${element.fullPath.split('/').join('\/')}`"
+                  :class="{ 'active-item': activeKey === element.path }"
+                  class="shadow-sm tabs-card-scroll-item"
+                  @contextmenu="handleContextMenu($event, element)"
+                  @click.stop="goPage(element)"
                 >
-                  <CloseOutlined />
-                </n-icon>
-              </div>
-            </template>
-          </Draggable>
+                  <span>{{ element.meta.title }}</span>
+                  <n-icon
+                    v-if="element.path !== baseHome"
+                    size="14"
+                    @click.stop="closeTabItem(element)"
+                  >
+                    <CloseOutlined />
+                  </n-icon>
+                </div>
+              </template>
+            </Draggable>
+          </n-scrollbar>
         </div>
       </div>
       <div class="tabs-close">
