@@ -65,9 +65,9 @@ export function useDataSource(
 
       const params = {
         ...pageParams,
+        ...opt,
       };
       const res = await request(params);
-
       const resultTotal = res[totalField] || 0;
       const currentPage = res[pageField];
 

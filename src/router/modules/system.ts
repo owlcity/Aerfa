@@ -50,6 +50,14 @@ const routes: Array<RouteRecordRaw> = [
         },
         component: () => import('@/views/system/role/role.vue'),
       },
+      {
+        path: 'dictionary',
+        name: 'system_dictionary',
+        meta: {
+          title: '字典管理',
+        },
+        component: () => import('@/views/system/dictionary/dictionary.vue'),
+      },
     ],
   },
 ];
