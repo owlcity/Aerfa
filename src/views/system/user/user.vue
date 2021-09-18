@@ -164,7 +164,7 @@
   }
 
   const loadDataTable = async (res) => {
-    const result = await getUserList({ ...res, ...formParams, ...params.value });
+    const result = await getUserList({ ...formParams, ...params.value, ...res });
     tableData.value = result.list;
     return result;
   };

@@ -11,7 +11,7 @@
           submitButtonText="提交预约"
           layout="horizontal"
           :gridProps="{ cols: 1 }"
-          :createSchemas="createSchemas"
+          :schemas="schemas"
           @submit="handleSubmit"
           @reset="handleReset"
         >
@@ -39,7 +39,7 @@
   import { useMessage } from 'naive-ui';
   import { Password } from '@/components/Password';
 
-  const createSchemas = [
+  const schemas = [
     {
       field: 'name',
       component: 'NInput',
@@ -90,10 +90,10 @@
       field: 'makeDate',
       component: 'NDatePicker',
       label: '预约时间',
+      defaultValue: 1183135260000,
       componentProps: {
         type: 'date',
         clearable: true,
-        defaultValue: 1183135260000,
         onUpdateValue: (e: any) => {
           console.log(e);
         },

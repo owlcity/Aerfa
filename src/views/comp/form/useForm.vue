@@ -19,7 +19,7 @@
   import { BasicForm, useForm } from '@/components/Form/index';
   import { useMessage } from 'naive-ui';
 
-  const createSchemas = [
+  const schemas = [
     {
       field: 'name',
       component: 'NInput',
@@ -79,10 +79,10 @@
       giProps: {
         //span: 24,
       },
+      defaultValue: 1183135260000,
       componentProps: {
         type: 'date',
         clearable: true,
-        defaultValue: 1183135260000,
         onUpdateValue: (e: any) => {
           console.log(e);
         },
@@ -172,7 +172,7 @@
     labelWidth: 120,
     layout: 'horizontal',
     submitButtonText: '提交预约',
-    createSchemas,
+    schemas,
   });
 
   function handleSubmit(values: Recordable) {

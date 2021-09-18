@@ -92,7 +92,7 @@
     },
   };
 
-  const createSchemas = [
+  const schemas = [
     {
       field: 'name',
       labelMessage: '这是一个提示',
@@ -143,10 +143,10 @@
       field: 'makeDate',
       component: 'NDatePicker',
       label: '预约时间',
+      defaultValue: 1183135260000,
       componentProps: {
         type: 'date',
         clearable: true,
-        defaultValue: 1183135260000,
         onUpdateValue: (e: any) => {
           console.log(e);
         },
@@ -290,7 +290,7 @@
   const [register, {}] = useForm({
     gridProps: { cols: '1 s:1 m:2 l:3 xl:4 2xl:4' },
     labelWidth: 80,
-    createSchemas,
+    schemas,
   });
 
   function addTable() {
@@ -298,7 +298,7 @@
   }
 
   const loadDataTable = async (res) => {
-    return await getTableList({ ...res, ...formParams, ...params.value });
+    return await getTableList({ ...formParams, ...params.value, ...res });
   };
 
   function onCheckedRow(rowKeys) {

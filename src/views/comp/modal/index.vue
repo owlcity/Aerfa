@@ -65,7 +65,7 @@
   import { basicModal, useModal } from '@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '@/components/Form/index';
 
-  const createSchemas: FormSchema[] = [
+  const schemas: FormSchema[] = [
     {
       field: 'name',
       component: 'NInput',
@@ -125,10 +125,10 @@
       giProps: {
         //span: 24,
       },
+      defaultValue: 1183135260000,
       componentProps: {
         type: 'date',
         clearable: true,
-        defaultValue: 1183135260000,
         onUpdateValue: (e: any) => {
           console.log(e);
         },
@@ -242,7 +242,7 @@
         layout: 'horizontal',
         submitButtonText: '提交预约',
         showActionButtonGroup: false,
-        createSchemas,
+        schemas,
       });
 
       const state = reactive({

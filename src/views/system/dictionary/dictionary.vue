@@ -210,7 +210,7 @@
   //加载字典项值列表
   const loadDataTable = async (res) => {
     const key = selectedKey.value.length ? selectedKey.value[0] : '';
-    const result =  await getDictionaryInfo({ ...res, ...params.value, key });
+    const result =  await getDictionaryInfo({ ...params.value, key, ...res });
     dictionaryValues.value = result.list;
     return result;
   };

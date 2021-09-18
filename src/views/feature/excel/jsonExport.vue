@@ -83,7 +83,7 @@
   }
 
   const loadDataTable = async (res) => {
-    const result = await getTableList({ ...res, ...params });
+    const result = await getTableList({ ...params, ...res });
     tableData.value = result.list;
     return result;
   };

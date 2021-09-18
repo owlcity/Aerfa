@@ -21,7 +21,7 @@
   import { useMessage } from 'naive-ui';
   import { BasicForm, FormSchema, useForm } from '@/components/Form/index';
 
-  const createSchemas: FormSchema[] = [
+  const schemas: FormSchema[] = [
     {
       field: 'formerPwd',
       component: 'NInput',
@@ -78,7 +78,7 @@
         labelWidth: 80,
         layout: 'horizontal',
         showActionButtonGroup: false,
-        createSchemas,
+        schemas,
       });
 
       const [modalRegister, { openModal, closeModal, setSubLoading }] = useModal({
