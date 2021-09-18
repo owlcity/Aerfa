@@ -60,6 +60,7 @@
         type="password"
         showPasswordOn="click"
         placeholder="请再次输入密码"
+        @keyup.enter="handleSubmit"
       >
         <template #prefix>
           <n-icon size="18" color="#808695">
@@ -78,14 +79,7 @@
     </n-form-item>
 
     <n-form-item :show-label="false">
-      <n-button
-        type="primary"
-        @click="handleSubmit"
-        @keyup.enter="handleSubmit"
-        size="large"
-        :loading="loading"
-        block
-      >
+      <n-button type="primary" @click="handleSubmit" size="large" :loading="loading" block>
         注册
       </n-button>
     </n-form-item>

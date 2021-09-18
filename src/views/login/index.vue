@@ -31,6 +31,7 @@
               type="password"
               showPasswordOn="click"
               placeholder="请输入密码"
+              @keyup.enter="handleSubmit"
             >
               <template #prefix>
                 <n-icon size="18" color="#808695">

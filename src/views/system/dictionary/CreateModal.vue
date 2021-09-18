@@ -19,11 +19,10 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { ref, reactive, computed } from 'vue';
   import { BasicForm, useForm } from '@/components/Form/index';
   import { basicModal, useModal } from '@/components/Modal';
   import { Password } from '@/components/Password';
-  import schemas from './modalSchemas.ts';
   import { useMessage } from 'naive-ui';
 
   const message = useMessage();
@@ -31,33 +30,92 @@
   const props = defineProps({
     title: {
       type: String,
-      default: '添加用户',
+      default: '添加字典',
     },
     isEdit: {
       type: Boolean,
       default: false,
     },
+    createType: {
+      type: Number,
+      default: 1,
+    },
   });
+
+  const typeName = computed(() => {
+    return props.createType === 1 ? '' : '项';
+  });
+
+  //表单项配置
+  const schemas = computed(() => [
+    {
+      field: 'label',
+      component: 'NInput',
+      label: `字典${typeName.value}名称`,
+      componentProps: {
+        placeholder: `请输入字典${typeName.value}名称`,
+      },
+      rules: [
+        {
+          required: true,
+          message: `请输入字典${typeName.value}名称`,
+          trigger: ['blur'],
+        },
+      ],
+    },
+    {
+      field: 'value',
+      component: 'NInput',
+      label: `字典${typeName.value}值`,
+      componentProps: {
+        placeholder: `请输入字典${typeName.value}值`,
+      },
+      rules: [
+        {
+          required: true,
+          message: `请输入字典${typeName.value}值`,
+          trigger: ['blur'],
+        },
+      ],
+    },
+    {
+      field: 'order',
+      component: 'NInputNumber',
+      label: '排序',
+      componentProps: {
+        placeholder: '请输入排序',
+      },
+      rules: [{ required: true, type: 'number', message: '请输入排序', trigger: ['blur'] }],
+    },
+    {
+      field: 'remark',
+      component: 'NInput',
+      label: '备注',
+      componentProps: {
+        placeholder: '请输入备注',
+        type: 'textarea',
+      },
+    },
+  ]);
 
   const title = ref(props.title);
 
   //创建form
   const [registerForm, { submit, setFieldsValue }] = useForm({
-    gridProps: { cols: 2 },
+    gridProps: { cols: 1 },
     collapsed: false,
-    collapsedRows: 12,
-    labelWidth: 80,
+    labelWidth: 100,
     layout: 'horizontal',
     submitButtonText: '确定',
     showActionButtonGroup: false,
     schemas,
   });
 
-  //添加会员弹窗
+  //弹窗
   const [modalRegister, { openModal, closeModal, setSubLoading, setProps }] = useModal({
     title,
     subBtuText: '确定',
-    width: 650,
+    width: 450,
   });
 
   //提交

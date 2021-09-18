@@ -22,6 +22,7 @@
         type="password"
         showPasswordOn="click"
         placeholder="请输入密码"
+        @keyup.enter="handleSubmit"
       >
         <template #prefix>
           <n-icon size="18" color="#808695">
@@ -41,14 +42,7 @@
       </div>
     </div>
     <n-form-item :show-label="false">
-      <n-button
-        type="primary"
-        @click="handleSubmit"
-        @keyup.enter="handleSubmit"
-        size="large"
-        :loading="loading"
-        block
-      >
+      <n-button type="primary" @click="handleSubmit" size="large" :loading="loading" block>
         登录
       </n-button>
     </n-form-item>
@@ -87,6 +81,7 @@
   import { ResultEnum } from '@/enums/httpEnum';
   import logo from '@/assets/images/logo.png';
   import { PersonOutline, LockClosedOutline, LogoGithub, LogoFacebook } from '@vicons/ionicons5';
+  import { PageEnum } from '@/enums/pageEnum';
 
   interface FormState {
     username: string;
@@ -97,6 +92,7 @@
   const message = useMessage();
   const loading = ref(false);
   const autoLogin = ref(true);
+  const LOGIN_NAME = PageEnum.BASE_LOGIN_NAME;
 
   const formInline = reactive({
     username: 'admin',
@@ -132,7 +128,7 @@
           const toPath = decodeURIComponent((route.query?.redirect || '/') as string);
           message.success('登录成功，即将进入系统');
           router.replace(toPath).then((_) => {
-            if (route.name == 'login') {
+            if (route.name === LOGIN_NAME) {
               router.replace('/');
             }
           });

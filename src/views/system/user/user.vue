@@ -58,7 +58,7 @@
     >
       <template #default>
         <p class="text-gray-600" style="padding-left: 35px"
-          >您确认要删除用户，<n-text strong>{{ rowKeysName }}?</n-text></p
+          >您确认要删除用户，<n-text strong>{{ rowKeysName }} ?</n-text></p
         >
       </template>
     </basicModal>
@@ -178,7 +178,7 @@
       .map((item) => {
         return item.username;
       })
-      .join(',');
+      .join('，');
   }
 
   function reloadTable() {
@@ -245,6 +245,7 @@
   function removeOkModal() {
     lightCloseModal();
     lightSetSubLoading();
+    message.error('抱歉，您没有操作权限');
   }
 </script>
 

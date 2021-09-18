@@ -1,3 +1,16 @@
+interface TreeHelperConfig {
+  id: string;
+  children: string;
+  pid: string;
+}
+const DEFAULT_CONFIG: TreeHelperConfig = {
+  id: 'id',
+  children: 'children',
+  pid: 'pid',
+};
+
+const getConfig = (config: Partial<TreeHelperConfig>) => Object.assign({}, DEFAULT_CONFIG, config);
+
 export function filter<T = any>(tree: T[], func: (n: T) => boolean): T[] {
   const children = 'children';
 

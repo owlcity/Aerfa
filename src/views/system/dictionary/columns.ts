@@ -1,7 +1,10 @@
 export const columns = [
   {
+    type: 'selection',
+  },
+  {
     title: '字典名称',
-    key: 'name',
+    key: 'label',
   },
   {
     title: '字典值',

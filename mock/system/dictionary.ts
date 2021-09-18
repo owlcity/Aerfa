@@ -31,20 +31,23 @@ const dictionaryItems = () => {
       key: 'registeredSource',
       values: [
         {
+          id: '@integer(10,9999)',
           value: 'baidu',
-          name: '百度',
+          label: '百度',
           'order|1': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
           create_date: `@date('yyyy-MM-dd hh:mm:ss')`,
         },
         {
+          id: '@integer(10,9999)',
           value: 'weibo',
-          name: '微博',
+          label: '微博',
           'order|1': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
           create_date: `@date('yyyy-MM-dd hh:mm:ss')`,
         },
         {
+          id: '@integer(10,9999)',
           value: 'weixin',
-          name: '微信',
+          label: '微信',
           'order|1': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
           create_date: `@date('yyyy-MM-dd hh:mm:ss')`,
         },
@@ -55,14 +58,16 @@ const dictionaryItems = () => {
       parentKey: 'makeMatter',
       values: [
         {
+          id: '@integer(10,9999)',
           value: 'examine',
-          name: '检查',
+          label: '检查',
           'order|1': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
           create_date: `@date('yyyy-MM-dd hh:mm:ss')`,
         },
         {
+          id: '@integer(10,9999)',
           value: 'tooth',
-          name: '拔牙',
+          label: '拔牙',
           'order|1': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
           create_date: `@date('yyyy-MM-dd hh:mm:ss')`,
         },
@@ -73,14 +78,16 @@ const dictionaryItems = () => {
       parentKey: 'makeMatter',
       values: [
         {
+          id: '@integer(10,9999)',
           value: 'take',
-          name: '拆线',
+          label: '拆线',
           'order|1': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
           create_date: `@date('yyyy-MM-dd hh:mm:ss')`,
         },
         {
+          id: '@integer(10,9999)',
           value: 'periodontal',
-          name: '牙周',
+          label: '牙周',
           'order|1': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
           create_date: `@date('yyyy-MM-dd hh:mm:ss')`,
         },
@@ -121,8 +128,14 @@ export default [
     timeout: 1000,
     method: 'get',
     response: ({ query }) => {
-      const { page = 1, pageSize = 10, key } = query;
-      const list = dictionaryInfo(Number(pageSize), key);
+      const { page = 1, pageSize = 10, key, keywords } = query;
+      let list = dictionaryInfo(Number(pageSize), key);
+      //实现搜索筛选
+      if (keywords) {
+        list = list.filter((item) => {
+          return item.label.indexOf(keywords) != -1;
+        });
+      }
       return resultSuccess({
         page: Number(page),
         pageSize: Number(pageSize),

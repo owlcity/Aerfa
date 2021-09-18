@@ -7,7 +7,7 @@ export interface ModalMethods {
   setProps: (props) => void;
   openModal: () => void;
   closeModal: () => void;
-  setSubLoading: (status) => void;
+  setSubLoading: (status?) => void;
 }
 
 /**

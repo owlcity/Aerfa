@@ -30,7 +30,6 @@
     unref,
     computed,
     useAttrs,
-    defineProps,
   } from 'vue';
   import { basicProps } from './props';
   import startDrag from '@/utils/Drag';
