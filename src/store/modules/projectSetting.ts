@@ -91,6 +91,9 @@ export const useProjectSettingStore = defineStore({
     setNavTheme(value: string): void {
       this.navTheme = value;
     },
+    setMenuSetting(values: object): void {
+      this.menuSetting = Object.assign(this.menuSetting, values);
+    },
   },
 });
 

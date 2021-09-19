@@ -10,7 +10,7 @@ import { FormOutlined } from '@vicons/antd';
 
 export function useColumns(propsRef: ComputedRef<BasicTableProps>) {
   const columnsRef = ref(unref(propsRef).columns) as unknown as Ref<BasicColumn[]>;
-  let cacheColumns = unref(propsRef).columns;
+  let cacheColumns = unref(propsRef).columns.filter((item) => item.type != 'selection');
 
   const getColumnsRef = computed(() => {
     const columns = cloneDeep(unref(columnsRef));
@@ -94,9 +94,10 @@ export function useColumns(propsRef: ComputedRef<BasicTableProps>) {
     const { actionColumn } = unref(propsRef);
     if (!actionColumn) return;
     // @ts-ignore
-    !columns.find((col) => col.key === 'action') && columns.push({
-      ...actionColumn,
-    });
+    !columns.find((col) => col.key === 'action') &&
+      columns.push({
+        ...actionColumn,
+      });
   }
 
   //设置

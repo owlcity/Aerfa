@@ -10,13 +10,13 @@
           </template>
           <template #header>
             <div class="table-toolbar-inner-popover-title">
-              <n-space>
+              <n-space justify="space-between">
                 <n-checkbox v-model:checked="checkAll" @update:checked="onCheckAll"
                   >列展示
                 </n-checkbox>
-                <n-checkbox v-model:checked="selection" @update:checked="onSelection"
-                  >勾选列
-                </n-checkbox>
+                <!--                <n-checkbox v-model:checked="selection" @update:checked="onSelection"-->
+                <!--                  >勾选列-->
+                <!--                </n-checkbox>-->
                 <n-button class="mt-1" size="small" text type="primary" @click="resetColumns"
                   >重置
                 </n-button>
@@ -121,7 +121,9 @@
     const checkListArr: any = columns.map((item) => item.key);
     checkList.value = checkListArr;
     defaultCheckList.value = checkListArr;
-    const newColumns = columns.filter((item) => item.key != 'action' && item.title != '操作');
+    const newColumns = columns.filter(
+      (item) => item.type != 'selection' && item.key != 'action' && item.title != '操作'
+    );
     if (!columnsList.value.length) {
       columnsList.value = cloneDeep(newColumns);
       cacheColumnsList.value = cloneDeep(newColumns);
@@ -163,6 +165,7 @@
     });
     setColumns(newColumns);
     columnsList.value = newColumns;
+    table.isShowTable.value = true;
   }
 
   //全选
@@ -171,7 +174,9 @@
     if (e) {
       setColumns(checkList);
       checkList.value = checkList;
+      table.isShowTable.value = true;
     } else {
+      table.isShowTable.value = false;
       setColumns([]);
       checkList.value = [];
     }

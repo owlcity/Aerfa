@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, unref, computed, onMounted } from 'vue';
+  import { ref, unref, computed, onMounted, watch, nextTick } from 'vue';
   import { Logo } from './components/Logo';
   import { TabsView } from './components/TagsView';
   import { MainView } from './components/Main';
@@ -64,7 +64,6 @@
 
   const { getDarkTheme } = useDesignSetting();
   const {
-    getShowFooter,
     getNavMode,
     getNavTheme,
     getHeaderSetting,
@@ -78,6 +77,14 @@
   const navMode = getNavMode;
 
   const collapsed = ref<boolean>(false);
+
+  watch(
+    () => collapsed.value,
+    (to) => {
+      settingStore.setMenuSetting({ collapsed: to });
+    },
+    { immediate: true }
+  );
 
   //固定顶部
   const fixedHeader = computed(() => {

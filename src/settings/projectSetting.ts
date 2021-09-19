@@ -38,6 +38,8 @@ const setting = {
     fixed: true,
     //分割菜单
     mixMenu: false,
+    //折叠
+    collapsed: false,
   },
   //面包屑
   crumbsSetting: {
@@ -50,7 +52,7 @@ const setting = {
   permissionMode: 'FIXED',
   //是否开启路由动画
   isPageAnimate: true,
-  //路由动画类型
-  pageAnimateType: 'zoom-fade',
+  //路由动画类型 默认消退
+  pageAnimateType: 'fade',
 };
 export default setting;

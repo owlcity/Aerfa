@@ -1,54 +1,19 @@
 <template>
-  <div>
-    <n-grid :x-gap="24">
-      <n-grid-item span="6">
-        <n-card :bordered="false" size="small" class="proCard">
-          <n-thing
-            class="thing-cell"
-            v-for="item in typeTabList"
-            :key="item.key"
-            :class="{ 'thing-cell-on': type === item.key }"
-            @click="switchType(item)"
-          >
-            <template #header>{{ item.name }}</template>
-            <template #description>{{ item.desc }}</template>
-          </n-thing>
-        </n-card>
-      </n-grid-item>
-      <n-grid-item span="18">
-        <n-card :bordered="false" size="small" :title="typeTitle" class="proCard">
-          <BasicSetting v-if="type === 1" />
-          <SafetySetting v-if="type === 2" />
-        </n-card>
-      </n-grid-item>
-    </n-grid>
-  </div>
+  <PageWrapper>
+    <n-card :bordered="false" size="small" class="proCard tabsCard">
+      <n-tabs type="line" size="large">
+        <n-tab-pane name="basic" tab="基本设置">
+          <BasicSetting />
+        </n-tab-pane>
+        <n-tab-pane name="safety" tab="安全设置"><SafetySetting /></n-tab-pane>
+      </n-tabs>
+    </n-card>
+  </PageWrapper>
 </template>
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { PageWrapper } from '@/components/Page';
   import BasicSetting from './BasicSetting.vue';
   import SafetySetting from './SafetySetting.vue';
-
-  const typeTabList = [
-    {
-      name: '基本设置',
-      desc: '个人账户信息设置',
-      key: 1,
-    },
-    {
-      name: '安全设置',
-      desc: '密码，邮箱等设置',
-      key: 2,
-    },
-  ];
-
-  const type = ref(1);
-  const typeTitle = ref('基本设置');
-
-  function switchType(e) {
-    type.value = e.key;
-    typeTitle.value = e.name;
-  }
 </script>
 <style lang="less" scoped>
   .thing-cell {

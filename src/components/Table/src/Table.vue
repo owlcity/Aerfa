@@ -57,7 +57,7 @@
       <ColumnSetting />
     </div>
   </div>
-  <div class="s-table">
+  <div class="s-table" v-if="isShowTable">
     <n-data-table
       ref="tableElRef"
       v-bind="getBindValues"
@@ -141,6 +141,7 @@
       'edit-change',
     ],
     setup(props, { emit }) {
+      const isShowTable = ref(true);
       const deviceHeight = ref(150);
       const tableElRef = ref<ComponentRef>(null);
       const wrapRef = ref<Nullable<HTMLDivElement>>(null);
@@ -272,10 +273,11 @@
         });
       });
 
-      createTableContext({ ...tableAction, wrapRef, getBindValues });
+      createTableContext({ ...tableAction, wrapRef, getBindValues, isShowTable });
 
       return {
         ...toRefs(state),
+        isShowTable,
         tableElRef,
         getBindValues,
         densityOptions,

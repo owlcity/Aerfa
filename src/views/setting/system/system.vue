@@ -1,73 +1,22 @@
 <template>
-  <div>
-    <n-grid :x-gap="24">
-      <n-grid-item span="6">
-        <n-card :bordered="false" size="small" class="proCard">
-          <n-thing
-            class="thing-cell"
-            v-for="item in typeTabList"
-            :key="item.key"
-            :class="{ 'thing-cell-on': type === item.key }"
-            @click="switchType(item)"
-          >
-            <template #header>{{ item.name }}</template>
-            <template #description>{{ item.desc }}</template>
-          </n-thing>
-        </n-card>
-      </n-grid-item>
-      <n-grid-item span="18">
-        <n-card :bordered="false" size="small" :title="typeTitle" class="proCard">
-          <BasicSetting v-if="type === 1" />
-          <RevealSetting v-if="type === 2" />
-          <EmailSetting v-if="type === 3" />
-        </n-card>
-      </n-grid-item>
-    </n-grid>
-  </div>
+  <PageWrapper>
+    <n-card :bordered="false" size="small" class="proCard tabsCard">
+      <n-tabs type="line" size="large">
+        <n-tab-pane name="basic" tab="基本设置">
+          <BasicSetting />
+        </n-tab-pane>
+        <n-tab-pane name="reveal" tab="显示设置"><RevealSetting /></n-tab-pane>
+        <n-tab-pane name="email" tab="邮件设置"><EmailSetting /></n-tab-pane>
+      </n-tabs>
+    </n-card>
+    <template #rightFooter><n-button type="primary">提交</n-button></template>
+  </PageWrapper>
 </template>
-<script lang="ts">
-  import { defineComponent, reactive, toRefs } from 'vue';
+<script lang="ts" setup>
+  import { PageWrapper } from '@/components/Page';
   import BasicSetting from './BasicSetting.vue';
   import RevealSetting from './RevealSetting.vue';
   import EmailSetting from './EmailSetting.vue';
-
-  const typeTabList = [
-    {
-      name: '基本设置',
-      desc: '系统常规设置',
-      key: 1,
-    },
-    {
-      name: '显示设置',
-      desc: '系统显示设置',
-      key: 2,
-    },
-    {
-      name: '邮件设置',
-      desc: '系统邮件设置',
-      key: 3,
-    },
-  ];
-  export default defineComponent({
-    components: { BasicSetting, RevealSetting, EmailSetting },
-    setup() {
-      const state = reactive({
-        type: 1,
-        typeTitle: '基本设置',
-      });
-
-      function switchType(e) {
-        state.type = e.key;
-        state.typeTitle = e.name;
-      }
-
-      return {
-        ...toRefs(state),
-        switchType,
-        typeTabList,
-      };
-    },
-  });
 </script>
 <style lang="less" scoped>
   .thing-cell {

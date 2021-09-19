@@ -44,7 +44,6 @@ export function useDataSource(
   });
 
   async function fetch(opt?) {
-    console.log(opt);
     try {
       setLoading(true);
       const { request, pagination }: any = unref(propsRef);
