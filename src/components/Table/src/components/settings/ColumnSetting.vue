@@ -11,7 +11,10 @@
           <template #header>
             <div class="table-toolbar-inner-popover-title">
               <n-space justify="space-between">
-                <n-checkbox v-model:checked="checkAll" @update:checked="onCheckAll"
+                <n-checkbox
+                  v-model:checked="checkAll"
+                  :indeterminate="!checkAll && checkPart"
+                  @update:checked="onCheckAll"
                   >列展示
                 </n-checkbox>
                 <!--                <n-checkbox v-model:checked="selection" @update:checked="onSelection"-->
@@ -25,7 +28,7 @@
           </template>
           <div class="table-toolbar-inner">
             <n-checkbox-group v-model:value="checkList" @update:value="onChange">
-              <Draggable v-model="columnsList" animation="300" item-key="key" @end="draggableEnd">
+              <Draggable v-model="basicColumns" animation="300" item-key="key" @end="draggableEnd">
                 <template #item="{ element }">
                   <div
                     :class="{ 'table-toolbar-inner-checkbox-dark': getDarkTheme === true }"
@@ -79,7 +82,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, unref, toRaw, watchEffect } from 'vue';
+  import { ref, unref, toRaw, watchEffect, computed, nextTick } from 'vue';
   import { useTableContext } from '../../hooks/useTableContext';
   import { cloneDeep } from 'lodash-es';
   import {
@@ -100,11 +103,12 @@
 
   const { getDarkTheme, getAppTheme } = useDesignSetting();
   const table: any = useTableContext();
-  const columnsList = ref<Options[]>([]);
+  const basicColumns = ref<Options[]>([]);
   const cacheColumnsList = ref<Options[]>([]);
 
   const selection = ref(false);
   const checkAll = ref(true);
+  const checkPart = ref(false);
   const checkList = ref([]);
   const defaultCheckList = ref([]);
 
@@ -118,14 +122,20 @@
   //初始化
   function init() {
     const columns: any[] = getColumns();
-    const checkListArr: any = columns.map((item) => item.key);
-    checkList.value = checkListArr;
-    defaultCheckList.value = checkListArr;
+    //同时兼容 全选 反选，单选
+    const checkListArr: any =
+      !checkAll.value && !checkPart.value && checkList.value.length
+        ? checkList.value
+        : columns.map((item) => item.key);
+    //重新赋值
+    checkList.value = !checkAll.value && !checkPart.value ? [] : checkListArr;
+    defaultCheckList.value = !checkAll.value && !checkPart.value ? [] : checkListArr;
+
     const newColumns = columns.filter(
       (item) => item.type != 'selection' && item.key != 'action' && item.title != '操作'
     );
-    if (!columnsList.value.length) {
-      columnsList.value = cloneDeep(newColumns);
+    if (!basicColumns.value.length) {
+      basicColumns.value = cloneDeep(newColumns);
       cacheColumnsList.value = cloneDeep(newColumns);
     }
   }
@@ -135,7 +145,15 @@
     if (selection.value) {
       list.unshift('selection');
     }
-    setColumns(list);
+    const filterColumns = basicColumns.value.filter((item) => {
+      return list.includes(item.key);
+    });
+    const isAction = list.includes('action');
+    const len = isAction ? list.length - 1 : list.length;
+    checkPart.value = basicColumns.value.length != len;
+    checkAll.value = basicColumns.value.length == len;
+    setColumns(filterColumns);
+    table.isShowTable.value = true;
   }
 
   //设置
@@ -164,29 +182,36 @@
       };
     });
     setColumns(newColumns);
-    columnsList.value = newColumns;
+    basicColumns.value = newColumns;
     table.isShowTable.value = true;
   }
 
   //全选
   function onCheckAll(e) {
-    let checkList = table.getCacheColumns(true);
+    let checkList = table.getCacheColumns();
+    checkPart.value = false;
     if (e) {
       setColumns(checkList);
+      checkAll.value = true;
       checkList.value = checkList;
       table.isShowTable.value = true;
     } else {
       table.isShowTable.value = false;
-      setColumns([]);
       checkList.value = [];
+      checkAll.value = false;
+      setColumns([]);
     }
   }
 
   //拖拽排序
   function draggableEnd() {
-    const newColumns = toRaw(unref(columnsList));
-    columnsList.value = newColumns;
-    setColumns(newColumns);
+    const newColumns = toRaw(unref(basicColumns));
+    basicColumns.value = newColumns;
+    const filterColumns = newColumns.filter((item) => {
+      return checkList.value.includes(item.key);
+    });
+    checkList.value = filterColumns.map((item) => item.key);
+    setColumns(filterColumns);
   }
 
   //勾选列
@@ -211,7 +236,7 @@
       columns[index].fixed = isFixed;
     }
     table.setCacheColumnsField(item.key, { fixed: isFixed });
-    columnsList.value[index].fixed = isFixed;
+    basicColumns.value[index].fixed = isFixed;
     setColumns(columns);
   }
 </script>

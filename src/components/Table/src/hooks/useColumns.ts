@@ -1,4 +1,4 @@
-import { ref, Ref, ComputedRef, unref, computed, watch, toRaw, h } from 'vue';
+import { ref, Ref, ComputedRef, unref, computed, watch, toRaw, h, nextTick } from 'vue';
 import type { BasicColumn, BasicTableProps } from '../types/table';
 import { isEqual, cloneDeep } from 'lodash-es';
 import { isArray, isString, isBoolean, isFunction } from '@/utils/is';
@@ -102,7 +102,6 @@ export function useColumns(propsRef: ComputedRef<BasicTableProps>) {
 
   //设置
   function setColumns(columnList: string[]) {
-    console.time('sort');
     const columns: any[] = cloneDeep(columnList);
     if (!isArray(columns)) return;
 
@@ -110,25 +109,7 @@ export function useColumns(propsRef: ComputedRef<BasicTableProps>) {
       columnsRef.value = [];
       return;
     }
-    const cacheKeys = cacheColumns.map((item) => item.key);
-    //针对拖拽排序
-    if (!isString(columns[0])) {
-      columnsRef.value = columns as BasicColumn[];
-    } else {
-      const newColumns: BasicColumn[] = [];
-      cacheColumns.forEach((item) => {
-        if (columnList.includes(item.key)) {
-          newColumns.push({ ...item });
-        }
-      });
-      if (!isEqual(cacheKeys, columns)) {
-        newColumns.sort((prev, next) => {
-          return cacheKeys.indexOf(prev.key) - cacheKeys.indexOf(next.key);
-        });
-      }
-      console.timeEnd('sort');
-      columnsRef.value = newColumns;
-    }
+    columnsRef.value = columns as BasicColumn[];
   }
 
   //获取

@@ -5,9 +5,11 @@
 
 - 修复`BasicTable`配置选择项异常
 
+
 ### ✨ Features
 - 新增`PageWrapper`布局组件
 - 新增`PageFooter`布局组件
+- 优化`BasicTable`全选反选部分选择效果
 - 新增`BasicTable->actionColumn`配置增强，可设置`popconfirm`二次确认
 - 移除`BasicTable`配置里面勾选列功能，用处不大，增加不必要代码量
 - 依赖升级
