@@ -1,4 +1,17 @@
 # CHANGELOG
+## 2.0.1 (2021-09-21)
+
+### 🐛 Bug Fixes
+
+- 修复`BasicTable`配置选择项异常
+
+### ✨ Features
+- 新增`PageWrapper`布局组件
+- 新增`PageFooter`布局组件
+- 新增`BasicTable->actionColumn`配置增强，可设置`popconfirm`二次确认
+- 移除`BasicTable`配置里面勾选列功能，用处不大，增加不必要代码量
+- 依赖升级
+
 
 ## 2.0.0 (2021-09-15)
 

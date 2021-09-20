@@ -48,8 +48,7 @@ export function useColumns(propsRef: ComputedRef<BasicTableProps>) {
     const columns = cloneDeep(pageColumns);
     return columns
       .filter((column) => {
-        // @ts-ignore
-        return hasPermission(column.auth) && isIfShow(column);
+        return hasPermission(column.auth as string[]) && isIfShow(column);
       })
       .map((column) => {
         //默认 ellipsis 为true
@@ -93,15 +92,17 @@ export function useColumns(propsRef: ComputedRef<BasicTableProps>) {
   function handleActionColumn(propsRef: ComputedRef<BasicTableProps>, columns: BasicColumn[]) {
     const { actionColumn } = unref(propsRef);
     if (!actionColumn) return;
-    // @ts-ignore
-    !columns.find((col) => col.key === 'action') &&
+    const hasIndex = columns.findIndex((item) => item.key === 'action');
+    if (hasIndex === -1) {
       columns.push({
-        ...actionColumn,
+        ...(actionColumn as any),
       });
+    }
   }
 
   //设置
   function setColumns(columnList: string[]) {
+    console.time('sort');
     const columns: any[] = cloneDeep(columnList);
     if (!isArray(columns)) return;
 
@@ -112,9 +113,9 @@ export function useColumns(propsRef: ComputedRef<BasicTableProps>) {
     const cacheKeys = cacheColumns.map((item) => item.key);
     //针对拖拽排序
     if (!isString(columns[0])) {
-      columnsRef.value = columns;
+      columnsRef.value = columns as BasicColumn[];
     } else {
-      const newColumns: any[] = [];
+      const newColumns: BasicColumn[] = [];
       cacheColumns.forEach((item) => {
         if (columnList.includes(item.key)) {
           newColumns.push({ ...item });
@@ -125,6 +126,7 @@ export function useColumns(propsRef: ComputedRef<BasicTableProps>) {
           return cacheKeys.indexOf(prev.key) - cacheKeys.indexOf(next.key);
         });
       }
+      console.timeEnd('sort');
       columnsRef.value = newColumns;
     }
   }
@@ -132,9 +134,7 @@ export function useColumns(propsRef: ComputedRef<BasicTableProps>) {
   //获取
   function getColumns(): BasicColumn[] {
     const columns = toRaw(unref(getColumnsRef));
-    return columns.map((item) => {
-      return { ...item, title: item.title, key: item.key, fixed: item.fixed || undefined };
-    });
+    return columns;
   }
 
   //获取原始

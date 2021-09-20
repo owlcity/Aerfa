@@ -172,7 +172,7 @@
       );
 
       const { getPageColumns, setColumns, getColumns, getCacheColumns, setCacheColumnsField } =
-        useColumns(getProps);
+        useColumns(getProps, { setLoading });
 
       const state = reactive({
         tableSize: unref(getProps as any).size || 'medium',

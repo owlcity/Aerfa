@@ -1,6 +1,6 @@
 {
-  "name": "naive-ui-admin",
-  "version": "2.0.0",
+  "name": "naive-admin",
+  "version": "2.0.1",
   "author": {
     "name": "Ahjung",
     "email": "735878602@qq.com",
@@ -44,7 +44,7 @@
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",
-    "naive-ui": "^2.18.2",
+    "naive-ui": "^2.19.0",
     "perfect-scrollbar": "^1.5.2",
     "pinia": "^2.0.0-rc.9",
     "print-js": "^1.6.0",
@@ -55,7 +55,7 @@
     "vue": "^3.2.12",
     "vue-router": "^4.0.11",
     "vue-types": "^4.1.0",
-    "vuedraggable": "^4.0.3",
+    "vuedraggable": "^4.1.0",
     "xlsx": "^0.17.0"
   },
   "devDependencies": {

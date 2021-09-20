@@ -246,21 +246,18 @@
           {
             label: '删除',
             icon: 'ic:outline-delete-outline',
-            onClick: handleDelete.bind(null, record),
-            // 根据业务控制是否显示 isShow 和 auth 是并且关系
-            ifShow: () => {
-              return true;
-            },
-            // 根据权限控制是否显示: 有权限，会显示，支持多个
-            auth: ['basic_list'],
+            onPositiveClick: handleDelete.bind(null, record),
+            onNegativeClick: handleNegative.bind(null, record),
+            isConfirm: true,
+            confirmContent: '您真的，确定要删除吗？',
+            positiveText: '确定删除',
           },
           {
             label: '编辑',
-            onClick: handleEdit.bind(null, record),
-            ifShow: () => {
-              return true;
-            },
-            auth: ['basic_list'],
+            onPositiveClick: handleDelete.bind(null, record),
+            onNegativeClick: handleNegative.bind(null, record),
+            isConfirm: true,
+            confirmContent: '您真的，确定要编辑吗？',
           },
         ],
         dropDownActions: [
@@ -334,6 +331,11 @@
   function handleDelete(record: Recordable) {
     console.log('点击了删除', record);
     message.info('点击了删除');
+  }
+
+  function handleNegative(record: Recordable) {
+    console.log('点击了取消', record);
+    message.info('点击了取消');
   }
 
   function handleSubmit(values: Recordable) {

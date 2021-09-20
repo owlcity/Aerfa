@@ -2,7 +2,17 @@
   <div class="tableAction">
     <div class="flex items-center justify-center">
       <template v-for="(action, index) in getActions" :key="`${index}-${action.label}`">
-        <n-button v-bind="action" class="mx-2">{{ action.label }}</n-button>
+        <template v-if="!action.isConfirm">
+          <n-button v-bind="action" class="mx-2">{{ action.label }}</n-button>
+        </template>
+        <template v-else>
+          <n-popconfirm v-bind="action">
+            <template #trigger>
+              <n-button class="mx-2" v-bind="action">{{ action.label }}</n-button>
+            </template>
+            {{ action.confirmContent }}
+          </n-popconfirm>
+        </template>
       </template>
       <n-dropdown
         v-if="dropDownActions && getDropdownList.length"
