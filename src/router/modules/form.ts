@@ -35,6 +35,14 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/form/basicForm/index.vue'),
       },
       {
+        path: 'advanced-form',
+        name: 'form-advanced-form',
+        meta: {
+          title: '高级表单',
+        },
+        component: () => import('@/views/form/advancedForm/advancedForm.vue'),
+      },
+      {
         path: 'step-form',
         name: 'form-step-form',
         meta: {

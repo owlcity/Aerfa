@@ -1,5 +1,5 @@
 <template>
-  <div class="page-wrapper">
+  <div class="page-wrapper" :class="{ 'footer-space': showFooter && getShowFooter }">
     <div class="n-layout-page-header mb-4" v-if="title || content || $slots.headerContent">
       <n-card :bordered="false" :title="title">
         {{ content }}
@@ -47,5 +47,9 @@
     .mb-4 {
       margin-bottom: 1rem;
     }
+  }
+
+  .footer-space {
+    padding-bottom: 64px;
   }
 </style>

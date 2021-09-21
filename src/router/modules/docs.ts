@@ -6,7 +6,7 @@ import { renderIcon } from '@/utils/index';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/external',
-    name: 'https://naiveadmin.com',
+    name: 'https://www.naiveadmin.com',
     component: Layout,
     meta: {
       title: '项目文档',

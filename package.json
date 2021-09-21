@@ -44,7 +44,7 @@
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",
-    "naive-ui": "^2.19.0",
+    "naive-ui": "^2.19.1",
     "perfect-scrollbar": "^1.5.2",
     "pinia": "^2.0.0-rc.9",
     "print-js": "^1.6.0",

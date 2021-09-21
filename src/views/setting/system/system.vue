@@ -9,7 +9,6 @@
         <n-tab-pane name="email" tab="邮件设置"><EmailSetting /></n-tab-pane>
       </n-tabs>
     </n-card>
-    <template #rightFooter><n-button type="primary">提交</n-button></template>
   </PageWrapper>
 </template>
 <script lang="ts" setup>
