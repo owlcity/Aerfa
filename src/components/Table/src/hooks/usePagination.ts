@@ -1,6 +1,6 @@
 import type { PaginationProps } from '../types/pagination';
 import type { BasicTableProps } from '../types/table';
-import { computed, unref, ref, ComputedRef } from 'vue';
+import { computed, unref, ref, ComputedRef, watchEffect } from 'vue';
 
 import { isBoolean } from '@/utils/is';
 import { APISETTING, DEFAULTPAGESIZE, PAGESIZES } from '../const';
@@ -9,21 +9,35 @@ export function usePagination(refProps: ComputedRef<BasicTableProps>) {
   const configRef = ref<PaginationProps>({});
   const show = ref(true);
 
+  watchEffect(() => {
+    const { pagination } = unref(refProps);
+    if (!isBoolean(pagination) && pagination) {
+      configRef.value = {
+        ...unref(configRef),
+        ...(pagination ?? {}),
+      };
+    }
+  });
+
   const getPaginationInfo = computed((): PaginationProps | boolean => {
     const { pagination } = unref(refProps);
     if (!unref(show) || (isBoolean(pagination) && !pagination)) {
       return false;
     }
     const { totalField } = APISETTING;
-    return {
-      pageSize: DEFAULTPAGESIZE,
-      pageSizes: PAGESIZES,
-      showSizePicker: true,
-      showQuickJumper: true,
-      ...(isBoolean(pagination) ? {} : pagination),
-      ...unref(configRef),
-      pageCount: unref(configRef)[totalField],
-    };
+    const pageCount = unref(configRef)[totalField] || undefined;
+    return pageCount
+      ? {
+          page: 1, //当前页
+          pageSize: DEFAULTPAGESIZE, //分页大小
+          pageSizes: PAGESIZES, // 每页条数
+          showSizePicker: true,
+          showQuickJumper: true,
+          ...(isBoolean(pagination) ? {} : pagination),
+          ...unref(configRef),
+          pageCount,
+        }
+      : false;
   });
 
   function setPagination(info: Partial<PaginationProps>) {

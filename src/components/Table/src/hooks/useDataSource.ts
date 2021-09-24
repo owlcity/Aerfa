@@ -52,7 +52,6 @@ export function useDataSource(
       const sizeField = APISETTING.sizeField;
       const totalField = APISETTING.totalField;
       const listField = APISETTING.listField;
-
       let pageParams = {};
       const { page = 1, pageSize = 10 } = unref(getPaginationInfo) as PaginationProps;
 
@@ -65,12 +64,16 @@ export function useDataSource(
 
       const params = {
         ...pageParams,
+        ...pagination,
         ...opt,
       };
 
       //如果是重置刷新，重置页码
       if (isRestReload) {
         params[pageField] = 1;
+        setPagination({
+          page: 1,
+        });
       }
       const res = await request(params);
       const resultTotal = res[totalField] || 0;
@@ -79,10 +82,11 @@ export function useDataSource(
       // 如果数据异常，需获取正确的页码再次执行
       if (resultTotal) {
         if (page > resultTotal) {
+          const currentTotalPage = Math.ceil(resultTotal / pageSize);
           setPagination({
-            [pageField]: resultTotal,
+            page: currentTotalPage,
           });
-          fetch(opt);
+          return await fetch(opt);
         }
       }
       const resultInfo = res[listField] ? res[listField] : [];
@@ -102,11 +106,12 @@ export function useDataSource(
       });
     } catch (error) {
       console.error(error);
+      const totalField = APISETTING.totalField;
       emit('fetch-error', error);
       dataSourceRef.value = [];
-      // setPagination({
-      //   pageCount: 0,
-      // });
+      setPagination({
+        [totalField]: 0,
+      });
     } finally {
       setLoading(false);
     }

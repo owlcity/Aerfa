@@ -160,7 +160,7 @@
 
       const { getPaginationInfo, setPagination } = usePagination(getProps);
 
-      const { getDataSourceRef, getRowKey, reload } = useDataSource(
+      const { getDataSourceRef, getRowKey, reload, restReload } = useDataSource(
         getProps,
         {
           getPaginationInfo,
@@ -172,7 +172,7 @@
       );
 
       const { getPageColumns, setColumns, getColumns, getCacheColumns, setCacheColumnsField } =
-        useColumns(getProps, { setLoading });
+        useColumns(getProps);
 
       const state = reactive({
         tableSize: unref(getProps as any).size || 'medium',
@@ -224,6 +224,7 @@
 
       const tableAction = {
         reload,
+        restReload,
         setColumns,
         setLoading,
         setProps,
@@ -282,6 +283,7 @@
         getBindValues,
         densityOptions,
         reload,
+        restReload,
         densitySelect,
         updatePage,
         updatePageSize,
