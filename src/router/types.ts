@@ -6,7 +6,6 @@ export type Component<T extends any = any> =
   | (() => Promise<typeof import('*.vue')>)
   | (() => Promise<T>);
 
-// @ts-ignore
 export interface AppRouteRecordRaw extends Omit<RouteRecordRaw, 'meta'> {
   name: string;
   meta: RouteMeta;
@@ -54,4 +53,3 @@ export interface Menu {
   redirect?: string;
   sort?: number;
 }
-

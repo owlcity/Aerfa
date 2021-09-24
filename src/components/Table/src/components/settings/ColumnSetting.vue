@@ -82,7 +82,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, unref, toRaw, watchEffect, computed, nextTick } from 'vue';
+  import { ref, unref, toRaw, watchEffect } from 'vue';
   import { useTableContext } from '../../hooks/useTableContext';
   import { cloneDeep } from 'lodash-es';
   import {
@@ -91,7 +91,6 @@
     VerticalRightOutlined,
     VerticalLeftOutlined,
   } from '@vicons/antd';
-  // @ts-ignore
   import Draggable from 'vuedraggable/src/vuedraggable';
   import { useDesignSetting } from '@/hooks/setting/useDesignSetting';
 

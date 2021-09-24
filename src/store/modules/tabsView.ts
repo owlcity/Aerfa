@@ -14,6 +14,16 @@ export type ITabsViewState = {
   tabsList: RouteItem[]; // 标签页
 };
 
+//首页路由
+function homeRoute(list: any[]) {
+  return list.filter((item) => item.fullPath === PageEnum.BASE_HOME_REDIRECT);
+}
+
+//排除首页路由
+function excludeHomeRoute(list: any[]) {
+  return list.filter((item) => item.fullPath != PageEnum.BASE_HOME_REDIRECT);
+}
+
 export const useTabsViewStore = defineStore({
   id: 'app-tabs-view',
   state: (): ITabsViewState => ({
@@ -37,16 +47,22 @@ export const useTabsViewStore = defineStore({
     closeLeftTabs(route) {
       // 关闭左侧
       const index = this.tabsList.findIndex((item) => item.fullPath == route.fullPath);
-      this.tabsList.splice(0, index);
+      const newTabsList = excludeHomeRoute(this.tabsList);
+      newTabsList.splice(0, index - 1);
+      this.tabsList = [...homeRoute(this.tabsList), ...newTabsList];
     },
     closeRightTabs(route) {
       // 关闭右侧
       const index = this.tabsList.findIndex((item) => item.fullPath == route.fullPath);
-      this.tabsList.splice(index + 1);
+      const newTabsList = excludeHomeRoute(this.tabsList);
+      newTabsList.splice(index);
+      this.tabsList = [...homeRoute(this.tabsList), ...newTabsList];
     },
     closeOtherTabs(route) {
       // 关闭其他
-      this.tabsList = this.tabsList.filter((item) => item.fullPath == route.fullPath);
+      this.tabsList = this.tabsList.filter((item) =>
+        [route.fullPath, PageEnum.BASE_HOME_REDIRECT].includes(item.fullPath)
+      );
     },
     closeCurrentTab(route) {
       // 关闭当前页
@@ -55,10 +71,7 @@ export const useTabsViewStore = defineStore({
     },
     closeAllTabs() {
       // 关闭全部 保留首页
-      const homeRoute = this.tabsList.filter(
-        (item) => item.fullPath === PageEnum.BASE_HOME_REDIRECT
-      );
-      this.tabsList = homeRoute;
+      this.tabsList = homeRoute(this.tabsList);
       //localStorage.removeItem(TABS_ROUTES);
     },
   },

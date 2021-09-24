@@ -19,7 +19,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/dashboard',
     name: routeName,
-    redirect: '/dashboard/console',
+    //redirect: '/dashboard/console',
     component: Layout,
     meta: {
       title: 'Dashboard',

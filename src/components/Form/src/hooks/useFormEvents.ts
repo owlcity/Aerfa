@@ -55,7 +55,6 @@ export function useFormEvents({
 
   //清空校验
   async function clearValidate() {
-    // @ts-ignore
     await unref(formElRef)?.restoreValidation();
   }
 

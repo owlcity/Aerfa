@@ -43,7 +43,7 @@ export function useDataSource(
     return unref(dataSourceRef);
   });
 
-  async function fetch(opt?) {
+  async function fetch(opt?, isRestReload?) {
     try {
       setLoading(true);
       const { request, pagination }: any = unref(propsRef);
@@ -67,6 +67,11 @@ export function useDataSource(
         ...pageParams,
         ...opt,
       };
+
+      //如果是重置刷新，重置页码
+      if (isRestReload) {
+        params[pageField] = 1;
+      }
       const res = await request(params);
       const resultTotal = res[totalField] || 0;
       const currentPage = res[pageField];
@@ -125,6 +130,10 @@ export function useDataSource(
     await fetch(opt);
   }
 
+  async function restReload(opt?) {
+    await fetch(opt, true);
+  }
+
   return {
     fetch,
     getRowKey,
@@ -132,5 +141,6 @@ export function useDataSource(
     getDataSource,
     setTableData,
     reload,
+    restReload,
   };
 }

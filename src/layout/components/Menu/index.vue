@@ -3,7 +3,7 @@
     :options="menus"
     :inverted="inverted"
     :mode="mode"
-    :collapsed="collapsed"
+    :collapsed="getCollapsed"
     :collapsed-width="64"
     :collapsed-icon-size="20"
     :indent="24"
@@ -58,6 +58,11 @@
   const matched = currentRoute.matched;
 
   const openKeys = ref(matched && matched.length ? matched.map((item) => item.name) : []);
+
+  const getCollapsed = computed(() => {
+    let location = props.location;
+    return location === 'left' ? props.collapsed : false;
+  });
 
   const inverted = computed(() => {
     return ['dark', 'header-dark'].includes(settingStore.navTheme);

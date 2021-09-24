@@ -72,7 +72,9 @@
   import { columns } from './columns';
   import { PlusOutlined } from '@vicons/antd';
   import { useRouter } from 'vue-router';
+  import { usePermission } from '@/hooks/web/usePermission';
 
+  const { hasSomePermission } = usePermission();
   const rules = {
     name: {
       required: true,

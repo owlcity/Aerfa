@@ -32,6 +32,8 @@
         :class="{
           'layout-content-fix': fixedHeader === 'absolute',
           'layout-content-inverted': getDarkTheme,
+          noMultiTabs: !isMultiTabs,
+          'fluid-header': fixedHeader === 'static',
         }"
       >
         <div class="layout-content-main">
@@ -211,6 +213,14 @@
       padding-top: 108px;
     }
 
+    .noMultiTabs {
+      padding-top: 74px;
+    }
+
+    .fluid-header {
+      padding-top: 10px;
+    }
+
     .layout-content-inverted {
       background: rgb(16, 16, 20);
     }
@@ -233,15 +243,7 @@
     padding-top: 44px;
   }
 
-  .fluid-header {
-    padding-top: 0;
-  }
-
   .main-view-fix {
     padding-top: 44px;
-  }
-
-  .noMultiTabs {
-    padding-top: 0;
   }
 </style>

@@ -1,5 +1,5 @@
 import type { FormProps, FormActionType, UseFormReturnType } from '../types/form';
-// @ts-ignore
+
 import type { DynamicProps } from '/#/utils';
 
 import { ref, onUnmounted, unref, nextTick, watch } from 'vue';

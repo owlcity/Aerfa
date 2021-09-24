@@ -112,7 +112,7 @@
   });
 
   const { getDarkTheme, getAppTheme } = useDesignSetting();
-  const { getNavMode, getMenuSetting, getMultiTabsSetting } = useProjectSetting();
+  const { getNavMode, getMenuSetting } = useProjectSetting();
   const settingStore = useProjectSettingStore();
   const message = useMessage();
   const route = useRoute();
@@ -127,7 +127,6 @@
   const dropdownX = ref(0);
   const dropdownY = ref(0);
   const showDropdown = ref(false);
-  const isMultiHeaderFixed = ref(false);
   const baseHome = PageEnum.BASE_HOME_REDIRECT;
 
   // 获取简易的路由对象
@@ -171,6 +170,7 @@
   //tags 右键右侧下拉菜单
   const TabsMenuOptions = computed(() => {
     const isDisabled = unref(tabsList).length <= 1 ? true : false;
+    const isLenTwo = unref(tabsList).length === 2;
     return [
       {
         label: '刷新当前',
@@ -186,19 +186,19 @@
       {
         label: '关闭其他',
         key: '3',
-        disabled: isDisabled,
+        disabled: isDisabled || isLenTwo,
         icon: renderIcon(SwapOutlined),
       },
       {
         label: '关闭左侧',
         key: '5',
-        disabled: isDisabled,
+        disabled: isDisabled || isLenTwo,
         icon: renderIcon(DoubleLeftOutlined),
       },
       {
         label: '关闭右侧',
         key: '6',
-        disabled: isDisabled,
+        disabled: isDisabled || isLenTwo,
         icon: renderIcon(DoubleRightOutlined),
       },
       {
@@ -305,7 +305,7 @@
   // 关闭全部
   const closeAll = () => {
     tabsViewStore.closeAllTabs();
-    reloadPage();
+    router.replace(PageEnum.BASE_HOME_REDIRECT);
     updateNavScroll();
   };
   //tab 操作
