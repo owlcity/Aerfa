@@ -6,6 +6,7 @@ export type Component<T extends any = any> =
   | (() => Promise<typeof import('*.vue')>)
   | (() => Promise<T>);
 
+// @ts-ignore
 export interface AppRouteRecordRaw extends Omit<RouteRecordRaw, 'meta'> {
   name: string;
   meta: RouteMeta;
@@ -21,8 +22,9 @@ export interface Meta {
   title: string;
   // 是否忽略权限
   ignoreAuth?: boolean;
+  //权限数组集合
   permissions?: string[];
-  // 是否不缓存
+  // 是否不缓存 预留功能 并未生效
   noKeepAlive?: boolean;
   // 是否固定在tab上
   affix?: boolean;
