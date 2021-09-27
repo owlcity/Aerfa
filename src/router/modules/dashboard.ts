@@ -34,6 +34,7 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: '主控台',
           permissions: ['dashboard_console'],
+          affix: true,
         },
         component: () => import('@/views/dashboard/console/console.vue'),
       },
@@ -52,6 +53,7 @@ const routes: Array<RouteRecordRaw> = [
           title: '工作台',
           keepAlive: true,
           permissions: ['dashboard_workplace'],
+          affix: true,
         },
         component: () => import('@/views/dashboard/workplace/workplace.vue'),
       },

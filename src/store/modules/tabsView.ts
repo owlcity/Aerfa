@@ -1,27 +1,38 @@
 import { defineStore } from 'pinia';
 import { RouteLocationNormalized } from 'vue-router';
-import { PageEnum } from '@/enums/pageEnum';
 
 // 不需要出现在标签页中的路由
 const whiteList = ['Redirect', 'login'];
 
 export type RouteItem = Partial<RouteLocationNormalized> & {
   fullPath: string;
+  path: string;
   name: string;
+  hash: string;
+  meta: object;
+  params: object;
+  query: object;
 };
 
 export type ITabsViewState = {
   tabsList: RouteItem[]; // 标签页
 };
 
-//首页路由
-function homeRoute(list: any[]) {
-  return list.filter((item) => item.fullPath === PageEnum.BASE_HOME_REDIRECT);
+//保留固定路由
+function retainAffixRoute(list: any[]) {
+  return list.filter((item) => item?.meta?.affix ?? false);
 }
 
-//排除首页路由
-function excludeHomeRoute(list: any[]) {
-  return list.filter((item) => item.fullPath != PageEnum.BASE_HOME_REDIRECT);
+//筛序最新的
+function filterNewTabs(sliceTabs: any[], tabsList: any[]) {
+  const pathList: string[] = [];
+  for (const item of sliceTabs) {
+    const affix = item?.meta?.affix ?? false;
+    if (!affix) {
+      pathList.push(item.fullPath);
+    }
+  }
+  return tabsList.filter((item) => !pathList.includes(item.fullPath));
 }
 
 export const useTabsViewStore = defineStore({
@@ -46,33 +57,34 @@ export const useTabsViewStore = defineStore({
     },
     closeLeftTabs(route) {
       // 关闭左侧
-      const index = this.tabsList.findIndex((item) => item.fullPath == route.fullPath);
-      const newTabsList = excludeHomeRoute(this.tabsList);
-      newTabsList.splice(0, index - 1);
-      this.tabsList = [...homeRoute(this.tabsList), ...newTabsList];
+      const index = this.tabsList.findIndex((item) => item.fullPath == route.value.fullPath);
+      if (index > 0) {
+        const leftTabs = this.tabsList.slice(0, index);
+        this.tabsList = filterNewTabs(leftTabs, this.tabsList);
+      }
     },
     closeRightTabs(route) {
       // 关闭右侧
-      const index = this.tabsList.findIndex((item) => item.fullPath == route.fullPath);
-      const newTabsList = excludeHomeRoute(this.tabsList);
-      newTabsList.splice(index);
-      this.tabsList = [...homeRoute(this.tabsList), ...newTabsList];
+      const index = this.tabsList.findIndex((item) => item.fullPath == route.value.fullPath);
+      if (index >= 0 && index < this.tabsList.length - 1) {
+        const rightTabs = this.tabsList.slice(index + 1, this.tabsList.length);
+        this.tabsList = filterNewTabs(rightTabs, this.tabsList);
+      }
     },
     closeOtherTabs(route) {
       // 关闭其他
-      this.tabsList = this.tabsList.filter((item) =>
-        [route.fullPath, PageEnum.BASE_HOME_REDIRECT].includes(item.fullPath)
+      this.tabsList = this.tabsList.filter(
+        (item) => ([route.fullPath].includes(item.fullPath) || item?.meta?.affix) ?? false
       );
     },
     closeCurrentTab(route) {
       // 关闭当前页
-      const index = this.tabsList.findIndex((item) => item.fullPath == route.fullPath);
+      const index = this.tabsList.findIndex((item) => item.fullPath == route.value.fullPath);
       this.tabsList.splice(index, 1);
     },
     closeAllTabs() {
-      // 关闭全部 保留首页
-      this.tabsList = homeRoute(this.tabsList);
-      //localStorage.removeItem(TABS_ROUTES);
+      // 关闭全部
+      this.tabsList = retainAffixRoute(this.tabsList);
     },
   },
 });

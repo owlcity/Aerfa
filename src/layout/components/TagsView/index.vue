@@ -29,20 +29,16 @@
         </span>
         <div ref="navScroll" class="tabs-card-scroll">
           <Draggable :list="tabsList" animation="300" class="flex" item-key="fullPath">
-            <template #item="{ element }">
+            <template #item="{ element, index }">
               <div
                 :id="`tag${element.fullPath.split('/').join('\/')}`"
                 :class="{ 'active-item': activeKey === element.path }"
                 class="shadow-sm tabs-card-scroll-item"
-                @contextmenu="handleContextMenu($event, element)"
+                @contextmenu="handleContextMenu($event, element, index)"
                 @click.stop="goPage(element)"
               >
                 <span>{{ element.meta.title }}</span>
-                <n-icon
-                  v-if="element.path !== baseHome"
-                  size="14"
-                  @click.stop="closeTabItem(element)"
-                >
+                <n-icon v-if="!element.meta.affix" size="14" @click.stop="closeTabItem(element)">
                   <CloseOutlined />
                 </n-icon>
               </div>
@@ -78,7 +74,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref, unref, provide, watch, onMounted, nextTick } from 'vue';
+  import { computed, ref, unref, provide, watch, onMounted, nextTick, toRaw } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { storage } from '@/utils/Storage';
   import { TABS_ROUTES } from '@/store/mutation-types';
@@ -121,13 +117,15 @@
   const asyncRouteStore = useAsyncRouteStore();
   const navScroll: any = ref(null);
   const navWrap: any = ref(null);
-  const isCurrent = ref(false);
   const activeKey = ref(route.fullPath);
   const scrollable = ref(false);
   const dropdownX = ref(0);
   const dropdownY = ref(0);
   const showDropdown = ref(false);
-  const baseHome = PageEnum.BASE_HOME_REDIRECT;
+  const closeLeftTab = ref(false);
+  const closeRightTab = ref(false);
+  const closeCurrent = ref(false);
+  const currentTabRoute = ref(null);
 
   // 获取简易的路由对象
   const getSimpleRoute = (route): RouteItem => {
@@ -169,8 +167,7 @@
 
   //tags 右键右侧下拉菜单
   const TabsMenuOptions = computed(() => {
-    const isDisabled = unref(tabsList).length <= 1 ? true : false;
-    const isLenTwo = unref(tabsList).length === 2;
+    const disabled = unref(tabsList).length === 1;
     return [
       {
         label: '刷新当前',
@@ -180,31 +177,31 @@
       {
         label: `关闭当前`,
         key: '2',
-        disabled: unref(isCurrent) || isDisabled,
+        disabled: closeCurrent.value,
         icon: renderIcon(MinusOutlined),
       },
       {
         label: '关闭其他',
         key: '3',
-        disabled: isDisabled || isLenTwo,
+        disabled: disabled,
         icon: renderIcon(SwapOutlined),
       },
       {
         label: '关闭左侧',
         key: '5',
-        disabled: isDisabled || isLenTwo,
+        disabled: closeLeftTab.value,
         icon: renderIcon(DoubleLeftOutlined),
       },
       {
         label: '关闭右侧',
         key: '6',
-        disabled: isDisabled || isLenTwo,
+        disabled: closeRightTab.value,
         icon: renderIcon(DoubleRightOutlined),
       },
       {
         label: '关闭全部',
         key: '4',
-        disabled: isDisabled,
+        disabled: disabled,
         icon: renderIcon(CloseOutlined),
       },
     ];
@@ -308,6 +305,12 @@
     router.replace(PageEnum.BASE_HOME_REDIRECT);
     updateNavScroll();
   };
+
+  //当前路由对象 或者 右键选择tab路由对象
+  const getCurrentTabRoute = computed(() =>
+    currentTabRoute.value ? currentTabRoute.value : route
+  );
+
   //tab 操作
   const closeHandleSelect = (key) => {
     switch (key) {
@@ -317,11 +320,11 @@
         break;
       //关闭
       case '2':
-        removeTab(route);
+        removeTab(getCurrentTabRoute);
         break;
       //关闭其他
       case '3':
-        closeOther(route);
+        closeOther(getCurrentTabRoute);
         break;
       //关闭所有
       case '4':
@@ -329,11 +332,11 @@
         break;
       //关闭左侧
       case '5':
-        closeLeft(route);
+        closeLeft(getCurrentTabRoute);
         break;
       //关闭右侧
       case '6':
-        closeRight(route);
+        closeRight(getCurrentTabRoute);
         break;
     }
     updateNavScroll();
@@ -403,10 +406,12 @@
     updateNavScroll(true);
   }
 
-  function handleContextMenu(e, item) {
+  function handleContextMenu(e, item, index) {
     e.preventDefault();
-    isCurrent.value = PageEnum.BASE_HOME_REDIRECT === item.path;
     showDropdown.value = false;
+    currentTabRoute.value = toRaw(item);
+    refreshTabDisabled(index);
+
     nextTick().then(() => {
       showDropdown.value = true;
       dropdownX.value = e.clientX;
@@ -416,6 +421,15 @@
 
   function onClickOutside() {
     showDropdown.value = false;
+    currentTabRoute.value = null;
+    const index = unref(tabsList).findIndex((item) => item.path === activeKey.value);
+    refreshTabDisabled(index);
+  }
+
+  function refreshTabDisabled(index) {
+    closeCurrent.value = unref(tabsList)[index].meta?.affix ?? false;
+    closeLeftTab.value = !(unref(tabsList).length > 0 && index > 0);
+    closeRightTab.value = !(index < unref(tabsList).length && index != unref(tabsList).length - 1);
   }
 
   //tags 跳转页面
