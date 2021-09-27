@@ -53,7 +53,6 @@ const routes: Array<RouteRecordRaw> = [
           title: '工作台',
           keepAlive: true,
           permissions: ['dashboard_workplace'],
-          affix: true,
         },
         component: () => import('@/views/dashboard/workplace/workplace.vue'),
       },
