@@ -126,6 +126,7 @@
   const closeRightTab = ref(false);
   const closeCurrent = ref(false);
   const currentTabRoute = ref(null);
+  const refreshCurrent = ref(true);
 
   // 获取简易的路由对象
   const getSimpleRoute = (route): RouteItem => {
@@ -173,11 +174,12 @@
         label: '刷新当前',
         key: '1',
         icon: renderIcon(ReloadOutlined),
+        disabled: refreshCurrent.value,
       },
       {
         label: `关闭当前`,
         key: '2',
-        disabled: closeCurrent.value,
+        disabled: closeCurrent.value || disabled,
         icon: renderIcon(MinusOutlined),
       },
       {
@@ -241,6 +243,8 @@
     (to) => {
       if (whiteList.includes(route.name as string)) return;
       activeKey.value = to;
+      currentTabRoute.value = null;
+      refreshCurrent.value = false;
       tabsViewStore.addTabs(getSimpleRoute(route));
       nextTick().then(() => {
         updateNavScroll(true);
@@ -260,7 +264,7 @@
     delKeepAliveCompName();
     tabsViewStore.closeCurrentTab(route);
     // 如果关闭的是当前页
-    if (activeKey.value === route.fullPath) {
+    if (activeKey.value === route.value.fullPath) {
       const currentRoute = tabsList.value[Math.max(0, tabsList.value.length - 1)];
       activeKey.value = currentRoute.fullPath;
       router.push(currentRoute);
@@ -280,7 +284,6 @@
   // 关闭左侧
   const closeLeft = (route) => {
     tabsViewStore.closeLeftTabs(route);
-    activeKey.value = route.fullPath;
     router.replace(route.fullPath);
     updateNavScroll();
   };
@@ -288,14 +291,12 @@
   // 关闭右侧
   const closeRight = (route) => {
     tabsViewStore.closeRightTabs(route);
-    activeKey.value = route.fullPath;
     router.replace(route.fullPath);
     updateNavScroll();
   };
   // 关闭其他
   const closeOther = (route) => {
     tabsViewStore.closeOtherTabs(route);
-    activeKey.value = route.fullPath;
     router.replace(route.fullPath);
     updateNavScroll();
   };
@@ -410,6 +411,7 @@
     e.preventDefault();
     showDropdown.value = false;
     currentTabRoute.value = toRaw(item);
+    refreshCurrent.value = !(activeKey.value === item.fullPath);
     refreshTabDisabled(index);
 
     nextTick().then(() => {
@@ -422,6 +424,7 @@
   function onClickOutside() {
     showDropdown.value = false;
     currentTabRoute.value = null;
+    refreshCurrent.value = false;
     const index = unref(tabsList).findIndex((item) => item.path === activeKey.value);
     refreshTabDisabled(index);
   }
@@ -443,7 +446,7 @@
   //删除tab
   function closeTabItem(e) {
     const { fullPath } = e;
-    const routeInfo = tabsList.value.find((item) => item.fullPath == fullPath);
+    const routeInfo = ref(tabsList.value.find((item) => item.fullPath == fullPath));
     removeTab(routeInfo);
   }
 

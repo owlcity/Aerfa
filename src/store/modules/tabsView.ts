@@ -74,13 +74,15 @@ export const useTabsViewStore = defineStore({
     closeOtherTabs(route) {
       // 关闭其他
       this.tabsList = this.tabsList.filter(
-        (item) => ([route.fullPath].includes(item.fullPath) || item?.meta?.affix) ?? false
+        (item) => ([route.value.fullPath].includes(item.fullPath) || item?.meta?.affix) ?? false
       );
     },
     closeCurrentTab(route) {
       // 关闭当前页
       const index = this.tabsList.findIndex((item) => item.fullPath == route.value.fullPath);
-      this.tabsList.splice(index, 1);
+      if (index != -1) {
+        this.tabsList.splice(index, 1);
+      }
     },
     closeAllTabs() {
       // 关闭全部
