@@ -138,7 +138,7 @@
   import { deepMerge } from '@/utils';
 
   const props = defineProps({ ...basicProps });
-  const emit = defineEmits(['reset', 'submit', 'register']);
+  const emit = defineEmits(['reset', 'submit', 'register', 'advanced']);
   const attrs = useAttrs();
 
   const defaultFormModel = ref<Recordable>({});
@@ -243,6 +243,7 @@
 
   function unfoldToggle() {
     gridCollapsed.value = !gridCollapsed.value;
+    emit('advanced', gridCollapsed.value);
   }
 
   async function setProps(formProps: Partial<FormProps>): Promise<void> {

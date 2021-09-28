@@ -1,7 +1,12 @@
 <template>
   <div>
     <n-card :bordered="false" class="pt-3 mb-4 proCard">
-      <BasicForm @register="register" @submit="handleSubmit" @reset="handleReset">
+      <BasicForm
+        @register="register"
+        @submit="handleSubmit"
+        @reset="handleReset"
+        @advanced="formAdvanced"
+      >
         <template #statusSlot="{ model, field }">
           <n-input v-model:value="model[field]" />
         </template>
@@ -291,6 +296,11 @@
     labelWidth: 80,
     schemas,
   });
+
+  function formAdvanced(status) {
+    console.log(status);
+    actionRef.value.redoHeight();
+  }
 
   function addTable() {
     showModal.value = true;

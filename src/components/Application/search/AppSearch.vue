@@ -1,98 +1,106 @@
 <template>
-  <n-modal v-model:show="isModal" class="app-search">
-    <n-card :bordered="false" class="app-search-card" footer-style="padding:0" size="small">
-      <div class="app-search-card-input">
-        <n-input
-          ref="searchInput"
-          v-model:value="searchKeyword"
-          :loading="loading"
-          clearable
-          placeholder="请输入关键词搜索"
-          size="large"
-          @input="handleSearch"
-        >
-          <template #prefix>
-            <n-icon v-if="loading">
-              <LoadingOutlined />
-            </n-icon>
-            <n-icon v-else>
-              <SearchOutline />
-            </n-icon>
-          </template>
-        </n-input>
-      </div>
-
-      <div class="app-search-card-result">
-        <div v-if="!loading && !searchResult.length" class="no-result">
-          <p v-if="!loading">暂无搜索结果</p>
-          <n-spin v-else size="small" />
+  <n-config-provider :theme="getDarkTheme">
+    <n-modal v-model:show="isModal" class="app-search">
+      <n-card
+        :bordered="false"
+        class="app-search-card"
+        :class="{ 'light-item-bg': !getDarkTheme }"
+        footer-style="padding:0"
+        size="small"
+      >
+        <div class="app-search-card-input">
+          <n-input
+            ref="searchInput"
+            v-model:value="searchKeyword"
+            :loading="loading"
+            clearable
+            placeholder="请输入关键词搜索"
+            size="large"
+            @input="handleSearch"
+          >
+            <template #prefix>
+              <n-icon v-if="loading">
+                <LoadingOutlined />
+              </n-icon>
+              <n-icon v-else>
+                <SearchOutline />
+              </n-icon>
+            </template>
+          </n-input>
         </div>
-        <div v-else-if="loading" class="no-result">
-          <n-spin size="small" />
-        </div>
-        <ul v-else class="result-ul">
-          <n-scrollbar>
-            <li
-              v-for="(item, index) in searchResult"
-              :key="item.key"
-              :class="{ 'result-ul-li-on': index === activeIndex }"
-              :data-index="index"
-              class="result-ul-li"
-              @click="handleEnter"
-              @mouseenter="handleMouseenter"
-            >
-              <a href="javascript:;">
-                <div class="result-ul-li-icon">
-                  <n-icon>
-                    <InteractionOutlined />
-                  </n-icon>
-                </div>
-                <div class="result-ul-li-content"> {{ item.name }}</div>
-                <div class="result-ul-li-action">
-                  <n-icon>
-                    <EnterOutlined />
-                  </n-icon>
-                </div>
-              </a>
-            </li>
-          </n-scrollbar>
-        </ul>
-      </div>
 
-      <template #footer>
-        <div class="app-search-card-footer">
-          <ul class="commands">
-            <li>
-              <n-icon class="commands-icon">
-                <EnterOutlined />
-              </n-icon>
-              <span>确认</span>
-            </li>
-            <li>
-              <n-icon class="mr-2 commands-icon">
-                <ArrowUpOutlined />
-              </n-icon>
-              <n-icon class="commands-icon">
-                <ArrowDownOutlined />
-              </n-icon>
-              <span>切换</span>
-            </li>
-            <li>
-              <n-icon class="commands-icon">
-                <CloseOutlined />
-              </n-icon>
-              <span>ESC关闭</span>
-            </li>
+        <div class="app-search-card-result">
+          <div v-if="!loading && !searchResult.length" class="no-result">
+            <p v-if="!loading">暂无搜索结果</p>
+            <n-spin v-else size="small" />
+          </div>
+          <div v-else-if="loading" class="no-result">
+            <n-spin size="small" />
+          </div>
+          <ul v-else class="result-ul">
+            <n-scrollbar>
+              <li
+                v-for="(item, index) in searchResult"
+                :key="item.key"
+                :class="{ 'result-ul-li-on': index === activeIndex }"
+                :data-index="index"
+                class="result-ul-li"
+                @click="handleEnter"
+                @mouseenter="handleMouseenter"
+              >
+                <a href="javascript:;">
+                  <div class="result-ul-li-icon">
+                    <n-icon>
+                      <InteractionOutlined />
+                    </n-icon>
+                  </div>
+                  <div class="result-ul-li-content"> {{ item.name }}</div>
+                  <div class="result-ul-li-action">
+                    <n-icon>
+                      <EnterOutlined />
+                    </n-icon>
+                  </div>
+                </a>
+              </li>
+            </n-scrollbar>
           </ul>
         </div>
-      </template>
-    </n-card>
-  </n-modal>
+
+        <template #footer>
+          <div class="app-search-card-footer">
+            <ul class="commands">
+              <li>
+                <n-icon class="commands-icon">
+                  <EnterOutlined />
+                </n-icon>
+                <span>确认</span>
+              </li>
+              <li>
+                <n-icon class="mr-2 commands-icon">
+                  <ArrowUpOutlined />
+                </n-icon>
+                <n-icon class="commands-icon">
+                  <ArrowDownOutlined />
+                </n-icon>
+                <span>切换</span>
+              </li>
+              <li>
+                <n-icon class="commands-icon">
+                  <CloseOutlined />
+                </n-icon>
+                <span>ESC关闭</span>
+              </li>
+            </ul>
+          </div>
+        </template>
+      </n-card>
+    </n-modal>
+  </n-config-provider>
 </template>
 
 <script lang="ts" setup>
   import type { Menu } from '@/router/types';
-  import { ref, unref, onBeforeMount, nextTick } from 'vue';
+  import { ref, unref, onBeforeMount, nextTick, computed } from 'vue';
   import { SearchOutline } from '@vicons/ionicons5';
   import {
     EnterOutlined,
@@ -107,6 +115,8 @@
   import { cloneDeep } from 'lodash-es';
   import { filter } from '@/utils/helper/treeHelper';
   import { useGo } from '@/hooks/web/usePage';
+  import { darkTheme } from 'naive-ui';
+  import { useDesignSettingStore } from '@/store/modules/designSetting';
 
   const isModal = ref(false);
   const loading = ref(false);
@@ -116,6 +126,8 @@
   const activeIndex = ref(-1);
   let menuList: Menu[] = [];
   const go = useGo();
+  const designStore = useDesignSettingStore();
+  const getDarkTheme = computed(() => (designStore.darkTheme ? darkTheme : undefined));
 
   interface SearchResult {
     name: string;
@@ -263,8 +275,8 @@
     &-card {
       width: 560px;
       padding: 0;
-      background-color: #f5f6f7;
-      box-shadow: inset 1px 1px 0 0 hsla(0, 0%, 100%, 0.5), 0 3px 8px 0 #555a64;
+      background: var(--color);
+      box-shadow: var(--box-shadow);
 
       &-input {
         margin-top: 6px;
@@ -299,18 +311,18 @@
           &-li {
             border-radius: 4px;
             display: flex;
-            padding-bottom: 4px;
+            padding-bottom: 8px;
             position: relative;
 
             a {
               display: flex;
               align-items: center;
-              background: #fff;
+              background: var(--color);
               border-radius: 4px;
-              box-shadow: 0 1px 3px 0 #d4d9e1;
               padding: 0 12px;
               width: 100%;
-              color: #969faf;
+              color: var(--text-color);
+              border-bottom: 1px solid var(--border-color);
 
               .n-icon {
                 color: #969faf;
@@ -319,7 +331,7 @@
 
             &-content {
               align-items: center;
-              color: #444950;
+              color: var(--text-color);
               display: flex;
               flex-direction: row;
               height: 56px;
@@ -353,9 +365,9 @@
 
       &-footer {
         align-items: center;
-        background: #fff;
+        background: var(--color);
         border-radius: 0 0 8px 8px;
-        box-shadow: 0 -1px 0 0 #e0e3e8, 0 -3px 6px 0 rgba(69, 98, 155, 0.12);
+        box-shadow: var(--box-shadow);
         display: flex;
         flex-shrink: 0;
         height: 44px;
@@ -381,7 +393,7 @@
 
           &-icon {
             align-items: center;
-            background: linear-gradient(-225deg, #d5dbe4, #f8f8f8);
+            background: linear-gradient(-225deg, var(--color), var(--color));
             border-radius: 2px;
             box-shadow: inset 0 -2px 0 0 #cdcde6, inset 0 0 1px 1px #fff,
               0 1px 2px 1px rgba(30, 35, 90, 0.4);
@@ -395,5 +407,9 @@
         }
       }
     }
+  }
+
+  .light-item-bg {
+    background: var(--border-color);
   }
 </style>

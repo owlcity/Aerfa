@@ -143,8 +143,8 @@
     setup(props, { emit }) {
       const isShowTable = ref(true);
       const deviceHeight = ref(150);
-      const tableElRef = ref<ComponentRef>(null);
-      const wrapRef = ref<Nullable<HTMLDivElement>>(null);
+      const tableElRef = ref(null);
+      const wrapRef = ref(null);
       let paginationEl: HTMLElement | null;
 
       const tableData = ref<Recordable[]>([]);
@@ -215,6 +215,11 @@
         };
       });
 
+      //重新计算表格高度
+      function redoHeight() {
+        useWindowSizeFn(computeTableHeight, 280);
+      }
+
       //获取分页信息
       const pagination = computed(() => toRaw(unref(getPaginationInfo)));
 
@@ -225,6 +230,7 @@
       const tableAction = {
         reload,
         restReload,
+        redoHeight,
         setColumns,
         setLoading,
         setProps,
@@ -284,6 +290,7 @@
         densityOptions,
         reload,
         restReload,
+        redoHeight,
         densitySelect,
         updatePage,
         updatePageSize,

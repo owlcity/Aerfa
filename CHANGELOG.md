@@ -1,4 +1,18 @@
 # CHANGELOG
+## 2.0.3 (2021-09-28)
+### 🐛 Bug Fixes
+
+- 修复`深色主题`顶部右侧搜索组件和部分页面布局不适配问题
+- 修复`ts类型定义`完善
+
+### ✨ Features
+- `多标签`组件交互重写更加人性化配置和交互
+- `BasicTable`组件支持dataSource纯表格数据 非 request 加载情况
+- `BasicTable`组件新增`redoHeight`重新计算表格高度方法
+- `BasicForm`组件新增`advanced`展开收起回调方法
+- `依赖升级`
+
+
 ## 2.0.2 (2021-09-24)
 ### 🐛 Bug Fixes
 

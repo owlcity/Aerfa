@@ -60,7 +60,7 @@
     &-extra {
       padding: 24px 40px;
       text-align: left;
-      background: #f8f8f9;
+      background: var(--border-color);
       border-radius: 4px;
     }
   }

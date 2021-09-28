@@ -7,6 +7,7 @@ const key = Symbol('s-table');
 type Instance = TableActionType & {
   wrapRef: Ref<Nullable<HTMLElement>>;
   getBindValues: ComputedRef<Recordable>;
+  isShowTable: any;
 };
 
 type RetInstance = Omit<Instance, 'getBindValues'> & {

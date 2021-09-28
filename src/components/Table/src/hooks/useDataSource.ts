@@ -18,8 +18,8 @@ export function useDataSource(
   watch(
     () => unref(propsRef).dataSource,
     () => {
-      const { dataSource }: any = unref(propsRef);
-      dataSource && (dataSourceRef.value = dataSource);
+      const { dataSource, request }: any = unref(propsRef);
+      !request && dataSource && (dataSourceRef.value = dataSource);
     },
     {
       immediate: true,
@@ -47,6 +47,7 @@ export function useDataSource(
     try {
       setLoading(true);
       const { request, pagination }: any = unref(propsRef);
+      if (!request) return;
       //组装分页信息
       const pageField = APISETTING.pageField;
       const sizeField = APISETTING.sizeField;
