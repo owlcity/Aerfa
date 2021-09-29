@@ -33,7 +33,6 @@
           'layout-content-fix': fixedHeader === 'absolute',
           'layout-content-inverted': getDarkTheme,
           noMultiTabs: !isMultiTabs,
-          'fluid-header': fixedHeader === 'static',
         }"
       >
         <div class="layout-content-main">
@@ -215,10 +214,6 @@
 
     .noMultiTabs {
       padding-top: 74px;
-    }
-
-    .fluid-header {
-      padding-top: 10px;
     }
 
     .layout-content-inverted {
