@@ -199,10 +199,16 @@
       //获取表格大小
       const getTableSize = computed(() => state.tableSize);
 
+      //计算高度
+      const getDeviceHeight = computed(() => {
+        const tableData = unref(getDataSourceRef);
+        const maxHeight = tableData.length ? `${unref(deviceHeight)}px` : 'auto';
+        return maxHeight;
+      });
+
       //组装表格信息
       const getBindValues = computed(() => {
         const tableData = unref(getDataSourceRef);
-        const maxHeight = tableData.length ? `${unref(deviceHeight)}px` : 'auto';
         return {
           ...unref(getProps),
           loading: unref(getLoading),
@@ -211,13 +217,13 @@
           data: tableData,
           size: unref(getTableSize),
           remote: true,
-          'max-height': maxHeight,
+          'max-height': getDeviceHeight.value,
         };
       });
 
       //重新计算表格高度
       function redoHeight() {
-        useWindowSizeFn(computeTableHeight, 280);
+        computeTableHeight();
       }
 
       //获取分页信息
@@ -251,8 +257,10 @@
         if (!table) return;
         if (!unref(getCanResize)) return;
         const tableEl: any = table?.$el;
+        await nextTick();
         const headEl = tableEl.querySelector('.n-data-table-thead ');
         const { bottomIncludeBody } = getViewportOffset(headEl);
+        console.log('bottomIncludeBody：', bottomIncludeBody);
         const headerH = 64;
         let paginationH = 2;
         let marginH = 24;
