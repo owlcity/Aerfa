@@ -27,7 +27,7 @@ export const basicProps = {
     type: String,
     default: 'dialog',
   },
-  draggable: {
+  isDraggable: {
     type: Boolean,
     default: true,
   },

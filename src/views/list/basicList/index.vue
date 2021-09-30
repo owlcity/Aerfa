@@ -153,7 +153,6 @@
       defaultValue: 1183135260000,
       componentProps: {
         type: 'date',
-        clearable: true,
         onUpdateValue: (e: any) => {
           console.log(e);
         },
@@ -196,7 +195,7 @@
             value: 3,
           },
         ],
-        onUpdateChecked: (e: any) => {
+        onUpdateValue: (e: any) => {
           console.log(e);
         },
       },
@@ -216,7 +215,7 @@
             value: 2,
           },
         ],
-        onUpdateChecked: (e: any) => {
+        onUpdateValue: (e: any) => {
           console.log(e);
         },
       },

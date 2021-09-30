@@ -101,8 +101,4 @@ export function createRouterGuards(router: Router) {
     asyncRouteStore.setKeepAliveComponents(keepAliveComponents);
     loadingSubject.next('finish');
   });
-
-  router.onError((error) => {
-    console.log(error, '路由错误');
-  });
 }

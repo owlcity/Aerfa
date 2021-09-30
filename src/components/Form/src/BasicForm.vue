@@ -28,7 +28,10 @@
 
           <!--NCheckbox-->
           <template v-else-if="schema.component === 'NCheckbox'">
-            <n-checkbox-group v-model:value="formModel[schema.field]">
+            <n-checkbox-group
+              v-bind="getSpecComponentProps(schema)"
+              v-model:value="formModel[schema.field]"
+            >
               <n-space>
                 <n-checkbox
                   v-for="item in schema.componentProps?.options"
@@ -42,7 +45,10 @@
 
           <!--NRadioGroup-->
           <template v-else-if="schema.component === 'NRadioGroup'">
-            <n-radio-group v-model:value="formModel[schema.field]">
+            <n-radio-group
+              v-bind="getSpecComponentProps(schema)"
+              v-model:value="formModel[schema.field]"
+            >
               <n-space>
                 <n-radio
                   v-for="item in schema.componentProps?.options"
@@ -176,6 +182,13 @@
     return {
       clearable: true,
       placeholder: createPlaceholderMessage(unref(component)),
+      ...compProps,
+    };
+  }
+
+  function getSpecComponentProps(schema) {
+    const compProps = schema.componentProps ?? {};
+    return {
       ...compProps,
     };
   }

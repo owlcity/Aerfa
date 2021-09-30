@@ -260,7 +260,6 @@
         await nextTick();
         const headEl = tableEl.querySelector('.n-data-table-thead ');
         const { bottomIncludeBody } = getViewportOffset(headEl);
-        console.log('bottomIncludeBody：', bottomIncludeBody);
         const headerH = 64;
         let paginationH = 2;
         let marginH = 24;

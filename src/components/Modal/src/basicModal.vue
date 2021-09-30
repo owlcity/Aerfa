@@ -1,7 +1,7 @@
 <template>
   <n-modal id="basic-modal" v-bind="getBindValue" :style="getWidth" v-model:show="isModal" @close="onCloseModal">
     <template #header>
-      <div id="basic-modal-bar" class="w-full" :class="{'cursor-move':draggable === true}">
+      <div id="basic-modal-bar" class="w-full" :class="{'cursor-move':isDraggable === true}">
         {{ getBindValue.title }}
       </div>
     </template>
@@ -47,7 +47,7 @@
   const isModal = ref(false);
   const subLoading = ref(false);
 
-  const getProps = computed((): FormProps => {
+  const getProps = computed(() => {
     return { ...props, ...(unref(propsRef) as any) };
   });
 
@@ -79,7 +79,7 @@
 
   function openModal() {
     isModal.value = true;
-    if (!unref(getProps).draggable) return;
+    if (!unref(getProps).isDraggable) return;
     nextTick(() => {
       const oBox = document.getElementById('basic-modal');
       const oBar = document.getElementById('basic-modal-bar');
