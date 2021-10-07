@@ -25,7 +25,6 @@
     <n-spin v-if="loading" class="ml-2.5" size="small" />
   </div>
 </template>
-<script lang="ts"></script>
 <script lang="ts" setup>
   import { ref, unref, computed, watch, nextTick, onBeforeMount } from 'vue';
   import { basicProps } from './props';
@@ -47,7 +46,7 @@
   watch(
     () => props.value,
     (v: []) => {
-      isDefault.value = (v && v.length) ? true : false;
+      isDefault.value = v && v.length ? true : false;
       defaultIds.value = v;
     },
     {

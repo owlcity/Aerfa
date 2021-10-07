@@ -217,6 +217,7 @@
 
       const [modalRegister, { openModal, closeModal, setSubLoading }] = useModal({
         title: '新增预约',
+        width: 600,
       });
 
       const [

@@ -67,7 +67,6 @@ import {
   NBackTop,
   NSkeleton,
   NScrollbar,
-  NxScrollbar,
   NH1,
   NH2,
   NH3,
@@ -77,6 +76,7 @@ import {
   NStatistic,
   NImage,
   NPopconfirm,
+  NCascader,
 } from 'naive-ui';
 
 const naive = create({
@@ -147,7 +147,6 @@ const naive = create({
     NBackTop,
     NSkeleton,
     NScrollbar,
-    NxScrollbar,
     NH1,
     NH2,
     NH3,
@@ -157,6 +156,7 @@ const naive = create({
     NStatistic,
     NImage,
     NPopconfirm,
+    NCascader,
   ],
 });
 

@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, reactive } from 'vue';
+  import { ref, reactive, onMounted } from 'vue';
   import { QuillEditor } from '@vueup/vue-quill';
   import '@vueup/vue-quill/dist/vue-quill.snow.css';
   const quillEditor = ref();
@@ -97,6 +97,10 @@
   function getHtmlVal() {
     return quillEditor.value.getHTML();
   }
+
+  onMounted(() => {
+    quillEditor.value.setHTML(myContent.value);
+  });
 </script>
 
 <style lang="less">
