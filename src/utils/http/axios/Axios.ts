@@ -69,9 +69,15 @@ export class VAxios {
           // 请求是否被取消
           const isCancel = axios.isCancel(res);
           if (transformRequestData && isFunction(transformRequestData) && !isCancel) {
-            return transformRequestData(res, opt, resolve, reject);
+            try {
+              const ret = transformRequestData(res, opt);
+              resolve(ret);
+            } catch (err) {
+              reject(err || new Error('request error!'));
+            }
+            return;
           }
-          reject(res as unknown as Promise<T>);
+          resolve(res as unknown as Promise<T>);
         })
         .catch((e: Error) => {
           if (requestCatch && isFunction(requestCatch)) {

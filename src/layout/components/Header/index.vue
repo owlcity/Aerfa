@@ -133,7 +133,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, markRaw, ref, unref } from 'vue';
+  import { computed, markRaw, nextTick, ref, unref, watch } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { useDialog, useMessage } from 'naive-ui';
   import { TABS_ROUTES } from '@/store/mutation-types';
@@ -162,12 +162,14 @@
   import { LockClosedOutline } from '@vicons/ionicons5';
   import { PageEnum } from '@/enums/pageEnum';
   import schoolboy from '@/assets/images/schoolboy.png';
+  import { RedirectName } from '@/router/constant';
 
   const userStore = useUserStore();
   const useLockscreen = useLockscreenStore();
   const message = useMessage();
   const dialog = useDialog();
   const appSearchRef = ref();
+  const isRefresh = ref(false);
   const { getNavMode, getNavTheme, getHeaderSetting, getMenuSetting, getCrumbsSetting } =
     useProjectSetting();
 
@@ -229,8 +231,16 @@
     });
   };
 
+  watch(
+    () => route.fullPath,
+    (to) => {
+      isRefresh.value = to.indexOf('/redirect/') != -1;
+    },
+    { immediate: true }
+  );
+
   const breadcrumbList = computed(() => {
-    return generator(route.matched);
+    if (!isRefresh.value) return generator(route.matched);
   });
 
   const dropdownSelect = (key) => {

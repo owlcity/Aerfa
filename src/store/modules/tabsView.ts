@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { RouteLocationNormalized } from 'vue-router';
 
 // 不需要出现在标签页中的路由
-const whiteList = ['Redirect', 'login'];
+const whiteList = ['Redirect', 'Login'];
 
 export type RouteItem = Partial<RouteLocationNormalized> & {
   fullPath: string;
@@ -52,6 +52,10 @@ export const useTabsViewStore = defineStore({
       const isExists = this.tabsList.some((item) => item.fullPath == route.fullPath);
       if (!isExists) {
         this.tabsList.push(route);
+      } else {
+        //如果是存在的路由，则刷新信息
+        const _index = this.tabsList.findIndex((item) => item.fullPath == route.fullPath);
+        this.tabsList[_index] = route;
       }
       return true;
     },

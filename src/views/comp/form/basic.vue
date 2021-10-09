@@ -25,6 +25,7 @@
               v-model:value="model[field]"
               @change="changePassword"
               block
+              repeat
             />
           </template>
         </BasicForm>

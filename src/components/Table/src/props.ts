@@ -21,7 +21,7 @@ export const basicProps = {
     default: () => [],
   },
   columns: {
-    type: [Array] as PropType<BasicColumn<any>[]>,
+    type: [Array] as PropType<BasicColumn[]>,
     default: () => [],
     required: true,
   },
@@ -43,7 +43,7 @@ export const basicProps = {
     default: 'auto',
   },
   actionColumn: {
-    type: Object as PropType<BasicColumn<any>>,
+    type: Object as PropType<BasicColumn>,
     default: null,
   },
   canResize: propTypes.bool.def(true),

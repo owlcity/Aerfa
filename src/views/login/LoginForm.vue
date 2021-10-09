@@ -31,7 +31,7 @@
         </template>
       </n-input>
     </n-form-item>
-    <div class="default-color mb-6">
+    <div class="mb-6 default-color">
       <div class="flex justify-between">
         <div class="flex-initial">
           <n-checkbox v-model:checked="autoLogin">自动登录</n-checkbox>
@@ -46,7 +46,7 @@
         登录
       </n-button>
     </n-form-item>
-    <div class="default-color mb-4">
+    <div class="mb-4 default-color">
       <div class="flex view-account-other">
         <div class="flex-initial">
           <span>其它登录方式</span>
@@ -127,11 +127,9 @@
         if (code == ResultEnum.SUCCESS) {
           const toPath = decodeURIComponent((route.query?.redirect || '/') as string);
           message.success('登录成功，即将进入系统');
-          router.replace(toPath).then((_) => {
-            if (route.name === LOGIN_NAME) {
-              router.replace('/');
-            }
-          });
+          if (route.name === LOGIN_NAME) {
+            router.replace('/');
+          } else router.replace(toPath);
         } else {
           message.info(msg || '登录失败');
         }

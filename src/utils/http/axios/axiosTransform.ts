@@ -14,12 +14,7 @@ export abstract class AxiosTransform {
   /**
    * @description: 请求成功处理
    */
-  transformRequestData?: (
-    res: AxiosResponse<Result>,
-    options: RequestOptions,
-    resolve,
-    reject
-  ) => any;
+  transformRequestData?: (res: AxiosResponse<Result>, options: RequestOptions) => any;
 
   /**
    * @description: 请求失败处理

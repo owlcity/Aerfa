@@ -21,7 +21,6 @@ const urlPrefix = globSetting.urlPrefix || '';
 
 import router from '@/router';
 import { storage } from '@/utils/Storage';
-import { messageSubject, modalSubject } from '@/utils/subjects';
 
 /**
  * @description: 数据处理，方便区分多种处理方式
@@ -30,7 +29,7 @@ const transform: AxiosTransform = {
   /**
    * @description: 处理请求数据
    */
-  transformRequestData: (res: AxiosResponse<Result>, options: RequestOptions, resolve, reject) => {
+  transformRequestData: (res: AxiosResponse<Result>, options: RequestOptions) => {
     const {
       isShowMessage = true,
       isShowErrorMessage,
@@ -43,15 +42,18 @@ const transform: AxiosTransform = {
 
     // 是否返回原生响应头 比如：需要获取响应头时使用该属性
     if (isReturnNativeResponse) {
-      return resolve(res);
+      return res;
     }
     // 不进行任何处理，直接返回
     // 用于页面代码可能需要直接获取code，data，message这些信息时开启
     if (!isTransformResponse) {
-      return resolve(res.data);
+      return res.data;
     }
 
     const { data } = res;
+
+    const $dialog = window['$dialog'];
+    const $message = window['$message'];
 
     if (!data) {
       // return '[HTTP] Request has no return value';
@@ -65,78 +67,58 @@ const transform: AxiosTransform = {
     if (isShowMessage) {
       if (hasSuccess && (successMessageText || isShowSuccessMessage)) {
         // 是否显示自定义信息提示
-        messageSubject.next({
+        $dialog.success({
           type: 'success',
           info: successMessageText || message || '操作成功！',
         });
       } else if (!hasSuccess && (errorMessageText || isShowErrorMessage)) {
         // 是否显示自定义信息提示
-        messageSubject.next({ type: 'error', info: message || errorMessageText || '操作失败！' });
+        $message.error(message || errorMessageText || '操作失败！');
       } else if (!hasSuccess && options.errorMessageMode === 'modal') {
         // errorMessageMode=‘custom-modal’的时候会显示modal错误弹窗，而不是消息提示，用于一些比较重要的错误
-        modalSubject.next({
-          type: 'info',
-          params: {
-            title: '提示',
-            content: message,
-            positiveText: '确定',
-            onPositiveClick: () => {},
-          },
+        $dialog.info({
+          title: '提示',
+          content: message,
+          positiveText: '确定',
+          onPositiveClick: () => {},
         });
       }
     }
 
     // 接口请求成功，直接返回结果
     if (code === ResultEnum.SUCCESS) {
-      return resolve(result);
+      return result;
     }
-    // 接口请求错误，统一提示错误信息
-    if (code === ResultEnum.ERROR) {
-      if (message) {
-        messageSubject.next({ type: 'error', info: data.message });
-        reject(new Error(message));
-      } else {
-        const msg = '操作失败,系统异常!';
-        messageSubject.next({ type: 'error', info: msg });
-        reject(new Error(msg));
-      }
-      return reject();
-    }
-
-    // 登录超时
-    if (code === ResultEnum.TIMEOUT) {
-      const LoginName = PageEnum.BASE_LOGIN_NAME;
-      if (router.currentRoute.value.name == LoginName) return;
-      // 到登录页
-      const timeoutMsg = '登录超时,请重新登录!';
-      modalSubject.next({
-        type: 'warning',
-        params: {
+    // 接口请求错误，统一提示错误信息 这里逻辑可以根据项目进行修改
+    let errorMsg = message;
+    switch (code) {
+      // 请求失败
+      case ResultEnum.ERROR:
+        $message.error(errorMsg);
+        break;
+      // 登录超时
+      case ResultEnum.TIMEOUT:
+        const LoginName = PageEnum.BASE_LOGIN_NAME;
+        const LoginPath = PageEnum.BASE_LOGIN;
+        if (router.currentRoute.value?.name === LoginName) return;
+        // 到登录页
+        errorMsg = '登录超时，请重新登录!';
+        $dialog.warning({
           title: '提示',
           content: '登录身份已失效，请重新登录!',
           positiveText: '确定',
-          negativeText: '取消',
+          //negativeText: '取消',
+          closable: false,
+          maskClosable: false,
           onPositiveClick: () => {
             storage.clear();
-            router.replace({
-              name: LoginName,
-              query: {
-                redirect: router.currentRoute.value.fullPath,
-              },
-            });
+            window.location.href = LoginPath;
           },
           onNegativeClick: () => {},
-        },
-      });
-      return reject(new Error(timeoutMsg));
+        });
+        break;
     }
-
-    // 这里逻辑可以根据项目进行修改
-    if (!hasSuccess) {
-      return reject(new Error(message));
-    }
-
-    return resolve(data);
+    throw new Error(errorMsg);
   },
 
   // 请求之前处理config
@@ -204,6 +186,8 @@ const transform: AxiosTransform = {
    * @description: 响应错误处理
    */
   responseInterceptorsCatch: (error: any) => {
+    const $dialog = window['$dialog'];
+    const $message = window['$message'];
     const { response, code, message } = error || {};
     // TODO 此处要根据后端接口返回格式修改
     const msg: string =
@@ -211,18 +195,19 @@ const transform: AxiosTransform = {
     const err: string = error.toString();
     try {
       if (code === 'ECONNABORTED' && message.indexOf('timeout') !== -1) {
-        messageSubject.next({ type: 'error', info: '接口请求超时，请刷新页面重试!' });
+        $message.error('接口请求超时，请刷新页面重试!');
         return;
       }
       if (err && err.includes('Network Error')) {
-        modalSubject.next({
-          type: 'info',
-          params: {
-            title: '网络异常',
-            content: '请检查您的网络连接是否正常!',
-            positiveText: '确定',
-            onPositiveClick: () => {},
-          },
+        $dialog.info({
+          title: '网络异常',
+          content: '请检查您的网络连接是否正常',
+          positiveText: '确定',
+          //negativeText: '取消',
+          closable: false,
+          maskClosable: false,
+          onPositiveClick: () => {},
+          onNegativeClick: () => {},
         });
         return Promise.reject(error);
       }

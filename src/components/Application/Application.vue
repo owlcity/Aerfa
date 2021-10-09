@@ -1,40 +1,46 @@
 <template>
-  <slot></slot>
+  <NConfigProvider :theme-overrides="getThemeOverrides">
+    <n-loading-bar-provider>
+      <LoadingBarContent />
+      <n-dialog-provider>
+        <DialogContent />
+        <n-notification-provider>
+          <n-message-provider>
+            <MessageContent />
+            <slot></slot>
+          </n-message-provider>
+        </n-notification-provider>
+      </n-dialog-provider>
+    </n-loading-bar-provider>
+  </NConfigProvider>
 </template>
 
 <script lang="ts" setup>
-  import { useMessage, useDialog, useLoadingBar } from 'naive-ui';
-  import { loadingSubject, messageSubject, modalSubject } from '@/utils/subjects';
+  import { computed, nextTick } from 'vue';
+  import { MessageContent } from '@/components/Application/content/Message';
+  import { DialogContent } from '@/components/Application/content/Dialog';
+  import { LoadingBarContent } from '@/components/Application/content/Loadingbar';
+  import { useDesignSetting } from '@/hooks/setting/useDesignSetting';
+  import {
+    NConfigProvider,
+    NDialogProvider,
+    NNotificationProvider,
+    NMessageProvider,
+    NLoadingBarProvider,
+  } from 'naive-ui';
 
-  const loadingBar = useLoadingBar();
-  const message = useMessage();
-  const dialog = useDialog();
-
-  loadingSubject.subscribe({
-    next: (status) => {
-      if (status == 'start') {
-        loadingBar.start();
-      } else if (status == 'error') {
-        loadingBar.error();
-      } else {
-        loadingBar.finish();
-      }
-    },
-  });
-
-  messageSubject.subscribe((event: any) => {
-    if (event.type == 'success') {
-      message.success(event.info);
-    } else {
-      message.error(event.info);
-    }
-  });
-
-  modalSubject.subscribe((event: any) => {
-    if (event.type == 'info') {
-      dialog.info(event.params);
-    } else {
-      dialog.warning(event.params);
-    }
+  /**
+   * @type import('naive-ui').GlobalThemeOverrides
+   */
+  const getThemeOverrides = computed(() => {
+    //nextTick(() => {
+    const designStore = useDesignSetting();
+    const appTheme = designStore.getAppTheme;
+    return {
+      LoadingBar: {
+        colorLoading: appTheme.value,
+      },
+    };
+    //});
   });
 </script>

@@ -2,7 +2,7 @@ import { ref, ComputedRef, unref, computed, onMounted, watchEffect, watch } from
 import type { BasicTableProps } from '../types/table';
 import type { PaginationProps } from '../types/pagination';
 import { isBoolean } from '@/utils/is';
-import { APISETTING } from '../const';
+import { APISETTING, DEFAULTPAGESIZE } from '../const';
 
 export function useDataSource(
   propsRef: ComputedRef<BasicTableProps>,
@@ -54,7 +54,7 @@ export function useDataSource(
       const totalField = APISETTING.totalField;
       const listField = APISETTING.listField;
       let pageParams = {};
-      const { page = 1, pageSize = 10 } = unref(getPaginationInfo) as PaginationProps;
+      const { page = 1, pageSize = DEFAULTPAGESIZE } = unref(getPaginationInfo) as PaginationProps;
 
       if ((isBoolean(pagination) && !pagination) || isBoolean(getPaginationInfo)) {
         pageParams = {};

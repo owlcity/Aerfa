@@ -6,7 +6,6 @@ import { ACCESS_TOKEN } from '@/store/mutation-types';
 import { storage } from '@/utils/Storage';
 import { PageEnum } from '@/enums/pageEnum';
 import { ErrorPageRoute } from '@/router/base';
-import { loadingSubject } from '@/utils/subjects';
 
 const LOGIN_PATH = PageEnum.BASE_LOGIN;
 
@@ -16,7 +15,8 @@ export function createRouterGuards(router: Router) {
   const userStore = useUserStoreWidthOut();
   const asyncRouteStore = useAsyncRouteStoreWidthOut();
   router.beforeEach(async (to, from, next) => {
-    loadingSubject.next('start');
+    const $loadingBar = window['$loadingBar'];
+    $loadingBar && $loadingBar.start();
     if (from.path === LOGIN_PATH && to.name === 'errorPage') {
       next(PageEnum.BASE_HOME);
       return;
@@ -76,10 +76,12 @@ export function createRouterGuards(router: Router) {
     const nextData = to.path === redirect ? { ...to, replace: true } : { path: redirect };
     asyncRouteStore.setDynamicAddedRoute(true);
     next(nextData);
-    loadingSubject.next('finish');
+
+    $loadingBar && $loadingBar.finish();
   });
 
   router.afterEach((to, _, failure) => {
+    const $loadingBar = window['$loadingBar'];
     document.title = (to?.meta?.title as string) || document.title;
     if (isNavigationFailure(failure)) {
       //console.log('failed navigation', failure)
@@ -99,6 +101,6 @@ export function createRouterGuards(router: Router) {
       }
     }
     asyncRouteStore.setKeepAliveComponents(keepAliveComponents);
-    loadingSubject.next('finish');
+    $loadingBar && $loadingBar.finish();
   });
 }
