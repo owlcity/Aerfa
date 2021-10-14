@@ -3,12 +3,12 @@
     <div class="flex items-center justify-center">
       <template v-for="(action, index) in getActions" :key="`${index}-${action.label}`">
         <template v-if="!action.isConfirm">
-          <n-button v-bind="action" class="mx-2">{{ action.label }}</n-button>
+          <n-button v-bind="action" class="mr-2">{{ action.label }}</n-button>
         </template>
         <template v-else>
           <n-popconfirm v-bind="action">
             <template #trigger>
-              <n-button class="mx-2" v-bind="action">{{ action.label }}</n-button>
+              <n-button class="mr-2" v-bind="action">{{ action.label }}</n-button>
             </template>
             {{ action.confirmContent }}
           </n-popconfirm>
@@ -21,16 +21,13 @@
         @select="select"
       >
         <slot name="more"></slot>
-        <n-button v-bind="getMoreProps" class="mx-2" v-if="!$slots.more" icon-placement="right">
+        <n-button v-bind="getMoreProps" class="mr-2" v-if="!$slots.more" icon-placement="right">
           <div class="flex items-center">
             <span>更多</span>
             <n-icon size="14" class="ml-1">
               <DownOutlined />
             </n-icon>
           </div>
-          <!--          <template #icon>-->
-          <!--            -->
-          <!--          </template>-->
         </n-button>
       </n-dropdown>
     </div>

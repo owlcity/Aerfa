@@ -9,7 +9,7 @@ export function useDataSource(
   { getPaginationInfo, setPagination, setLoading, tableData },
   emit
 ) {
-  const dataSourceRef = ref([]);
+  const dataSourceRef = ref<Recordable[]>([]);
 
   watchEffect(() => {
     tableData.value = unref(dataSourceRef);
@@ -124,12 +124,12 @@ export function useDataSource(
     }, 16);
   });
 
-  function setTableData(values) {
+  function setTableData<T = Recordable>(values: T[]) {
     dataSourceRef.value = values;
   }
 
-  function getDataSource(): any[] {
-    return getDataSourceRef.value;
+  function getDataSource<T = Recordable>() {
+    return getDataSourceRef.value as T[];
   }
 
   async function reload(opt?) {
@@ -140,6 +140,14 @@ export function useDataSource(
     await fetch(opt, true);
   }
 
+  async function updateTableData(index: number, key: string, value: any) {
+    const record = dataSourceRef.value[index];
+    if (record) {
+      dataSourceRef.value[index][key] = value;
+    }
+    return dataSourceRef.value[index];
+  }
+
   return {
     fetch,
     getRowKey,
@@ -148,5 +156,6 @@ export function useDataSource(
     setTableData,
     reload,
     restReload,
+    updateTableData,
   };
 }

@@ -32,7 +32,7 @@
             <template #item="{ element, index }">
               <div
                 :id="`tag${element.fullPath.split('/').join('\/')}`"
-                :class="{ 'active-item': activeKey === element.path }"
+                :class="{ 'active-item': activeKey === element.fullPath }"
                 class="shadow-sm tabs-card-scroll-item"
                 @contextmenu="handleContextMenu($event, element, index)"
                 @click.stop="goPage(element)"
@@ -100,6 +100,7 @@
   import elementResizeDetectorMaker from 'element-resize-detector';
   import { useDesignSetting } from '@/hooks/setting/useDesignSetting';
   import { useProjectSettingStore } from '@/store/modules/projectSetting';
+  import { useGo, useRedo } from '@/hooks/web/usePage';
 
   const props = defineProps({
     collapsed: {
@@ -110,6 +111,8 @@
   const { getDarkTheme, getAppTheme } = useDesignSetting();
   const { getNavMode, getMenuSetting } = useProjectSetting();
   const settingStore = useProjectSettingStore();
+  const go = useGo();
+  const redo = useRedo();
   const message = useMessage();
   const route = useRoute();
   const router = useRouter();
@@ -133,10 +136,6 @@
     const { fullPath, hash, meta, name, params, path, query } = route;
     return { fullPath, hash, meta, name, params, path, query };
   };
-
-  const tagItemBg = computed(() => {
-    return getDarkTheme.value ? 'rgba(38, 38, 42, 1)' : '#fff';
-  });
 
   const isMixMenuNoneSub = computed(() => {
     const mixMenu = settingStore.menuSetting.mixMenu;
@@ -272,12 +271,12 @@
     updateNavScroll();
   };
   // 刷新页面
-  const reloadPage = () => {
+  async function reloadPage() {
     delKeepAliveCompName();
-    router.push({
-      path: '/redirect' + unref(route).fullPath,
-    });
-  };
+    const redo = useRedo(router);
+    await redo();
+  }
+
   // 注入刷新页面方法
   provide('reloadPage', reloadPage);
 
@@ -438,9 +437,10 @@
   //tags 跳转页面
   function goPage(e) {
     const { fullPath } = e;
+    closeCurrent.value = e.meta?.affix ?? false;
     if (fullPath === route.fullPath) return;
     activeKey.value = fullPath;
-    router.push({ path: fullPath });
+    go(e, true);
   }
 
   //删除tab

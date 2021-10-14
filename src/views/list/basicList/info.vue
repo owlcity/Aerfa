@@ -17,6 +17,12 @@
           <n-tag type="success"> 已到账</n-tag>
         </n-descriptions-item>
       </n-descriptions>
+      <div class="w-full">
+        <n-space>
+          <label>测试页面缓存</label>
+          <n-input placeholder="输入点内容试试" />
+        </n-space>
+      </div>
     </n-card>
   </div>
 </template>
@@ -25,6 +31,7 @@
   import { defineComponent } from 'vue';
 
   export default defineComponent({
+    name: 'BasicInfo',
     setup() {
       return {};
     },

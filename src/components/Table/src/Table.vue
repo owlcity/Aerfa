@@ -72,21 +72,10 @@
   </div>
 </template>
 
-<script lang="ts">
-  import {
-    ref,
-    defineComponent,
-    reactive,
-    unref,
-    toRaw,
-    computed,
-    toRefs,
-    onMounted,
-    nextTick,
-  } from 'vue';
-  import { ReloadOutlined, ColumnHeightOutlined, QuestionCircleOutlined } from '@vicons/antd';
-  import { createTableContext } from './hooks/useTableContext';
+<script lang="ts" setup>
+  import { ref, unref, toRaw, computed, onMounted, nextTick } from 'vue';
 
+  import { createTableContext } from './hooks/useTableContext';
   import ColumnSetting from './components/settings/ColumnSetting.vue';
 
   import { useLoading } from './hooks/useLoading';
@@ -95,13 +84,27 @@
   import { usePagination } from './hooks/usePagination';
 
   import { basicProps } from './props';
-
   import { BasicTableProps } from './types/table';
 
   import { getViewportOffset } from '@/utils/domUtils';
   import { useWindowSizeFn } from '@/hooks/event/useWindowSizeFn';
   import { isBoolean } from '@/utils/is';
   import { useDesignSetting } from '@/hooks/setting/useDesignSetting';
+  import { ReloadOutlined, ColumnHeightOutlined, QuestionCircleOutlined } from '@vicons/antd';
+
+  const props = defineProps({
+    ...basicProps,
+  });
+
+  const emit = defineEmits([
+    'fetch-success',
+    'fetch-error',
+    'update:checked-row-keys',
+    'edit-end',
+    'edit-cancel',
+    'edit-row-end',
+    'edit-change',
+  ]);
 
   const densityOptions = [
     {
@@ -121,191 +124,168 @@
     },
   ];
 
-  export default defineComponent({
-    components: {
-      ReloadOutlined,
-      ColumnHeightOutlined,
-      ColumnSetting,
-      QuestionCircleOutlined,
+  const isShowTable = ref(true);
+  const deviceHeight = ref(150);
+  const tableElRef = ref(null);
+  const wrapRef = ref(null);
+  let paginationEl: HTMLElement | null;
+
+  const tableData = ref<Recordable[]>([]);
+  const innerPropsRef = ref<Partial<BasicTableProps>>();
+
+  const getProps = computed(() => {
+    return { ...props, ...unref(innerPropsRef) } as BasicTableProps;
+  });
+
+  const { getAppTheme } = useDesignSetting();
+
+  const { getLoading, setLoading } = useLoading(getProps);
+
+  const { getPaginationInfo, setPagination } = usePagination(getProps);
+
+  const {
+    getDataSourceRef,
+    getRowKey,
+    reload,
+    restReload,
+    setTableData,
+    getDataSource,
+    updateTableData,
+  } = useDataSource(
+    getProps,
+    {
+      getPaginationInfo,
+      setPagination,
+      tableData,
+      setLoading,
     },
-    props: {
-      ...basicProps,
-    },
-    emits: [
-      'fetch-success',
-      'fetch-error',
-      'update:checked-row-keys',
-      'edit-end',
-      'edit-cancel',
-      'edit-row-end',
-      'edit-change',
-    ],
-    setup(props, { emit }) {
-      const isShowTable = ref(true);
-      const deviceHeight = ref(150);
-      const tableElRef = ref(null);
-      const wrapRef = ref(null);
-      let paginationEl: HTMLElement | null;
+    emit
+  );
 
-      const tableData = ref<Recordable[]>([]);
-      const innerPropsRef = ref<Partial<BasicTableProps>>();
+  const { getPageColumns, setColumns, getColumns, getCacheColumns, setCacheColumnsField } =
+    useColumns(getProps);
 
-      const getProps = computed(() => {
-        return { ...props, ...unref(innerPropsRef) } as BasicTableProps;
-      });
+  const tableSize = ref(unref(getProps as any).size || 'medium');
+  const isColumnSetting = ref(false);
 
-      const { getAppTheme } = useDesignSetting();
+  //页码切换
+  function updatePage(page) {
+    setPagination({ page: page });
+    reload();
+  }
 
-      const { getLoading, setLoading } = useLoading(getProps);
+  //分页数量切换
+  function updatePageSize(size) {
+    setPagination({ page: 1, pageSize: size });
+    reload();
+  }
 
-      const { getPaginationInfo, setPagination } = usePagination(getProps);
+  //密度切换
+  function densitySelect(e) {
+    tableSize.value = e;
+  }
 
-      const { getDataSourceRef, getRowKey, reload, restReload } = useDataSource(
-        getProps,
-        {
-          getPaginationInfo,
-          setPagination,
-          tableData,
-          setLoading,
-        },
-        emit
-      );
+  //获取表格大小
+  const getTableSize = computed(() => tableSize.value);
 
-      const { getPageColumns, setColumns, getColumns, getCacheColumns, setCacheColumnsField } =
-        useColumns(getProps);
+  //计算高度
+  const getDeviceHeight = computed(() => {
+    const tableData = unref(getDataSourceRef);
+    const maxHeight = tableData.length ? `${unref(deviceHeight)}px` : 'auto';
+    return maxHeight;
+  });
 
-      const state = reactive({
-        tableSize: unref(getProps as any).size || 'medium',
-        isColumnSetting: false,
-      });
+  //组装表格信息
+  const getBindValues = computed(() => {
+    const tableData = unref(getDataSourceRef);
+    return {
+      ...unref(getProps),
+      loading: unref(getLoading),
+      columns: toRaw(unref(getPageColumns)),
+      rowKey: unref(getRowKey),
+      data: tableData,
+      size: unref(getTableSize),
+      remote: true,
+      'max-height': getDeviceHeight.value,
+    };
+  });
 
-      //页码切换
-      function updatePage(page) {
-        setPagination({ page: page });
-        reload();
+  //重新计算表格高度
+  function redoHeight() {
+    computeTableHeight();
+  }
+
+  //获取分页信息
+  const pagination = computed(() => toRaw(unref(getPaginationInfo)));
+
+  function setProps(props: Partial<BasicTableProps>) {
+    innerPropsRef.value = { ...unref(innerPropsRef), ...props };
+  }
+
+  const tableAction = {
+    reload,
+    restReload,
+    redoHeight,
+    setColumns,
+    setLoading,
+    setProps,
+    getColumns,
+    getPageColumns,
+    getCacheColumns,
+    setCacheColumnsField,
+    emit,
+  };
+
+  createTableContext({ ...tableAction, wrapRef, getBindValues, isShowTable });
+
+  const getCanResize = computed(() => {
+    const { canResize } = unref(getProps);
+    return canResize;
+  });
+
+  async function computeTableHeight() {
+    const table = unref(tableElRef);
+    if (!table) return;
+    if (!unref(getCanResize)) return;
+    const tableEl: any = table?.$el;
+    await nextTick();
+    const headEl = tableEl.querySelector('.n-data-table-thead ');
+    const { bottomIncludeBody } = getViewportOffset(headEl);
+    const headerH = 64;
+    let paginationH = 2;
+    let marginH = 20;
+    if (!isBoolean(pagination)) {
+      paginationEl = tableEl.querySelector('.n-data-table__pagination') as HTMLElement;
+      if (paginationEl) {
+        const offsetHeight = paginationEl.offsetHeight;
+        paginationH += offsetHeight || 0;
+      } else {
+        paginationH += 28;
       }
+    }
+    let height =
+      bottomIncludeBody - (headerH + paginationH + marginH + (props.resizeHeightOffset || 0));
+    const maxHeight = props.maxHeight;
+    height = maxHeight && maxHeight < height ? maxHeight : height;
+    deviceHeight.value = height;
+  }
 
-      //分页数量切换
-      function updatePageSize(size) {
-        setPagination({ page: 1, pageSize: size });
-        reload();
-      }
+  useWindowSizeFn(computeTableHeight, 280);
 
-      //密度切换
-      function densitySelect(e) {
-        state.tableSize = e;
-      }
+  onMounted(() => {
+    nextTick(() => {
+      computeTableHeight();
+    });
+  });
 
-      //获取表格大小
-      const getTableSize = computed(() => state.tableSize);
-
-      //计算高度
-      const getDeviceHeight = computed(() => {
-        const tableData = unref(getDataSourceRef);
-        const maxHeight = tableData.length ? `${unref(deviceHeight)}px` : 'auto';
-        return maxHeight;
-      });
-
-      //组装表格信息
-      const getBindValues = computed(() => {
-        const tableData = unref(getDataSourceRef);
-        return {
-          ...unref(getProps),
-          loading: unref(getLoading),
-          columns: toRaw(unref(getPageColumns)),
-          rowKey: unref(getRowKey),
-          data: tableData,
-          size: unref(getTableSize),
-          remote: true,
-          'max-height': getDeviceHeight.value,
-        };
-      });
-
-      //重新计算表格高度
-      function redoHeight() {
-        computeTableHeight();
-      }
-
-      //获取分页信息
-      const pagination = computed(() => toRaw(unref(getPaginationInfo)));
-
-      function setProps(props: Partial<BasicTableProps>) {
-        innerPropsRef.value = { ...unref(innerPropsRef), ...props };
-      }
-
-      const tableAction = {
-        reload,
-        restReload,
-        redoHeight,
-        setColumns,
-        setLoading,
-        setProps,
-        getColumns,
-        getPageColumns,
-        getCacheColumns,
-        setCacheColumnsField,
-        emit,
-      };
-
-      const getCanResize = computed(() => {
-        const { canResize } = unref(getProps);
-        return canResize;
-      });
-
-      async function computeTableHeight() {
-        const table = unref(tableElRef);
-        if (!table) return;
-        if (!unref(getCanResize)) return;
-        const tableEl: any = table?.$el;
-        await nextTick();
-        const headEl = tableEl.querySelector('.n-data-table-thead ');
-        const { bottomIncludeBody } = getViewportOffset(headEl);
-        const headerH = 64;
-        let paginationH = 2;
-        let marginH = 24;
-        if (!isBoolean(pagination)) {
-          paginationEl = tableEl.querySelector('.n-data-table__pagination') as HTMLElement;
-          if (paginationEl) {
-            const offsetHeight = paginationEl.offsetHeight;
-            paginationH += offsetHeight || 0;
-          } else {
-            paginationH += 28;
-          }
-        }
-        let height =
-          bottomIncludeBody - (headerH + paginationH + marginH + (props.resizeHeightOffset || 0));
-        const maxHeight = props.maxHeight;
-        height = maxHeight && maxHeight < height ? maxHeight : height;
-        deviceHeight.value = height;
-      }
-
-      useWindowSizeFn(computeTableHeight, 280);
-
-      onMounted(() => {
-        nextTick(() => {
-          computeTableHeight();
-        });
-      });
-
-      createTableContext({ ...tableAction, wrapRef, getBindValues, isShowTable });
-
-      return {
-        ...toRefs(state),
-        isShowTable,
-        tableElRef,
-        getBindValues,
-        densityOptions,
-        reload,
-        restReload,
-        redoHeight,
-        densitySelect,
-        updatePage,
-        updatePageSize,
-        pagination,
-        tableAction,
-        getAppTheme,
-      };
-    },
+  //导出方法到外部使用
+  defineExpose({
+    reload,
+    restReload,
+    getDataSource,
+    setTableData,
+    updateTableData,
+    redoHeight,
   });
 </script>
 <style lang="less" scoped>

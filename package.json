@@ -1,6 +1,6 @@
 {
   "name": "naive-admin",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "author": {
     "name": "Ahjung",
     "email": "735878602@qq.com",
@@ -44,13 +44,12 @@
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",
-    "naive-ui": "^2.19.5",
+    "naive-ui": "^2.19.8",
     "perfect-scrollbar": "^1.5.2",
     "pinia": "^2.0.0-rc.9",
     "print-js": "^1.6.0",
     "qrcode": "^1.4.4",
     "qs": "^6.10.1",
-    "rxjs": "^7.3.0",
     "vfonts": "^0.1.0",
     "vue": "^3.2.19",
     "vue-router": "^4.0.11",

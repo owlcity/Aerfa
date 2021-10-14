@@ -2,6 +2,23 @@
 
 ## Pending
 
+## 2.0.3 (2021-10-15)
+- 移除`rxjs`依赖和相关文件
+- 修复`面包屑`显示隐藏路由
+- 修复`多标签`关闭当前页判断不准确
+- 修复`多标签`跳转路由参数丢失
+- 修复`路由带参`路由相同，参数不同缓存无效
+- 修复`BasicTable`组件编辑行`switch`组件默认值不生效
+
+### ✨ Features
+- 新增`useGo`和`useRedo`路由跳转方法
+- `BasicForm`组件，提交按钮，loading 动画状态优化
+- `BasicTable`组件重构为`script setup`语法
+- `BasicTable`组件导出`updateTableData`，`setTableData`，`getDataSource`方法
+- `依赖升级`
+
+
+
 ## 2.0.3 (2021-10-09)
 
 ### 🐛 Bug Fixes

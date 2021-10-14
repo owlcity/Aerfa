@@ -44,11 +44,7 @@
       <n-breadcrumb v-if="crumbsSetting.show">
         <template v-for="routeItem in breadcrumbList" :key="routeItem.name">
           <n-breadcrumb-item>
-            <n-dropdown
-              v-if="routeItem.children.length"
-              :options="routeItem.children"
-              @select="dropdownSelect"
-            >
+            <n-dropdown v-if="routeItem.children.length" :options="routeItem.children">
               <span class="link-text">
                 <component
                   :is="routeItem.meta.icon"
@@ -133,7 +129,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, markRaw, nextTick, ref, unref, watch } from 'vue';
+  import { computed, markRaw, ref, unref, watch } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { useDialog, useMessage } from 'naive-ui';
   import { TABS_ROUTES } from '@/store/mutation-types';
@@ -146,6 +142,7 @@
   import ProjectSetting from './ProjectSetting.vue';
   import NotifierProPlus from './NotifierProPlus.vue';
   import AmendPwd from './AmendPwd.vue';
+  import { useGo, useRedo } from '@/hooks/web/usePage';
   import {
     FullscreenExitOutlined,
     FullscreenOutlined,
@@ -182,6 +179,9 @@
     },
   });
 
+  const go = useGo();
+  const redo = useRedo();
+
   const BASE_LOGIN_NAME = PageEnum.BASE_LOGIN_NAME;
 
   const drawerSetting = ref();
@@ -215,20 +215,29 @@
   const route = useRoute();
 
   const generator: any = (routerMap) => {
-    return routerMap.map((item) => {
-      const currentMenu = {
-        ...item,
-        label: item.meta.title,
-        key: item.name,
-        disabled: item.path === '/',
-      };
-      // 是否有子菜单，并递归处理
-      if (item.children && item.children.length > 0) {
-        // Recursion
-        currentMenu.children = generator(item.children, currentMenu);
-      }
-      return currentMenu;
-    });
+    return routerMap
+      .filter((item) => {
+        return !item.meta?.hidden;
+      })
+      .map((item) => {
+        const currentMenu = {
+          ...item,
+          label: item.meta.title,
+          key: item.name,
+          disabled: item.path === '/',
+          props: {
+            onClick: () => {
+              go(item, false);
+            },
+          },
+        };
+        // 是否有子菜单，并递归处理
+        if (item.children && item.children.length > 0) {
+          // Recursion
+          currentMenu.children = generator(item.children, currentMenu);
+        }
+        return currentMenu;
+      });
   };
 
   watch(
@@ -243,16 +252,11 @@
     if (!isRefresh.value) return generator(route.matched);
   });
 
-  const dropdownSelect = (key) => {
-    router.push({ name: key });
-  };
-
   // 刷新页面
-  const reloadPage = () => {
-    router.push({
-      path: '/redirect' + unref(route).fullPath,
-    });
-  };
+  async function reloadPage() {
+    const redo = useRedo(router);
+    await redo();
+  }
 
   // 退出登录
   const doLogout = () => {

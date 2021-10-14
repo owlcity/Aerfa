@@ -97,7 +97,7 @@
 
       const getIsCheckComp = computed(() => {
         const component = unref(getComponent);
-        return ['NCheckbox', 'NSwitch'].includes(component);
+        return ['NCheckbox', 'NRadio'].includes(component);
       });
 
       const getComponentProps = computed(() => {

@@ -44,8 +44,11 @@ export function useFormEvents({
     if (!formEl) return false;
     try {
       await validate();
-      loadingSub.value = false;
       emit('submit', formModel);
+      // 延迟500毫秒，为了能让用户感知到有加载图标在转动
+      setTimeout(() => {
+        loadingSub.value = false;
+      }, 500);
       return true;
     } catch (error) {
       loadingSub.value = false;
@@ -55,7 +58,7 @@ export function useFormEvents({
 
   //清空校验
   async function clearValidate() {
-    await unref(formElRef)?.restoreValidation();
+    await unref(formElRef as any)?.restoreValidation();
   }
 
   //重置

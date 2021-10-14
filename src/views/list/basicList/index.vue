@@ -1,6 +1,6 @@
 <template>
   <div>
-    <n-card :bordered="false" class="pt-3 mb-4 proCard">
+    <n-card :bordered="false" class="pt-3 mb-2 proCard">
       <BasicForm
         @register="register"
         @submit="handleSubmit"
@@ -12,7 +12,7 @@
         </template>
       </BasicForm>
     </n-card>
-    <n-card :bordered="false" class="mb-4 proCard">
+    <n-card :bordered="false" class="mb-2 proCard">
       <BasicTable
         :columns="columns"
         :request="loadDataTable"
@@ -260,7 +260,7 @@
           },
           {
             label: '编辑',
-            onPositiveClick: handleDelete.bind(null, record),
+            onPositiveClick: handleEdit.bind(null, record),
             onNegativeClick: handleNegative.bind(null, record),
             isConfirm: true,
             confirmContent: '您真的，确定要编辑吗？',
@@ -336,7 +336,7 @@
 
   function handleEdit(record: Recordable) {
     console.log('点击了编辑', record);
-    router.push({ name: 'basic-info', params: { id: record.id } });
+    router.push({ name: 'BasicInfo', params: { id: record.id } });
   }
 
   function handleDelete(record: Recordable) {

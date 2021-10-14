@@ -36,11 +36,12 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'basic-info/:id?',
-        name: 'basic-info',
+        name: 'BasicInfo',
         meta: {
           title: '基础详情',
           hidden: true,
           activeMenu: 'basic-list',
+          keepAlive: true,
         },
         component: () => import('@/views/list/basicList/info.vue'),
       },
