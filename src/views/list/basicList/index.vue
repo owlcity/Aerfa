@@ -75,9 +75,10 @@
   import { BasicForm, useForm } from '@/components/Form/index';
   import { getTableList } from '@/api/table/list';
   import { columns } from './columns';
-  import { PlusOutlined } from '@vicons/antd';
+  import { PlusOutlined, DeleteOutlined, FormOutlined } from '@vicons/antd';
   import { useRouter } from 'vue-router';
   import { usePermission } from '@/hooks/web/usePermission';
+  import { renderIcon } from '@/utils';
 
   const { hasSomePermission } = usePermission();
   const rules = {
@@ -251,7 +252,9 @@
         actions: [
           {
             label: '删除',
-            icon: 'ic:outline-delete-outline',
+            type: 'error',
+            size: 'medium',
+            icon: renderIcon(DeleteOutlined),
             onPositiveClick: handleDelete.bind(null, record),
             onNegativeClick: handleNegative.bind(null, record),
             isConfirm: true,
@@ -260,15 +263,26 @@
           },
           {
             label: '编辑',
+            type: 'warning',
+            size: 'medium',
+            icon: renderIcon(FormOutlined),
             onPositiveClick: handleEdit.bind(null, record),
             onNegativeClick: handleNegative.bind(null, record),
             isConfirm: true,
             confirmContent: '您真的，确定要编辑吗？',
           },
         ],
+        dropDownProps: {
+          label: '更多',
+          type: 'info',
+          size: 'medium',
+          icon: renderIcon(DeleteOutlined),
+          // iconPlacement: 'left',
+        },
         dropDownActions: [
           {
             label: '启用',
+            size: 'medium',
             key: 'enabled',
             // 根据业务控制是否显示: 非enable状态的不显示启用按钮
             ifShow: () => {

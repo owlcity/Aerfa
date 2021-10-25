@@ -42,6 +42,16 @@
 
   const schemas = [
     {
+      field: 'id',
+      defaultValue: 128,
+      hidden: true,
+    },
+    {
+      field: 'identity',
+      defaultValue: '我是一个隐藏字段内容',
+      hidden: true,
+    },
+    {
       field: 'name',
       component: 'NInput',
       label: '姓名',
@@ -180,7 +190,7 @@
   }
 
   function handleReset(values: Recordable) {
-    console.log(values);
+    message.success(JSON.stringify(values));
   }
 
   function changePassword(value) {

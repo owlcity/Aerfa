@@ -3,12 +3,22 @@
     <div class="flex items-center justify-center">
       <template v-for="(action, index) in getActions" :key="`${index}-${action.label}`">
         <template v-if="!action.isConfirm">
-          <n-button v-bind="action" class="mr-2">{{ action.label }}</n-button>
+          <n-button v-bind="action" class="mr-2">
+            {{ action.label }}
+            <template #icon v-if="action.icon">
+              <component :is="action.icon" />
+            </template>
+          </n-button>
         </template>
         <template v-else>
           <n-popconfirm v-bind="action">
             <template #trigger>
-              <n-button class="mr-2" v-bind="action">{{ action.label }}</n-button>
+              <n-button class="mr-2" v-bind="action">
+                {{ action.label }}
+                <template #icon v-if="action.icon">
+                  <component :is="action.icon" />
+                </template>
+              </n-button>
             </template>
             {{ action.confirmContent }}
           </n-popconfirm>
@@ -21,10 +31,13 @@
         @select="select"
       >
         <slot name="more"></slot>
-        <n-button v-bind="getMoreProps" class="mr-2" v-if="!$slots.more" icon-placement="right">
+        <n-button icon-placement="right" v-bind="getMoreProps" class="mr-2" v-if="!$slots.more">
+          <template #icon v-if="getMoreProps.icon">
+            <component :is="getMoreProps.icon" />
+          </template>
           <div class="flex items-center">
-            <span>更多</span>
-            <n-icon size="14" class="ml-1">
+            <span>{{ dropDownProps.label || '更多' }}</span>
+            <n-icon size="14" class="ml-1" v-if="!getMoreProps.icon">
               <DownOutlined />
             </n-icon>
           </div>
@@ -40,10 +53,11 @@
   import { usePermission } from '@/hooks/web/usePermission';
   import { isBoolean, isFunction } from '@/utils/is';
   import { DownOutlined } from '@vicons/antd';
+  import { Render } from '@/components/Render';
 
   export default defineComponent({
     name: 'TableAction',
-    components: { DownOutlined },
+    components: { DownOutlined, Render },
     props: {
       actions: {
         type: Array as PropType<ActionItem[]>,
@@ -62,6 +76,10 @@
         type: Function as PropType<Function>,
         default: () => {},
       },
+      dropDownProps: {
+        type: Object as PropType<Object>,
+        default: () => {},
+      },
     },
     setup(props) {
       const { hasPermission } = usePermission();
@@ -72,10 +90,12 @@
         props.style === 'button' ? undefined : props.style === 'text' ? true : undefined;
 
       const getMoreProps = computed(() => {
+        const { dropDownProps } = props;
         return {
           text: actionText,
           type: actionType,
           size: 'small',
+          ...dropDownProps,
         };
       });
 

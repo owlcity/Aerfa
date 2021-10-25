@@ -380,7 +380,7 @@
   }
 
   function resetForm() {
-    formRef.value.restoreValidation();
+    formRef.value.resetFields();
     formValue = Object.assign(unref(formValue), defaultValueRef());
   }
 

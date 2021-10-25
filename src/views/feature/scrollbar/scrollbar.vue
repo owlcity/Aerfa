@@ -16,8 +16,10 @@
       <n-alert class="mt-4" title="指令方式" type="info"
         >基于，perfect-scrollbar 使用方式可参考该插件
       </n-alert>
-      <div v-scrollBar class="scrollbar-box mt-4">
-        <p v-for="item in list">{{ item.name }}</p>
+      <div class="scrollbar-main mt-4">
+        <div v-scrollBar class="scrollbar-box">
+          <p v-for="item in list" :key="item.id">{{ item.name }}</p>
+        </div>
       </div>
 
       <n-alert class="mt-4" title="UI框架内置滚动条" type="info">演示，函数触发滚动条位置</n-alert>
@@ -62,6 +64,15 @@
 </script>
 
 <style lang="less" scoped>
+  // 如果使用 perfect-scrollbar初始化的DOM，
+  // 内部有使用border/margin/padding等会改变元素原有宽高的样式，
+  // 就会造成滚动条无限滚动的bug;
+  .scrollbar-main {
+    width: 360px;
+    border: 1px solid #eee;
+    overflow: hidden;
+  }
+
   .scrollbar-box {
     width: 360px;
     height: 350px;

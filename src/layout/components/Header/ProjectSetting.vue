@@ -270,6 +270,9 @@
     () => designStore.darkTheme,
     (to) => {
       settingStore.navTheme = to ? 'header-dark' : 'dark';
+      const htmlRoot = document.getElementById('htmlRoot');
+      if (!htmlRoot) return;
+      htmlRoot.setAttribute('data-theme', to ? 'dark' : 'light');
     }
   );
 
@@ -345,6 +348,9 @@
         border-radius: 2px;
         margin: 0 5px 5px 0;
         text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         .n-icon {
           color: #fff;

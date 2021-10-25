@@ -148,6 +148,24 @@ export function useDataSource(
     return dataSourceRef.value[index];
   }
 
+  function updateTableDataRecord(index: number, record: Recordable): Recordable | undefined {
+    if (!dataSourceRef.value || dataSourceRef.value.length === 0) return;
+    const row = dataSourceRef.value[index] || [];
+    if (row) {
+      for (const field in row) {
+        if (Reflect.has(record, field)) row[field] = record[field];
+      }
+      return row;
+    }
+  }
+
+  function deleteTableDataRecord(index: number) {
+    if (!dataSourceRef.value || dataSourceRef.value.length == 0) return;
+    if (index >= 0) {
+      dataSourceRef.value.splice(index, 1);
+    }
+  }
+
   return {
     fetch,
     getRowKey,
@@ -157,5 +175,7 @@ export function useDataSource(
     reload,
     restReload,
     updateTableData,
+    updateTableDataRecord,
+    deleteTableDataRecord,
   };
 }

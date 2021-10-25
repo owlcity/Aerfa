@@ -48,6 +48,7 @@
   });
 
   function handleEdit(record) {
+    console.log(record);
     currentEditKeyRef.value = record.key;
     record.onEdit?.(true);
   }

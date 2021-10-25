@@ -2,6 +2,14 @@
 
 ## Pending
 
+### ✨ Features
+- `深色主题`优化滚动条样式
+- `BasicTable.actionColumn` 操作组件配置增强，支持`图标，大小`
+- `BasicTable.actionColumn` 新增`dropDownProps`更多按钮组件，支持配置，和 `actionColumn一致`
+- `BasicTable` 组件新增`updateTableDataRecord`，`deleteTableDataRecord`，`getColumns`，`setColumns`方法
+- `BasicForm.schemas` 新增`hidden`，配置隐藏域表单，可配合`defaultValue`设置默认值，常用于编辑
+
+
 ## 2.0.5 (2021-10-14)
 - 移除`rxjs`依赖和相关文件
 - 修复`面包屑`显示隐藏路由

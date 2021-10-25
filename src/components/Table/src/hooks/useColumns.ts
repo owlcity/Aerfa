@@ -1,7 +1,7 @@
-import { ref, Ref, ComputedRef, unref, computed, watch, toRaw, h, nextTick } from 'vue';
+import { ref, Ref, ComputedRef, unref, computed, watch, toRaw, h } from 'vue';
 import type { BasicColumn, BasicTableProps } from '../types/table';
-import { isEqual, cloneDeep } from 'lodash-es';
-import { isArray, isString, isBoolean, isFunction } from '@/utils/is';
+import { cloneDeep } from 'lodash-es';
+import { isArray, isBoolean, isFunction } from '@/utils/is';
 import { usePermission } from '@/hooks/web/usePermission';
 import { ActionItem } from '@/components/Table';
 import { renderEditCell } from '../components/editable';

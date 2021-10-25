@@ -65,7 +65,6 @@ export function useFormEvents({
   async function resetFields(): Promise<void> {
     const { resetFunc, submitOnReset } = unref(getProps);
     resetFunc && isFunction(resetFunc) && (await resetFunc());
-
     const formEl = unref(formElRef);
     if (!formEl) return;
     Object.keys(formModel).forEach((key) => {

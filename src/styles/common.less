@@ -55,22 +55,39 @@ a:active, a:hover {
 
 /* 滚动条的宽度 */
 *::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 12px;
+  height: 12px;
 }
 
 /* 滚动条的设置 */
 *::-webkit-scrollbar-thumb {
+  border-radius: 6px;
+  border: 2px solid transparent;
   background-color: #ddd;
   background-clip: padding-box;
-  -webkit-border-radius: 2em;
-  -moz-border-radius: 2em;
-  border-radius: 2em;
 }
 
 /* 滚动条鼠标移上去 */
 *::-webkit-scrollbar-thumb:hover {
   background-color: #bbb;
+}
+
+html[data-theme='dark'] {
+  *::-webkit-scrollbar{
+    background-color: rgb(24, 24, 28);
+  }
+
+  *::-webkit-scrollbar-track-piece{
+    background-color: rgb(24, 24, 28);
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2)
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
 }
 
 /* router view transition */

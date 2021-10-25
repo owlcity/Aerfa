@@ -27,6 +27,7 @@ export interface FormSchema {
   showFeedback?: boolean;
   showLabel?: boolean;
   requireMarkPlacement?: string;
+  hidden?: boolean;
 }
 
 export interface FormProps {

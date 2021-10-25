@@ -151,6 +151,8 @@
     setTableData,
     getDataSource,
     updateTableData,
+    updateTableDataRecord,
+    deleteTableDataRecord,
   } = useDataSource(
     getProps,
     {
@@ -283,8 +285,12 @@
     reload,
     restReload,
     getDataSource,
+    getColumns,
+    setColumns,
     setTableData,
     updateTableData,
+    updateTableDataRecord,
+    deleteTableDataRecord,
     redoHeight,
   });
 </script>

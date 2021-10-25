@@ -146,7 +146,6 @@
         actions: [
           {
             label: '删除',
-            icon: 'ic:outline-delete-outline',
             onClick: removeDictionaryValueOne.bind(null, record),
           },
           {
