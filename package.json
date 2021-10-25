@@ -104,7 +104,7 @@
     "vite-plugin-mock": "^2.9.6",
     "vite-plugin-style-import": "^1.2.1",
     "vue-eslint-parser": "^7.11.0",
-    "vue-tsc": "^0.28.8"
+    "vue-tsc": "^0.3.0"
   },
   "lint-staged": {
     "*.{vue,js,ts,tsx}": "eslint --fix"
