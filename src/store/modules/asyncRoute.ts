@@ -59,6 +59,9 @@ export const useAsyncRouteStore = defineStore({
     isDynamicAddedRoute: false,
   }),
   getters: {
+    getRouters() {
+      return toRaw(this.addRouters);
+    },
     getMenus(): RouteRecordRaw[] {
       return this.menus;
     },
@@ -67,8 +70,12 @@ export const useAsyncRouteStore = defineStore({
     },
   },
   actions: {
-    getRouters() {
-      return toRaw(this.addRouters);
+    //从缓存列表删除路由
+    removeKeepAliveComponents(compNames) {
+      if (!compNames || !compNames.length) return;
+      this.keepAliveComponents = this.keepAliveComponents.filter(
+        (item) => !compNames.includes(item)
+      );
     },
     setDynamicAddedRoute(added: boolean) {
       this.isDynamicAddedRoute = added;

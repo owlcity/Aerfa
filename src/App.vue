@@ -41,6 +41,7 @@
     return {
       common: {
         primaryColor: appTheme,
+        primaryColorSuppl: appTheme,
         primaryColorHover: lightenStr,
         primaryColorPressed: lightenStr,
       },
@@ -83,7 +84,3 @@
     document.removeEventListener('mousedown', timekeeping);
   });
 </script>
-
-<style lang="less">
-  @import 'styles/index.less';
-</style>

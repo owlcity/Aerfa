@@ -139,7 +139,7 @@ export default [
       return resultSuccess({
         page: Number(page),
         pageSize: Number(pageSize),
-        pageCount: list.length > Number(pageSize) ? Math.ceil(list.length / Number(pageSize)) : 1,
+        pageCount: list.length > Number(pageSize) ? Math.ceil(list.length / Number(pageSize)) : 0,
         list,
       });
     },

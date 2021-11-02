@@ -1,6 +1,6 @@
 {
   "name": "naive-admin",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "author": {
     "name": "Ahjung",
     "email": "735878602@qq.com",
@@ -44,7 +44,7 @@
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",
-    "naive-ui": "^2.19.11",
+    "naive-ui": "^2.20.1",
     "perfect-scrollbar": "^1.5.2",
     "pinia": "^2.0.0-rc.10",
     "print-js": "^1.6.0",
@@ -95,7 +95,7 @@
     "stylelint-config-standard": "^22.0.0",
     "stylelint-order": "^4.1.0",
     "stylelint-scss": "^3.19.0",
-    "tailwindcss": "^2.2.16",
+    "tailwindcss": "^3.0.0-alpha.1",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3",
     "vite": "^2.6.10",

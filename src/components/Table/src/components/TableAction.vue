@@ -36,7 +36,7 @@
             <component :is="getMoreProps.icon" />
           </template>
           <div class="flex items-center">
-            <span>{{ dropDownProps.label || '更多' }}</span>
+            <span>{{ dropDownProps.label }}</span>
             <n-icon size="14" class="ml-1" v-if="!getMoreProps.icon">
               <DownOutlined />
             </n-icon>
@@ -78,7 +78,11 @@
       },
       dropDownProps: {
         type: Object as PropType<Object>,
-        default: () => {},
+        default: () => {
+          return {
+            label: '更多',
+          };
+        },
       },
     },
     setup(props) {

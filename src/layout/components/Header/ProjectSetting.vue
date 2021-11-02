@@ -324,6 +324,10 @@
         margin-right: 16px;
         cursor: pointer;
         text-align: center;
+
+        img {
+          display: block;
+        }
       }
 
       &-title {

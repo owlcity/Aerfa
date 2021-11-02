@@ -81,6 +81,11 @@
   </div>
 </template>
 
+<script lang="ts">
+  export default {
+    name: 'BasicForm',
+  };
+</script>
 <script lang="ts" setup>
   import { ref, unref, reactive } from 'vue';
   import { useMessage } from 'naive-ui';

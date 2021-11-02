@@ -14,7 +14,7 @@
           class="tabs-card-prev"
           @click="scrollPrev"
         >
-          <n-icon color="#515a6e" size="16">
+          <n-icon size="16">
             <LeftOutlined />
           </n-icon>
         </span>
@@ -23,7 +23,7 @@
           class="tabs-card-next"
           @click="scrollNext"
         >
-          <n-icon color="#515a6e" size="16">
+          <n-icon size="16">
             <RightOutlined />
           </n-icon>
         </span>
@@ -54,7 +54,7 @@
           @select="closeHandleSelect"
         >
           <div class="tabs-close-btn">
-            <n-icon color="#515a6e" size="16">
+            <n-icon size="16">
               <DownOutlined />
             </n-icon>
           </div>
@@ -230,6 +230,7 @@
       }
     }
   };
+
   // 标签页列表
   const tabsList: any = computed(() => tabsViewStore.tabsList);
   const whiteList: string[] = [
@@ -237,6 +238,7 @@
     PageEnum.REDIRECT_NAME,
     PageEnum.ERROR_PAGE_NAME,
   ];
+
   watch(
     () => route.fullPath,
     (to) => {
@@ -247,6 +249,7 @@
       tabsViewStore.addTabs(getSimpleRoute(route));
       nextTick().then(() => {
         updateNavScroll(true);
+        refreshTabDisabled(getTabIndex());
       });
     },
     { immediate: true }
@@ -262,6 +265,7 @@
     }
     delKeepAliveCompName();
     tabsViewStore.closeCurrentTab(route);
+    asyncRouteStore.removeKeepAliveComponents([route.value.name]);
     // 如果关闭的是当前页
     if (activeKey.value === route.value.fullPath) {
       const currentRoute = tabsList.value[Math.max(0, tabsList.value.length - 1)];
@@ -270,6 +274,7 @@
     }
     updateNavScroll();
   };
+
   // 刷新页面
   async function reloadPage() {
     delKeepAliveCompName();
@@ -282,20 +287,20 @@
 
   // 关闭左侧
   const closeLeft = (route) => {
-    tabsViewStore.closeLeftTabs(route);
+    tabsViewStore.closeLeftTabs(route, activeKey.value);
     router.replace(route.fullPath);
     updateNavScroll();
   };
 
   // 关闭右侧
   const closeRight = (route) => {
-    tabsViewStore.closeRightTabs(route);
+    tabsViewStore.closeRightTabs(route, activeKey.value);
     router.replace(route.fullPath);
     updateNavScroll();
   };
   // 关闭其他
   const closeOther = (route) => {
-    tabsViewStore.closeOtherTabs(route);
+    tabsViewStore.closeOtherTabs(route, activeKey.value);
     router.replace(route.fullPath);
     updateNavScroll();
   };
@@ -420,11 +425,15 @@
     });
   }
 
+  function getTabIndex() {
+    return unref(tabsList).findIndex((item) => item.path === activeKey.value);
+  }
+
   function onClickOutside() {
     showDropdown.value = false;
     currentTabRoute.value = null;
     refreshCurrent.value = false;
-    const index = unref(tabsList).findIndex((item) => item.path === activeKey.value);
+    const index = getTabIndex();
     refreshTabDisabled(index);
   }
 
@@ -474,6 +483,7 @@
       max-width: 100%;
       min-width: 100%;
       padding: 0 10px;
+      box-sizing: border-box;
 
       .tabs-card {
         -webkit-box-flex: 1;
@@ -580,7 +590,6 @@
       cursor: pointer;
       //margin-right: 10px;
       &-btn {
-        color: var(--color);
         height: 100%;
         display: flex;
         align-items: center;

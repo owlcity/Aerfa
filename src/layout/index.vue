@@ -51,7 +51,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, unref, computed, onMounted, watch, nextTick } from 'vue';
+  import { ref, unref, computed, onMounted, watch } from 'vue';
   import { Logo } from './components/Logo';
   import { TabsView } from './components/TagsView';
   import { MainView } from './components/Main';
@@ -61,6 +61,7 @@
   import { useDesignSetting } from '@/hooks/setting/useDesignSetting';
   import { useLoadingBar } from 'naive-ui';
   import { useRoute } from 'vue-router';
+  import { useEventListener } from '@vueuse/core';
   import { useProjectSettingStore } from '@/store/modules/projectSetting';
 
   const { getDarkTheme } = useDesignSetting();
@@ -154,30 +155,25 @@
   });
 
   const watchWidth = () => {
+    const isFullScreen =
+      document.fullScreen ||
+      document.mozFullScreen ||
+      document.webkitIsFullScreen ||
+      document.msFullscreenElement;
+    if (isFullScreen) return;
     const Width = document.body.clientWidth;
-    if (Width <= 950) {
+    if (Width < 750) {
       collapsed.value = true;
-    } else collapsed.value = false;
+    }
   };
 
   onMounted(() => {
     window.addEventListener('resize', watchWidth);
-    //挂载在 window 方便与在js中使用
-    window['$loading'] = useLoadingBar();
-    window['$loading'].finish();
   });
 </script>
 
 <style lang="less" scoped>
   .layout {
-    //display: flex;
-    //flex-direction: row;
-    //flex: auto;
-    //
-    //&-default-background {
-    //  background: #f5f7f9;
-    //}
-
     .layout-sider {
       min-height: 100vh;
       box-shadow: 2px 0 8px 0 rgb(29 35 41 / 5%);

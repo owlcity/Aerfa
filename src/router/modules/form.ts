@@ -28,9 +28,10 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       {
         path: 'basic-form',
-        name: 'form-basic-form',
+        name: 'BasicForm',
         meta: {
           title: '基础表单',
+          keepAlive: true,
         },
         component: () => import('@/views/form/basicForm/index.vue'),
       },

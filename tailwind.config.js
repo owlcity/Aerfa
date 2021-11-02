@@ -26,6 +26,9 @@ module.exports = {
       },
     },
   },
+  corePlugins: {
+    preflight: false,
+  },
 };
 /**
  * Used for animation when the element is displayed

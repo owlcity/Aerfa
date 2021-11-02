@@ -25,7 +25,7 @@
       <!--刷新-->
       <n-tooltip trigger="hover">
         <template #trigger>
-          <div class="table-toolbar-right-icon" @click="reload">
+          <div class="table-toolbar-right-icon" @click="reloadTable">
             <n-icon size="18">
               <ReloadOutlined />
             </n-icon>
@@ -169,6 +169,11 @@
 
   const tableSize = ref(unref(getProps as any).size || 'medium');
   const isColumnSetting = ref(false);
+
+  //table内部刷新
+  function reloadTable() {
+    reload();
+  }
 
   //页码切换
   function updatePage(page) {

@@ -43,7 +43,7 @@ export function useDataSource(
     return unref(dataSourceRef);
   });
 
-  async function fetch(opt?, isRestReload?) {
+  async function fetch(opt?: {}, isRestReload?) {
     try {
       setLoading(true);
       const { request, pagination }: any = unref(propsRef);
@@ -79,6 +79,7 @@ export function useDataSource(
       const res = await request(params);
       const resultTotal = res[totalField] || 0;
       const currentPage = res[pageField];
+      const results = res[listField] ? res[listField] : [];
 
       // 如果数据异常，需获取正确的页码再次执行
       if (resultTotal) {
@@ -90,8 +91,8 @@ export function useDataSource(
           return await fetch(opt);
         }
       }
-      const resultInfo = res[listField] ? res[listField] : [];
-      dataSourceRef.value = resultInfo;
+
+      dataSourceRef.value = results;
       setPagination({
         [pageField]: currentPage,
         [totalField]: resultTotal,
@@ -102,7 +103,7 @@ export function useDataSource(
         });
       }
       emit('fetch-success', {
-        items: unref(resultInfo),
+        items: unref(results),
         resultTotal,
       });
     } catch (error) {
