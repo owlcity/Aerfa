@@ -20,14 +20,15 @@
           :style="getWrapperStyle"
           @pressEnter="handleEnter"
           @options-change="handleOptionsChange"
+          @click="(e) => e.stopPropagation()"
         />
       </div>
       <div v-if="!getRowEditable" class="editable-cell-action">
         <n-icon class="mx-2 cursor-pointer">
-          <CheckOutlined @click="handleSubmit" />
+          <CheckOutlined @click.stop="handleSubmit" />
         </n-icon>
         <n-icon class="mx-2 cursor-pointer">
-          <CloseOutlined @click="handleCancel" />
+          <CloseOutlined @click.stop="handleCancel" />
         </n-icon>
       </div>
     </div>
@@ -183,7 +184,8 @@
         }
       });
 
-      function handleEdit() {
+      function handleEdit(e) {
+        e.stopPropagation();
         if (unref(getRowEditable) || unref(props.column?.editRow)) return;
         ruleMessage.value = '';
         isEdit.value = true;
@@ -267,6 +269,7 @@
         //const record = await table.updateTableData(index, dataKey, value);
         needEmit && table.emit?.('edit-end', { record, index, key, value });
         isEdit.value = false;
+        return false;
       }
 
       async function handleEnter() {

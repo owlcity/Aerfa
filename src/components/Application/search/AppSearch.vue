@@ -375,6 +375,7 @@
         position: relative;
         user-select: none;
         width: 100%;
+        box-sizing: border-box;
 
         .commands {
           display: flex;

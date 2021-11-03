@@ -22,39 +22,41 @@
       <!--顶部右侧区域-->
       <slot name="toolbar"></slot>
 
-      <!--刷新-->
-      <n-tooltip trigger="hover">
-        <template #trigger>
-          <div class="table-toolbar-right-icon" @click="reloadTable">
-            <n-icon size="18">
-              <ReloadOutlined />
-            </n-icon>
-          </div>
-        </template>
-        <span>刷新</span>
-      </n-tooltip>
-
-      <!--密度-->
-      <n-tooltip trigger="hover">
-        <template #trigger>
-          <div class="table-toolbar-right-icon">
-            <n-dropdown
-              v-model:value="tableSize"
-              :options="densityOptions"
-              trigger="click"
-              @select="densitySelect"
-            >
+      <template v-if="isTableSetting">
+        <!--刷新-->
+        <n-tooltip trigger="hover" v-if="isShowTableRedo">
+          <template #trigger>
+            <div class="table-toolbar-right-icon" @click="reloadTable">
               <n-icon size="18">
-                <ColumnHeightOutlined />
+                <ReloadOutlined />
               </n-icon>
-            </n-dropdown>
-          </div>
-        </template>
-        <span>密度</span>
-      </n-tooltip>
+            </div>
+          </template>
+          <span>刷新</span>
+        </n-tooltip>
 
-      <!--表格设置单独抽离成组件-->
-      <ColumnSetting />
+        <!--密度-->
+        <n-tooltip trigger="hover" v-if="isShowTableSize">
+          <template #trigger>
+            <div class="table-toolbar-right-icon">
+              <n-dropdown
+                v-model:value="tableSize"
+                :options="densityOptions"
+                trigger="click"
+                @select="densitySelect"
+              >
+                <n-icon size="18">
+                  <ColumnHeightOutlined />
+                </n-icon>
+              </n-dropdown>
+            </div>
+          </template>
+          <span>密度</span>
+        </n-tooltip>
+
+        <!--表格设置单独抽离成组件-->
+        <ColumnSetting v-if="isShowTableSetting" />
+      </template>
     </div>
   </div>
   <div class="s-table" v-if="isShowTable">
@@ -194,6 +196,18 @@
 
   //获取表格大小
   const getTableSize = computed(() => tableSize.value);
+
+  //表格设置工具
+  const isTableSetting = computed(() => getProps.value.showTableSetting);
+
+  //是否显示刷新按钮
+  const isShowTableRedo = computed(() => getProps.value.tableSetting?.redo ?? true);
+
+  //是否显示尺寸调整按钮
+  const isShowTableSize = computed(() => getProps.value.tableSetting?.size ?? true);
+
+  //是否显示字段调整按钮
+  const isShowTableSetting = computed(() => getProps.value.tableSetting?.setting ?? true);
 
   //计算高度
   const getDeviceHeight = computed(() => {

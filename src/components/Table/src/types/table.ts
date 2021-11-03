@@ -25,6 +25,12 @@ export interface TableActionType {
   redoHeight: () => void;
 }
 
+export interface TableSetting {
+  redo?: boolean;
+  size?: boolean;
+  setting?: boolean;
+}
+
 export interface BasicTableProps {
   title?: string;
   dataSource: Function;
@@ -35,4 +41,6 @@ export interface BasicTableProps {
   canResize: boolean;
   resizeHeightOffset: number;
   loading?: boolean;
+  showTableSetting?: boolean;
+  tableSetting?: TableSetting;
 }

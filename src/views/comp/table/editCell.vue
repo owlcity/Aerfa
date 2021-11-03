@@ -11,6 +11,7 @@
       @edit-change="onEditChange"
       @update:checked-row-keys="onCheckedRow"
       :scroll-x="1360"
+      :row-props="rowProps"
     >
       <template #toolbar>
         <n-button type="primary" @click="reloadTable">刷新数据</n-button>
@@ -30,6 +31,16 @@
     pageSize: 5,
     name: 'xiaoMa',
   });
+
+  function rowProps(rows) {
+    return {
+      style: 'cursor: pointer;',
+      onclick: function () {
+        console.log('row点击事件触发');
+        console.log(rows);
+      },
+    };
+  }
 
   function onEditChange({ column, value, record }) {
     if (column.key === 'id') {

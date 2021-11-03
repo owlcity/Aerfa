@@ -240,6 +240,9 @@
             //padding: 8px;
             //border: 1px solid #d9d9d9;
             border-radius: 2px;
+            img {
+              width: 100%;
+            }
           }
 
           .img-box-actions {

@@ -83,11 +83,16 @@
       <div class="layout-header-trigger layout-header-trigger-min">
         <n-tooltip placement="bottom">
           <template #trigger>
-            <n-icon size="18">
-              <component :is="fullscreenIcon" @click="toggleFullScreen" />
-            </n-icon>
+            <span @click="toggleFullScreen">
+              <n-icon size="18" v-if="isFullscreen">
+                <FullscreenExitOutlined />
+              </n-icon>
+              <n-icon size="18" v-else>
+                <FullscreenOutlined />
+              </n-icon>
+            </span>
           </template>
-          <span>全屏</span>
+          <span>{{ isFullscreen ? '还原' : '全屏' }}</span>
         </n-tooltip>
       </div>
       <!--消息-->
@@ -160,6 +165,7 @@
   import { PageEnum } from '@/enums/pageEnum';
   import schoolboy from '@/assets/images/schoolboy.png';
   import { RedirectName } from '@/router/constant';
+  import { useFullscreen } from '@vueuse/core';
 
   const userStore = useUserStore();
   const useLockscreen = useLockscreenStore();
@@ -213,6 +219,7 @@
 
   const router = useRouter();
   const route = useRoute();
+  const { isFullscreen, toggle } = useFullscreen();
 
   const generator: any = (routerMap) => {
     return routerMap
@@ -282,23 +289,9 @@
     });
   };
 
-  // 切换全屏图标
-  const toggleFullscreenIcon = () =>
-    (fullscreenIcon.value =
-      document.fullscreenElement !== null ? FullscreenExitOutlined : FullscreenOutlined);
-
-  // 监听全屏切换事件
-  document.addEventListener('fullscreenchange', toggleFullscreenIcon);
-
   // 全屏切换
   const toggleFullScreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
-    }
+    toggle();
   };
 
   // 图标列表

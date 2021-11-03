@@ -1,6 +1,6 @@
 import type { PropType } from 'vue';
 import { propTypes } from '@/utils/propTypes';
-import { BasicColumn } from './types/table';
+import type { BasicColumn, TableSetting } from './types/table';
 import { NDataTable } from 'naive-ui';
 export const basicProps = {
   ...NDataTable.props, // 这里继承原 UI 组件的 props
@@ -45,6 +45,18 @@ export const basicProps = {
   actionColumn: {
     type: Object as PropType<BasicColumn>,
     default: null,
+  },
+  showTableSetting: {
+    type: Boolean,
+    default: true,
+  },
+  tableSetting: {
+    type: Object as PropType<TableSetting>,
+    default: () => ({
+      redo: true,
+      size: true,
+      setting: true,
+    }),
   },
   canResize: propTypes.bool.def(true),
   resizeHeightOffset: propTypes.number.def(0),
