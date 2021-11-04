@@ -59,9 +59,7 @@
   import { PageHeader } from './components/Header';
   import { useProjectSetting } from '@/hooks/setting/useProjectSetting';
   import { useDesignSetting } from '@/hooks/setting/useDesignSetting';
-  import { useLoadingBar } from 'naive-ui';
   import { useRoute } from 'vue-router';
-  import { useEventListener } from '@vueuse/core';
   import { useProjectSettingStore } from '@/store/modules/projectSetting';
 
   const { getDarkTheme } = useDesignSetting();
@@ -116,17 +114,8 @@
     return true;
   });
 
-  const fixedMenu = computed(() => {
-    const { fixed } = unref(getHeaderSetting);
-    return fixed ? 'absolute' : 'static';
-  });
-
   const isMultiTabs = computed(() => {
     return unref(getMultiTabsSetting).show;
-  });
-
-  const fixedMulti = computed(() => {
-    return unref(getMultiTabsSetting).fixed;
   });
 
   const inverted = computed(() => {
@@ -141,13 +130,6 @@
   const leftMenuWidth = computed(() => {
     const { minMenuWidth, menuWidth } = unref(getMenuSetting);
     return collapsed.value ? minMenuWidth : menuWidth;
-  });
-
-  const getChangeStyle = computed(() => {
-    const { minMenuWidth, menuWidth } = unref(getMenuSetting);
-    return {
-      'padding-left': collapsed.value ? `${minMenuWidth}px` : `${menuWidth}px`,
-    };
   });
 
   const getMenuLocation = computed(() => {
