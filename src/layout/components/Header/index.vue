@@ -166,6 +166,7 @@
   import schoolboy from '@/assets/images/schoolboy.png';
   import { RedirectName } from '@/router/constant';
   import { useFullscreen } from '@vueuse/core';
+  import { useAsyncRouteStore } from '@/store/modules/asyncRoute';
 
   const userStore = useUserStore();
   const useLockscreen = useLockscreenStore();
@@ -220,6 +221,7 @@
   const router = useRouter();
   const route = useRoute();
   const { isFullscreen, toggle } = useFullscreen();
+  const asyncRouteStore = useAsyncRouteStore();
 
   const generator: any = (routerMap) => {
     return routerMap
@@ -277,6 +279,7 @@
           message.success('成功退出登录');
           // 移除标签页
           localStorage.removeItem(TABS_ROUTES);
+          asyncRouteStore.setDynamicAddedRoute(false);
           router.replace({
             name: BASE_LOGIN_NAME,
             query: {
