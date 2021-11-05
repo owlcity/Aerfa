@@ -3,7 +3,7 @@
     <div class="n-layout-page-header">
       <n-card :bordered="false" title="引导页"> 用于给用户展示一些新的功能，和功能操作步骤</n-card>
     </div>
-    <n-card :bordered="false" class="mt-4 proCard">
+    <n-card :bordered="false" class="mt-3 proCard">
       <n-button type="primary" @click="handleStart">点这里体验一发</n-button>
     </n-card>
   </div>

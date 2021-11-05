@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-4">
+  <div class="mt-3">
     <NRow :gutter="24">
       <NCol :span="24">
         <n-card content-style="padding: 0;" :bordered="false">

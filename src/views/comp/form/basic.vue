@@ -5,7 +5,7 @@
         基础表单，用于向用户收集表单信息，并展示 Password 组件使用示例</n-card
       >
     </div>
-    <n-card :bordered="false" class="mt-4 proCard">
+    <n-card :bordered="false" class="mt-3 proCard">
       <div class="BasicForm">
         <BasicForm
           submitButtonText="提交预约"

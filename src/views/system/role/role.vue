@@ -5,7 +5,7 @@
         页面数据为 Mock 示例数据，非真实数据。
       </n-card>
     </div>
-    <n-card :bordered="false" class="mt-4 proCard">
+    <n-card :bordered="false" class="mt-3 proCard">
       <BasicTable
         :columns="columns"
         :request="loadDataTable"

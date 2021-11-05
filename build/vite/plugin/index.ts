@@ -3,6 +3,8 @@ import type { Plugin } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 
+import windiCSS from 'vite-plugin-windicss';
+
 import { configHtmlPlugin } from './html';
 import { configMockPlugin } from './mock';
 import { configCompressPlugin } from './compress';
@@ -16,6 +18,9 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean, prodMock) 
     // have to
     vueJsx(),
   ];
+
+  // vite-plugin-windicss
+  vitePlugins.push(windiCSS());
 
   // vite-plugin-html
   vitePlugins.push(configHtmlPlugin(viteEnv, isBuild));

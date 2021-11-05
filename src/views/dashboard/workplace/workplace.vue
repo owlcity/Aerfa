@@ -33,7 +33,7 @@
         </n-grid>
       </n-card>
     </div>
-    <n-grid class="mt-4" cols="2 s:1 m:1 l:2 xl:2 2xl:2" responsive="screen" :x-gap="12" :y-gap="9">
+    <n-grid class="mt-3" cols="2 s:1 m:1 l:2 xl:2 2xl:2" responsive="screen" :x-gap="12" :y-gap="9">
       <n-gi>
         <n-card
           :segmented="{ content: 'hard' }"
@@ -150,7 +150,7 @@
           :bordered="false"
           size="small"
           title="动态"
-          class="mt-4"
+          class="mt-3"
         >
           <template #header-extra><a href="javascript:;">更多</a></template>
           <n-list>
@@ -282,7 +282,7 @@
           :segmented="{ content: 'hard' }"
           :bordered="false"
           size="small"
-          class="pt-4 pb-3 mt-4"
+          class="pt-4 pb-3 mt-3"
         >
           <img src="~@/assets/images/Business.svg" class="w-full" />
         </n-card>

@@ -1,4 +1,6 @@
-import './styles/tailwind.css';
+import 'virtual:windi-base.css';
+import 'virtual:windi-components.css';
+import 'virtual:windi-utilities.css';
 import './styles/index.less';
 import { createApp } from 'vue';
 import App from './App.vue';

@@ -5,7 +5,7 @@
         二维码组件使用示例，通常用于一些商品、促销活动、或者分享推广二维码展示
       </n-card>
     </div>
-    <n-grid class="mt-4" cols="1 s:2 m:2 l:3 xl:3 2xl:3" responsive="screen" :x-gap="12" :y-gap="9">
+    <n-grid class="mt-3" cols="1 s:2 m:2 l:3 xl:3 2xl:3" responsive="screen" :x-gap="12" :y-gap="9">
       <n-gi>
         <n-card :segmented="{ content: 'hard' }" :bordered="false" size="small" title="基础实例">
           <n-space justify="center" class="qrcode-space">
@@ -99,7 +99,7 @@
             <QrCode :value="qrCodeUrl" ref="qrRef" :logo="LogoImg" />
           </n-space>
           <n-space justify="center" class="qrcode-space">
-            <n-button class="mt-4" type="primary" @click="download"> 下载 </n-button>
+            <n-button class="mt-3" type="primary" @click="download"> 下载 </n-button>
           </n-space>
           <n-space justify="center" class="qrcode-space">
             <div class="msg">(在线logo会导致图片跨域，需要下载图片需要自行解决跨域问题)</div>
@@ -124,7 +124,7 @@
             />
           </n-space>
           <n-space justify="center" class="qrcode-space">
-            <n-button class="mt-4" type="primary" @click="downloadDiy"> 下载 </n-button>
+            <n-button class="mt-3" type="primary" @click="downloadDiy"> 下载 </n-button>
           </n-space>
           <n-space justify="center" class="qrcode-space">
             <div class="msg">要进行扩展绘制则不能将tag设为img</div>

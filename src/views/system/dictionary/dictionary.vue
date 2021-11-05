@@ -5,7 +5,7 @@
         可代替后台管理系统，设置的大量枚举值和配置，统一标准化管理，随时修改或增加
       </n-card>
     </div>
-    <n-grid class="mt-4" cols="1 s:1 m:1 l:3 xl:3 2xl:3" responsive="screen" :x-gap="12">
+    <n-grid class="mt-3" cols="1 s:1 m:1 l:3 xl:3 2xl:3" responsive="screen" :x-gap="12">
       <n-gi span="1" class="mb-4">
         <n-card :segmented="{ content: 'hard' }" :bordered="false" size="small">
           <template #header>

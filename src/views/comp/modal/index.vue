@@ -8,7 +8,7 @@
         方式，ref方式，也支持，使用方式和其他组件一致，如：modalRef.value.closeModal()
       </n-card>
     </div>
-    <n-card :bordered="false" class="mt-4 proCard">
+    <n-card :bordered="false" class="mt-3 proCard">
       <n-alert title="Modal嵌套Form" type="info">
         使用 useModal 进行弹窗展示和操作，并演示了在Modal内和Form组件，组合使用方法
       </n-alert>

@@ -5,7 +5,7 @@
         将一个冗长或用户不熟悉的表单任务分成多个步骤，指导用户完成。
       </n-card>
     </div>
-    <n-card :bordered="false" class="mt-4 proCard">
+    <n-card :bordered="false" class="mt-3 proCard">
       <n-space vertical class="steps" justify="center">
         <n-steps :current="currentTab" :status="currentStatus">
           <n-step title="填写转账信息" description="确保填写正确" />

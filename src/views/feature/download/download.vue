@@ -5,7 +5,7 @@
         文件下载示例，用于各种场景下载文件或者图片
       </n-card>
     </div>
-    <n-card :bordered="false" class="mt-4 proCard">
+    <n-card :bordered="false" class="mt-3 proCard">
       <n-alert :show-icon="false" title="后台接口文件流下载" type="info">
         <n-button class="mt-2" type="primary" @click="downloadFile">文件流下载</n-button>
       </n-alert>

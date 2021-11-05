@@ -3,32 +3,32 @@
     <div class="n-layout-page-header">
       <n-card :bordered="false" title="滚动场景"> 比如，卡片列表，文章列表滚动</n-card>
     </div>
-    <n-card :bordered="false" class="mt-4 proCard">
+    <n-card :bordered="false" class="mt-3 proCard">
       <n-alert title="UI框架内置滚动条" type="info"
         >如果你只是想简单的，实现一个滚动，可以这么写
       </n-alert>
-      <div class="scrollbar-box mt-4">
+      <div class="scrollbar-box mt-3">
         <n-scrollbar>
           <p v-for="item in list">{{ item.name }}</p>
         </n-scrollbar>
       </div>
 
-      <n-alert class="mt-4" title="指令方式" type="info"
+      <n-alert class="mt-3" title="指令方式" type="info"
         >基于，perfect-scrollbar 使用方式可参考该插件
       </n-alert>
-      <div class="scrollbar-main mt-4">
+      <div class="scrollbar-main mt-3">
         <div v-scrollBar class="scrollbar-box">
           <p v-for="item in list" :key="item.id">{{ item.name }}</p>
         </div>
       </div>
 
-      <n-alert class="mt-4" title="UI框架内置滚动条" type="info">演示，函数触发滚动条位置</n-alert>
-      <div class="scrollbar-box mt-4">
+      <n-alert class="mt-3" title="UI框架内置滚动条" type="info">演示，函数触发滚动条位置</n-alert>
+      <div class="scrollbar-box mt-3">
         <n-scrollbar ref="scrollbar">
           <p v-for="item in list">{{ item.name }}</p>
         </n-scrollbar>
       </div>
-      <div class="mt-4">
+      <div class="mt-3">
         <n-space>
           <n-button @click="goScrollbar(120)">滚动到120位置</n-button>
           <n-button @click="goScrollbar(900)">滚动到900位置</n-button>

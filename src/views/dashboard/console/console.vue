@@ -127,7 +127,7 @@
       </n-grid-item>
     </n-grid>
 
-    <n-grid cols="1 s:1 m:1 l:2 xl:2 2xl:2" responsive="screen" :x-gap="12" :y-gap="8" class="mt-4">
+    <n-grid cols="1 s:1 m:1 l:2 xl:2 2xl:2" responsive="screen" :x-gap="12" :y-gap="8" class="mt-3">
       <n-grid-item>
         <n-card
           size="small"
@@ -159,7 +159,7 @@
       </n-grid-item>
     </n-grid>
 
-    <n-grid cols="1 s:1 m:2 l:2 xl:2 2xl:2" responsive="screen" :x-gap="12" :y-gap="8" class="mt-4">
+    <n-grid cols="1 s:1 m:2 l:2 xl:2 2xl:2" responsive="screen" :x-gap="12" :y-gap="8" class="mt-3">
       <n-grid-item>
         <n-card
           size="small"

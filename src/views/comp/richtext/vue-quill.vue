@@ -5,7 +5,7 @@
         富文本，用于展示图文信息，比如商品详情，文章详情等...
       </n-card>
     </div>
-    <n-card :bordered="false" class="mt-4 proCard">
+    <n-card :bordered="false" class="mt-3 proCard">
       <QuillEditor
         ref="quillEditor"
         :options="options"
@@ -22,7 +22,7 @@
         </n-space>
       </template>
     </n-card>
-    <n-card :bordered="false" class="mt-4 proCard" title="HTML 内容">
+    <n-card :bordered="false" class="mt-3 proCard" title="HTML 内容">
       <n-input
         v-model:value="myContentHtml"
         type="textarea"

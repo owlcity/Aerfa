@@ -5,7 +5,7 @@
         适用于，头像上传，图片上传之前需要进行裁剪，简单说就是，需要图片上传并且需要裁剪，就可以用这个组件快速实现，需要真实接口才能进行上传测试！
       </n-card>
     </div>
-    <n-card :bordered="false" class="mt-4 proCard" title="圆形裁剪">
+    <n-card :bordered="false" class="mt-3 proCard" title="圆形裁剪">
       <!--圆形裁剪-->
       <Cropper
         ref="cropperCircled"
@@ -15,19 +15,19 @@
         title="圆形头像上传"
       />
       <n-space>
-        <n-button class="mt-4 ml-12" @click="cropperCircledImg">选择图片</n-button>
+        <n-button class="mt-3 ml-12" @click="cropperCircledImg">选择图片</n-button>
       </n-space>
     </n-card>
 
-    <n-card :bordered="false" class="mt-4 proCard" title="矩形裁剪">
+    <n-card :bordered="false" class="mt-3 proCard" title="矩形裁剪">
       <!--矩形裁剪-->
       <Cropper ref="cropperRectangle" :src="src" title="矩形头像上传" />
       <n-space>
-        <n-button class="mt-4 ml-12" @click="cropperRectangleImg">选择图片</n-button>
+        <n-button class="mt-3 ml-12" @click="cropperRectangleImg">选择图片</n-button>
       </n-space>
     </n-card>
 
-    <n-card :bordered="false" class="mt-4 proCard" title="自定义内容，选择权交给您">
+    <n-card :bordered="false" class="mt-3 proCard" title="自定义内容，选择权交给您">
       <!--圆形裁剪-->
       <Cropper
         ref="cropperCircled"
@@ -36,7 +36,7 @@
         :uploadApi="upload"
         title="圆形头像上传"
       >
-        <n-button class="mt-4 ml-12" @click="cropperCircledImg">自定义裁剪图片</n-button>
+        <n-button class="mt-3 ml-12" @click="cropperCircledImg">自定义裁剪图片</n-button>
       </Cropper>
     </n-card>
   </div>

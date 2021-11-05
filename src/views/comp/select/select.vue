@@ -5,11 +5,11 @@
         扩展选择器组件，用于各种表单选择器，简化使用，内置缓存，可对相同的数据减少http请求，也可手动刷新数据源
       </n-card>
     </div>
-    <n-card :bordered="false" class="mt-4 proCard">
+    <n-card :bordered="false" class="mt-3 proCard">
       <n-alert title="基础使用" type="info">
         自动加载数据，首次加载缓存，之后同一个KEY不在获取新数据</n-alert
       >
-      <div class="mt-4">
+      <div class="mt-3">
         <n-space align="center">
           <BasicSelect
             ref="basicSelectRef"
