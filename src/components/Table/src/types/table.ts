@@ -15,6 +15,7 @@ export interface BasicColumn extends TableBaseColumn {
   auth?: string[];
   // 业务控制是否显示
   ifShow?: boolean | ((column: BasicColumn) => boolean);
+  editCellRender?: Recordable;
 }
 
 export interface TableActionType {

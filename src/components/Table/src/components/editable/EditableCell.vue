@@ -54,7 +54,7 @@
   import { EventEnum } from '@/components/Table/src/componentMap';
   import { Render } from '@/components/Render';
 
-  import { milliseconds, format } from 'date-fns';
+  import { milliseconds } from 'date-fns';
   import { LabelValueOptions } from '/#/index';
 
   export default defineComponent({
@@ -310,7 +310,7 @@
         optionsRef.value = options;
       }
 
-      function initCbs(cbs: 'submitCbs' | 'validCbs' | 'cancelCbs', handle: Fn) {
+      function initCbs(cbs: 'submitCbs' | 'validCbs' | 'cancelCbs', handle) {
         if (props.record) {
         /* eslint-disable  */
         isArray(props.record[cbs])

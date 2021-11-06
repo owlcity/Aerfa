@@ -18,7 +18,7 @@ export interface FormSchema {
   labelMessageStyle?: object | string;
   defaultValue?: any;
   component?: ComponentType;
-  componentProps?: object;
+  componentProps?: any;
   slot?: string;
   rules?: object | object[];
   giProps?: GridItemProps;

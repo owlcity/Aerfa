@@ -15,7 +15,7 @@
   import { defineComponent, onMounted, ref, unref, computed, onUnmounted } from 'vue';
   import Cropper from 'cropperjs';
   import 'cropperjs/dist/cropper.css';
-  import { useDebounceFn } from '@vueuse/shared';
+  import { useDebounceFn } from '@vueuse/core';
   import { ElRef } from '/#/index';
 
   type Options = Cropper.Options;

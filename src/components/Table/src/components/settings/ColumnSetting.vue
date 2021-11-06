@@ -108,7 +108,7 @@
   const selection = ref(false);
   const checkAll = ref(true);
   const checkPart = ref(false);
-  const checkList = ref([]);
+  const checkList = ref<string[]>([]);
   const defaultCheckList = ref([]);
 
   watchEffect(() => {
@@ -207,23 +207,23 @@
     const newColumns = toRaw(unref(basicColumns));
     basicColumns.value = newColumns;
     const filterColumns = newColumns.filter((item) => {
-      return checkList.value.includes(item.key);
+      return checkList.value.includes(item.key as string);
     });
-    checkList.value = filterColumns.map((item) => item.key);
+    checkList.value = filterColumns.map((item) => item.key) as string[];
     setColumns(filterColumns);
   }
 
   //勾选列
-  function onSelection(e) {
-    let checkList = table.getCacheColumns();
-    if (e) {
-      checkList.unshift({ type: 'selection', key: 'selection' });
-      setColumns(checkList);
-    } else {
-      checkList.splice(0, 1);
-      setColumns(checkList);
-    }
-  }
+  // function onSelection(e) {
+  //   let checkList = table.getCacheColumns();
+  //   if (e) {
+  //     checkList.unshift({ type: 'selection', key: 'selection' });
+  //     setColumns(checkList);
+  //   } else {
+  //     checkList.splice(0, 1);
+  //     setColumns(checkList);
+  //   }
+  // }
 
   //固定
   function fixedColumn(item, fixed) {

@@ -170,7 +170,6 @@
     useColumns(getProps);
 
   const tableSize = ref(unref(getProps as any).size || 'medium');
-  const isColumnSetting = ref(false);
 
   //table内部刷新
   function reloadTable() {
@@ -265,7 +264,7 @@
   });
 
   async function computeTableHeight() {
-    const table = unref(tableElRef);
+    const table: any = unref(tableElRef);
     if (!table) return;
     if (!unref(getCanResize)) return;
     const tableEl: any = table?.$el;

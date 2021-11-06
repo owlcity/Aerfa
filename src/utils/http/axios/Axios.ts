@@ -129,13 +129,13 @@ export class VAxios {
     }
 
     return this.axiosInstance.request<T>({
-      ...config,
       method: 'POST',
       data: formData,
       headers: {
         'Content-type': ContentTypeEnum.FORM_DATA,
         ignoreCancelToken: true,
       },
+      ...config,
     });
   }
 
@@ -158,10 +158,17 @@ export class VAxios {
 
     // 请求拦截器配置处理
     this.axiosInstance.interceptors.request.use((config: AxiosRequestConfig) => {
-      const { headers: { ignoreCancelToken } = { ignoreCancelToken: false } } = config;
-      !ignoreCancelToken && axiosCanceler.addPending(config);
+      const {
+        headers: { ignoreCancelToken },
+      } = config;
+      const ignoreCancel =
+        ignoreCancelToken !== undefined
+          ? ignoreCancelToken
+          : this.options.requestOptions?.ignoreCancelToken;
+
+      !ignoreCancel && axiosCanceler.addPending(config);
       if (requestInterceptors && isFunction(requestInterceptors)) {
-        config = requestInterceptors(config);
+        config = requestInterceptors(config, this.options);
       }
       return config;
     }, undefined);

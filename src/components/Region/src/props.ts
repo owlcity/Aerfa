@@ -14,4 +14,8 @@ export const basicProps = {
     type: Array,
     default: [],
   },
+  wrapper: {
+    type: String,
+    default: '',
+  },
 };

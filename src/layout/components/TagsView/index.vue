@@ -112,7 +112,6 @@
   const { getNavMode, getMenuSetting } = useProjectSetting();
   const settingStore = useProjectSettingStore();
   const go = useGo();
-  const redo = useRedo();
   const message = useMessage();
   const route = useRoute();
   const router = useRouter();

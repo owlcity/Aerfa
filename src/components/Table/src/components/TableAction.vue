@@ -1,7 +1,7 @@
 <template>
   <div class="tableAction">
     <div class="flex items-center justify-center">
-      <template v-for="(action, index) in getActions" :key="`${index}-${action.label}`">
+      <template v-for="action in getActions" :key="`${index}-${action.label}`">
         <template v-if="!action.isConfirm">
           <n-button v-bind="action" class="mr-2">
             {{ action.label }}
@@ -93,7 +93,7 @@
       const actionText =
         props.style === 'button' ? undefined : props.style === 'text' ? true : undefined;
 
-      const getMoreProps = computed(() => {
+      const getMoreProps: any = computed(() => {
         const { dropDownProps } = props;
         return {
           text: actionText,
@@ -106,7 +106,7 @@
       const getDropdownList = computed(() => {
         return (toRaw(props.dropDownActions) || [])
           .filter((action) => {
-            return hasPermission(action.auth) && isIfShow(action);
+            return hasPermission(action.auth as string[]) && isIfShow(action);
           })
           .map((action) => {
             const { popConfirm } = action;
@@ -139,9 +139,9 @@
       const getActions = computed(() => {
         return (toRaw(props.actions) || [])
           .filter((action) => {
-            return hasPermission(action.auth) && isIfShow(action);
+            return hasPermission(action.auth as string[]) && isIfShow(action);
           })
-          .map((action) => {
+          .map((action: any) => {
             const { popConfirm } = action;
             //需要展示什么风格，自己修改一下参数
             return {

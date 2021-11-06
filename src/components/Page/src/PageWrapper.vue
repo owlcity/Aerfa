@@ -27,7 +27,7 @@
   import { useProjectSetting } from '@/hooks/setting/useProjectSetting';
 
   const slots = useSlots();
-  const props = defineProps({ ...basicProps });
+  defineProps({ ...basicProps });
 
   const { getMenuSetting } = useProjectSetting();
 

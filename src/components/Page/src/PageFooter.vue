@@ -13,18 +13,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed } from 'vue';
   import { useDesignSetting } from '@/hooks/setting/useDesignSetting';
 
   const { getDarkTheme } = useDesignSetting();
-
-  const getFooterWidth = computed(() => {
-    const { menuWidth, minMenuWidth, collapsed } = getMenuSetting.value;
-    const wh = collapsed ? minMenuWidth : menuWidth;
-    return {
-      width: `calc(100% - ${wh}px)`,
-    };
-  });
 </script>
 
 <style lang="less" scoped>

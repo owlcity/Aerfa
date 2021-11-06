@@ -69,7 +69,7 @@ const transform: AxiosTransform = {
         // 是否显示自定义信息提示
         $dialog.success({
           type: 'success',
-          info: successMessageText || message || '操作成功！',
+          content: successMessageText || message || '操作成功！',
         });
       } else if (!hasSuccess && (errorMessageText || isShowErrorMessage)) {
         // 是否显示自定义信息提示
@@ -123,7 +123,7 @@ const transform: AxiosTransform = {
 
   // 请求之前处理config
   beforeRequestHook: (config, options) => {
-    const { apiUrl, joinPrefix, joinParamsToUrl, formatDate, joinTime = true } = options;
+    const { apiUrl, joinPrefix, joinParamsToUrl, formatDate, joinTime = true, urlPrefix } = options;
 
     if (joinPrefix) {
       config.url = `${urlPrefix}${config.url}`;
@@ -146,7 +146,7 @@ const transform: AxiosTransform = {
     } else {
       if (!isString(params)) {
         formatDate && formatRequestDate(params);
-        if (Reflect.has(config, 'data') && config.data && Object.keys(config.data).length) {
+        if (Reflect.has(config, 'data') && config.data && Object.keys(config.data).length > 0) {
           config.data = data;
           config.params = params;
         } else {
@@ -171,13 +171,15 @@ const transform: AxiosTransform = {
   /**
    * @description: 请求拦截器处理
    */
-  requestInterceptors: (config) => {
+  requestInterceptors: (config, options) => {
     // 请求之前处理config
     const userStore = useUserStoreWidthOut();
     const token = userStore.getToken;
-    if (token) {
+    if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
       // jwt token
-      config.headers.token = token;
+      (config as Recordable).headers.Authorization = options.authenticationScheme
+        ? `${options.authenticationScheme} ${token}`
+        : token;
     }
     return config;
   },
@@ -227,6 +229,7 @@ const transform: AxiosTransform = {
 
 const Axios = new VAxios({
   timeout: 10 * 1000,
+  authenticationScheme: '',
   // 接口前缀
   prefixUrl: urlPrefix,
   headers: { 'Content-Type': ContentTypeEnum.JSON },
@@ -247,7 +250,15 @@ const Axios = new VAxios({
     // 消息提示类型
     errorMessageMode: 'none',
     // 接口地址
-    apiUrl: globSetting.apiUrl as string,
+    apiUrl: globSetting.apiUrl,
+    // 接口拼接地址
+    urlPrefix: urlPrefix,
+    //  是否加入时间戳
+    joinTime: true,
+    // 忽略重复请求
+    ignoreCancelToken: true,
+    // 是否携带token
+    withToken: true,
   },
   withCredentials: false,
 });

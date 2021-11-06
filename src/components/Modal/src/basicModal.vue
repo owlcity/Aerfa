@@ -1,7 +1,7 @@
 <template>
   <n-modal id="basic-modal" v-bind="getBindValue" :style="getWidth" v-model:show="isModal" @close="onCloseModal">
     <template #header>
-      <div id="basic-modal-bar" class="w-full" :class="{'cursor-move':isDraggable === true}">
+      <div id="basic-modal-bar" class="w-full" :class="{'cursor-move':isDraggable}">
         {{ getBindValue.title }}
       </div>
     </template>
@@ -34,7 +34,6 @@
   import { basicProps } from './props';
   import startDrag from '@/utils/Drag';
   import { deepMerge } from '@/utils';
-  import { FormProps } from '@/components/Form';
   import { ModalProps, ModalMethods } from './type';
 
   const attrs = useAttrs();
@@ -64,6 +63,10 @@
   async function setProps(modalProps: Partial<ModalProps>): Promise<void> {
     propsRef.value = deepMerge(unref(propsRef) || ({} as any), modalProps);
   }
+
+  const isDraggable = computed(() => {
+    return unref(getProps).isDraggable;
+  })
 
   const getBindValue = computed(() => {
     return {

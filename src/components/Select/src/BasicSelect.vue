@@ -22,7 +22,7 @@
   const options = ref([]);
 
   const getProps = computed(() => {
-    return { ...props } as basicProps;
+    return { ...props };
   });
 
   const selectWidth = props.block ? '100%' : `${props.width}px`;

@@ -28,7 +28,7 @@
         <div
           class="upload-card-item upload-card-item-select-picture"
           :style="getCSSProperties"
-          v-if="imgList.length < maxNumber"
+          v-if="imgList.length < getMaxNumber"
         >
           <n-upload
             v-bind="$props"
@@ -49,8 +49,8 @@
 
     <!--上传图片-->
     <n-space>
-      <n-alert title="提示" type="info" v-if="helpText" class="flex w-full">
-        {{ helpText }}
+      <n-alert title="提示" type="info" v-if="getHelpText" class="flex w-full">
+        {{ getHelpText }}
       </n-alert>
     </n-space>
   </div>
@@ -80,6 +80,14 @@
   const globSetting = useGlobSetting();
 
   const props = defineProps({ ...basicProps });
+
+  const getMaxNumber = computed(() => {
+    return props.maxNumber;
+  });
+
+  const getHelpText = computed(() => {
+    return props.helpText;
+  });
 
   const emit = defineEmits(['uploadChange', 'delete']);
 
