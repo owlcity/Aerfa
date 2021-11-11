@@ -1,76 +1,96 @@
 <template>
-  <div class="table-toolbar">
-    <!--顶部左侧区域-->
-    <div class="flex items-center table-toolbar-left">
-      <template v-if="title">
-        <div class="table-toolbar-left-title">
-          {{ title }}
-          <n-tooltip v-if="titleTooltip" trigger="hover">
-            <template #trigger>
-              <n-icon class="ml-1 text-gray-400 cursor-pointer" size="18">
-                <QuestionCircleOutlined />
-              </n-icon>
-            </template>
-            {{ titleTooltip }}
-          </n-tooltip>
-        </div>
-      </template>
-      <slot name="tableTitle"></slot>
-    </div>
-
-    <div class="flex items-center table-toolbar-right">
-      <!--顶部右侧区域-->
-      <slot name="toolbar"></slot>
-
-      <template v-if="isTableSetting">
-        <!--刷新-->
-        <n-tooltip trigger="hover" v-if="isShowTableRedo">
-          <template #trigger>
-            <div class="table-toolbar-right-icon" @click="reloadTable">
-              <n-icon size="18">
-                <ReloadOutlined />
-              </n-icon>
-            </div>
-          </template>
-          <span>刷新</span>
-        </n-tooltip>
-
-        <!--密度-->
-        <n-tooltip trigger="hover" v-if="isShowTableSize">
-          <template #trigger>
-            <div class="table-toolbar-right-icon">
-              <n-dropdown
-                v-model:value="tableSize"
-                :options="densityOptions"
-                trigger="click"
-                @select="densitySelect"
-              >
-                <n-icon size="18">
-                  <ColumnHeightOutlined />
+  <div
+    ref="basicTableRef"
+    :class="{
+      'table-full-screen': isFullscreen && !getDarkTheme,
+    }"
+  >
+    <div class="table-toolbar">
+      <!--顶部左侧区域-->
+      <div class="flex items-center table-toolbar-left">
+        <template v-if="tableTitle">
+          <div class="table-toolbar-left-title">
+            {{ tableTitle }}
+            <n-tooltip v-if="tableTitleTooltip" trigger="hover">
+              <template #trigger>
+                <n-icon class="ml-1 text-gray-400 cursor-pointer" size="18">
+                  <QuestionCircleOutlined />
                 </n-icon>
-              </n-dropdown>
-            </div>
-          </template>
-          <span>密度</span>
-        </n-tooltip>
+              </template>
+              {{ tableTitleTooltip }}
+            </n-tooltip>
+          </div>
+        </template>
+        <slot name="tableTitle"></slot>
+      </div>
 
-        <!--表格设置单独抽离成组件-->
-        <ColumnSetting v-if="isShowTableSetting" />
-      </template>
+      <div class="flex items-center table-toolbar-right">
+        <!--顶部右侧区域-->
+        <slot name="toolbar"></slot>
+
+        <template v-if="isTableSetting">
+          <!--刷新-->
+          <n-tooltip trigger="hover" v-if="isShowTableRedo">
+            <template #trigger>
+              <div class="table-toolbar-right-icon" @click="reloadTable">
+                <n-icon size="18">
+                  <ReloadOutlined />
+                </n-icon>
+              </div>
+            </template>
+            <span>刷新</span>
+          </n-tooltip>
+
+          <!--密度-->
+          <n-tooltip trigger="hover" v-if="isShowTableSize">
+            <template #trigger>
+              <div class="table-toolbar-right-icon">
+                <n-dropdown
+                  v-model:value="tableSize"
+                  :options="densityOptions"
+                  trigger="click"
+                  @select="densitySelect"
+                >
+                  <n-icon size="18">
+                    <ColumnHeightOutlined />
+                  </n-icon>
+                </n-dropdown>
+              </div>
+            </template>
+            <span>密度</span>
+          </n-tooltip>
+
+          <!--表格设置单独抽离成组件-->
+          <ColumnSetting v-if="isShowTableSetting" />
+
+          <!--全屏-->
+          <n-tooltip trigger="hover" v-if="isShowTableFullscreen">
+            <template #trigger>
+              <div class="table-toolbar-right-icon" @click="toggleTableFullScreen">
+                <n-icon size="18">
+                  <FullscreenExitOutlined v-if="isFullscreen" />
+                  <FullscreenOutlined v-else />
+                </n-icon>
+              </div>
+            </template>
+            <span>{{ isFullscreen ? '还原' : '全屏' }}</span>
+          </n-tooltip>
+        </template>
+      </div>
     </div>
-  </div>
-  <div class="s-table" v-if="isShowTable">
-    <n-data-table
-      ref="tableElRef"
-      v-bind="getBindValues"
-      :pagination="pagination"
-      @update:page="updatePage"
-      @update:page-size="updatePageSize"
-    >
-      <template v-for="item in Object.keys($slots)" :key="item" #[item]="data">
-        <slot v-bind="data" :name="item"></slot>
-      </template>
-    </n-data-table>
+    <div class="s-table" v-if="isShowTable">
+      <n-data-table
+        ref="tableElRef"
+        v-bind="getBindValues"
+        :pagination="pagination"
+        @update:page="updatePage"
+        @update:page-size="updatePageSize"
+      >
+        <template v-for="item in Object.keys($slots)" :key="item" #[item]="data">
+          <slot v-bind="data" :name="item"></slot>
+        </template>
+      </n-data-table>
+    </div>
   </div>
 </template>
 
@@ -92,7 +112,14 @@
   import { useWindowSizeFn } from '@/hooks/event/useWindowSizeFn';
   import { isBoolean } from '@/utils/is';
   import { useDesignSetting } from '@/hooks/setting/useDesignSetting';
-  import { ReloadOutlined, ColumnHeightOutlined, QuestionCircleOutlined } from '@vicons/antd';
+  import {
+    ReloadOutlined,
+    ColumnHeightOutlined,
+    QuestionCircleOutlined,
+    FullscreenExitOutlined,
+    FullscreenOutlined,
+  } from '@vicons/antd';
+  import { useFullscreen } from '@vueuse/core';
 
   const props = defineProps({
     ...basicProps,
@@ -128,18 +155,25 @@
 
   const isShowTable = ref(true);
   const deviceHeight = ref(150);
-  const tableElRef = ref(null);
+  const tableElRef = ref<HTMLElement | null>(null);
+  const basicTableRef = ref<HTMLElement | null>(null);
   const wrapRef = ref(null);
   let paginationEl: HTMLElement | null;
 
   const tableData = ref<Recordable[]>([]);
   const innerPropsRef = ref<Partial<BasicTableProps>>();
 
+  const { isFullscreen, toggle } = useFullscreen(basicTableRef);
+
   const getProps = computed(() => {
     return { ...props, ...unref(innerPropsRef) } as BasicTableProps;
   });
 
-  const { getAppTheme } = useDesignSetting();
+  const tableTitle = unref(getProps).title || '';
+
+  const tableTitleTooltip = unref(getProps).titleTooltip || '';
+
+  const { getAppTheme, getDarkTheme } = useDesignSetting();
 
   const { getLoading, setLoading } = useLoading(getProps);
 
@@ -170,6 +204,11 @@
     useColumns(getProps);
 
   const tableSize = ref(unref(getProps as any).size || 'medium');
+
+  //表格全屏
+  function toggleTableFullScreen() {
+    toggle();
+  }
 
   //table内部刷新
   function reloadTable() {
@@ -207,6 +246,9 @@
 
   //是否显示字段调整按钮
   const isShowTableSetting = computed(() => getProps.value.tableSetting?.setting ?? true);
+
+  //是否显示表格全屏按钮
+  const isShowTableFullscreen = computed(() => getProps.value.tableSetting?.fullscreen ?? true);
 
   //计算高度
   const getDeviceHeight = computed(() => {
@@ -353,5 +395,10 @@
 
   .table-toolbar-inner-popover-title {
     padding: 2px 0;
+  }
+
+  .table-full-screen {
+    background: #fff;
+    padding: 20px;
   }
 </style>

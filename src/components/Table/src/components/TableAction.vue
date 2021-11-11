@@ -1,7 +1,7 @@
 <template>
   <div class="tableAction">
     <div class="flex items-center justify-center">
-      <template v-for="action in getActions" :key="`${index}-${action.label}`">
+      <template v-for="action in getActions" :key="action.label">
         <template v-if="!action.isConfirm">
           <n-button v-bind="action" class="mr-2">
             {{ action.label }}

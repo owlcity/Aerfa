@@ -30,6 +30,7 @@ export interface TableSetting {
   redo?: boolean;
   size?: boolean;
   setting?: boolean;
+  fullscreen?: boolean;
 }
 
 export interface BasicTableProps {
@@ -44,4 +45,5 @@ export interface BasicTableProps {
   loading?: boolean;
   showTableSetting?: boolean;
   tableSetting?: TableSetting;
+  titleTooltip?: string;
 }

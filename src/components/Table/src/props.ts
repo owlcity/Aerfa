@@ -56,6 +56,7 @@ export const basicProps = {
       redo: true,
       size: true,
       setting: true,
+      fullscreen: true,
     }),
   },
   canResize: propTypes.bool.def(true),

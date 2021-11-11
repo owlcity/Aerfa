@@ -72,15 +72,13 @@
   import { h, reactive, ref } from 'vue';
   import { useMessage } from 'naive-ui';
   import { BasicTable, TableAction } from '@/components/Table';
-  import { BasicForm, useForm } from '@/components/Form/index';
+  import { BasicForm, useForm, FormSchema } from '@/components/Form/index';
   import { getTableList } from '@/api/table/list';
   import { columns } from './columns';
   import { PlusOutlined, DeleteOutlined, FormOutlined } from '@vicons/antd';
   import { useRouter } from 'vue-router';
-  import { usePermission } from '@/hooks/web/usePermission';
   import { renderIcon } from '@/utils';
 
-  const { hasSomePermission } = usePermission();
   const rules = {
     name: {
       required: true,
@@ -100,7 +98,7 @@
     },
   };
 
-  const schemas = [
+  const schemas: FormSchema[] = [
     {
       field: 'name',
       labelMessage: '这是一个提示',

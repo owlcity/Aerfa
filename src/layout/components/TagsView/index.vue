@@ -74,7 +74,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref, unref, provide, watch, onMounted, nextTick, toRaw } from 'vue';
+  import { computed, ref, unref, provide, watch, onMounted, nextTick, toRaw, inject } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { storage } from '@/utils/Storage';
   import { TABS_ROUTES } from '@/store/mutation-types';
@@ -95,6 +95,8 @@
     DoubleLeftOutlined,
     DoubleRightOutlined,
     MinusOutlined,
+    CompressOutlined,
+    ExpandOutlined,
   } from '@vicons/antd';
   import { renderIcon } from '@/utils/index';
   import elementResizeDetectorMaker from 'element-resize-detector';
@@ -107,6 +109,8 @@
       type: Boolean,
     },
   });
+
+  const emit = defineEmits(['pageFullScreen']);
 
   const { getDarkTheme, getAppTheme } = useDesignSetting();
   const { getNavMode, getMenuSetting } = useProjectSetting();
@@ -164,10 +168,17 @@
     };
   });
 
+  const getPageFullScreen = inject('isPageFullScreen');
+
   //tags 右键右侧下拉菜单
   const TabsMenuOptions = computed(() => {
     const disabled = unref(tabsList).length === 1;
     return [
+      {
+        label: unref(getPageFullScreen) ? '退出全屏' : '内容全屏',
+        key: '7',
+        icon: getPageFullScreen ? renderIcon(CompressOutlined) : renderIcon(ExpandOutlined),
+      },
       {
         label: '刷新当前',
         key: '1',
@@ -341,6 +352,10 @@
       //关闭右侧
       case '6':
         closeRight(getCurrentTabRoute);
+        break;
+      //内容页全屏
+      case '7':
+        emit('pageFullScreen');
         break;
     }
     updateNavScroll();

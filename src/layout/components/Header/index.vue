@@ -134,7 +134,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, markRaw, ref, unref, watch } from 'vue';
+  import { computed, ref, unref, watch } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { useDialog, useMessage } from 'naive-ui';
   import { TABS_ROUTES } from '@/store/mutation-types';
@@ -164,7 +164,6 @@
   import { LockClosedOutline } from '@vicons/ionicons5';
   import { PageEnum } from '@/enums/pageEnum';
   import schoolboy from '@/assets/images/schoolboy.png';
-  import { RedirectName } from '@/router/constant';
   import { useFullscreen } from '@vueuse/core';
   import { useAsyncRouteStore } from '@/store/modules/asyncRoute';
 
@@ -187,7 +186,6 @@
   });
 
   const go = useGo();
-  const redo = useRedo();
 
   const BASE_LOGIN_NAME = PageEnum.BASE_LOGIN_NAME;
 
@@ -196,8 +194,6 @@
   const amendPwdRef = ref();
 
   // const username = userStore?.info ? ref(userStore?.info.username) : '';
-
-  const fullscreenIcon = markRaw(FullscreenOutlined);
 
   const navMode = getNavMode;
 
@@ -257,6 +253,7 @@
     { immediate: true }
   );
 
+  // eslint-disable-next-line vue/return-in-computed-property
   const breadcrumbList = computed(() => {
     if (!isRefresh.value) return generator(route.matched);
   });

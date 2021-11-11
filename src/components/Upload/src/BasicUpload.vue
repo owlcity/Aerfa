@@ -170,18 +170,22 @@
 
   //上传结束
   function finish({ event: Event }) {
-    const res = eval('(' + Event.target.response + ')');
-    const infoField = componentSetting.upload.apiSetting.infoField;
-    const { code } = res;
-    const message = res.msg || res.message || '上传失败';
-    const result = res[infoField];
-    //成功
-    if (code === ResultEnum.SUCCESS) {
-      let imgUrl: string = getImgUrl(result.photo);
-      imgList.value.push(imgUrl as never);
-      originalImgList.value.push(result.photo as never);
-      emit('uploadChange', originalImgList.value);
-    } else message.error(message);
+    try {
+      const res = eval('(' + Event.target.response + ')');
+      const { infoField, imgField } = componentSetting.upload.apiSetting;
+      const { code } = res;
+      const msg = res.msg || res.message || '上传失败';
+      const result = res[infoField];
+      //成功
+      if (code === ResultEnum.SUCCESS) {
+        let imgUrl: string = getImgUrl(result[imgField]);
+        imgList.value.push(imgUrl as never);
+        originalImgList.value.push(result[imgField] as never);
+        emit('uploadChange', originalImgList.value);
+      } else message.error(msg);
+    } catch (error) {
+      console.error(error);
+    }
   }
 </script>
 

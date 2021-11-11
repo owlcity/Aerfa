@@ -21,7 +21,11 @@
     <n-layout embedded :inverted="inverted">
       <n-layout-header :inverted="getHeaderInverted" :position="fixedHeader">
         <PageHeader v-model:collapsed="collapsed" :inverted="inverted" />
-        <TabsView v-if="isMultiTabs" v-model:collapsed="collapsed" />
+        <TabsView
+          v-if="isMultiTabs"
+          v-model:collapsed="collapsed"
+          @page-full-screen="togglePageFullScreen"
+        />
       </n-layout-header>
 
       <n-layout
@@ -33,10 +37,11 @@
           'layout-content-fix': fixedHeader === 'absolute',
           'layout-content-inverted': getDarkTheme,
           noMultiTabs: !isMultiTabs,
+          'page-full-screen': isFullscreen && !getDarkTheme,
         }"
       >
         <div class="layout-content-main">
-          <div class="main-view">
+          <div class="main-view" ref="adminBodyRef">
             <MainView />
           </div>
         </div>
@@ -51,7 +56,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, unref, computed, onMounted, watch } from 'vue';
+  import { ref, unref, computed, onMounted, watch, provide } from 'vue';
   import { Logo } from './components/Logo';
   import { TabsView } from './components/TagsView';
   import { MainView } from './components/Main';
@@ -61,6 +66,7 @@
   import { useDesignSetting } from '@/hooks/setting/useDesignSetting';
   import { useRoute } from 'vue-router';
   import { useProjectSettingStore } from '@/store/modules/projectSetting';
+  import { useFullscreen } from '@vueuse/core';
 
   const { getDarkTheme } = useDesignSetting();
   const {
@@ -77,6 +83,11 @@
   const navMode = getNavMode;
 
   const collapsed = ref<boolean>(false);
+  const adminBodyRef = ref<HTMLElement | null>(null);
+
+  const { isFullscreen, toggle } = useFullscreen(adminBodyRef);
+
+  provide('isPageFullScreen', isFullscreen);
 
   watch(
     () => collapsed.value,
@@ -103,6 +114,11 @@
     const { fixed } = unref(getMenuSetting);
     return fixed ? 'absolute' : 'static';
   });
+
+  //切换内容页全屏
+  function togglePageFullScreen() {
+    toggle();
+  }
 
   const isMixMenuNoneSub = computed(() => {
     const mixMenu = settingStore.menuSetting.mixMenu;
@@ -136,13 +152,10 @@
     return 'left';
   });
 
+  //看自身需求是否保留吧，这个用处不是很大
   const watchWidth = () => {
-    const isFullScreen =
-      document.fullScreen ||
-      document.mozFullScreen ||
-      document.webkitIsFullScreen ||
-      document.msFullscreenElement;
-    if (isFullScreen) return;
+    const { isFullscreen: isFullscreen } = useFullscreen();
+    if (isFullscreen.value) return;
     const Width = document.body.clientWidth;
     if (Width < 750) {
       collapsed.value = true;
@@ -218,5 +231,20 @@
 
   .main-view-fix {
     padding-top: 44px;
+  }
+
+  //内容全屏
+  .page-full-screen {
+    .main-view {
+      background: #f0f2f5;
+    }
+  }
+
+  .dark {
+    .page-full-screen {
+      .main-view {
+        background: #000;
+      }
+    }
   }
 </style>

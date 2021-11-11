@@ -77,7 +77,9 @@ export function generatorMenuMix(routerMap: Array<any>, routerName: string, loca
     });
     return firstRouter;
   } else {
-    return getChildrenRouter(newRouter.filter((item) => item.name === routerName));
+    const currentRouters = newRouter.filter((item) => item.name === routerName);
+    const childrenRouter = currentRouters.length ? currentRouters[0].children || [] : [];
+    return getChildrenRouter(childrenRouter);
   }
 }
 
