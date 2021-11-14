@@ -6,28 +6,22 @@
       'admin-layout-fix-header': fixedHeader,
       'admin-layout-fix-side': fixedSide,
       'admin-layout-fix-body': true,
+      'admin-layout-side-horizontal': navMode === 'horizontal',
       'admin-layout-show-tabs': isMultiTabs,
       'admin-layout-collapse': collapsed,
     }"
   >
     <n-layout-header :inverted="getHeaderInverted" class="admin-layout-header">
       <div class="flex">
-        <Logo />
+        <Logo v-if="navMode != 'horizontal'" />
         <PageHeader @update:collapsed="updateCollapsed" :inverted="inverted" />
       </div>
     </n-layout-header>
-    <!-- :position="fixeBody" -->
-    <!-- :class="{
-        'layout-content-fix': fixedHeader === 'absolute',
-        'layout-content-inverted': getDarkTheme,
-        noMultiTabs: !isMultiTabs,
-        'page-full-screen': isFullscreen && !getDarkTheme,
-      }" -->
+
     <n-layout has-sider :inverted="inverted" class="admin-layout-content">
-      <!-- :position="fixeLeftSider" -->
       <n-layout-sider
         v-if="isMixMenuNoneSub && (navMode === 'vertical' || navMode === 'horizontal-mix')"
-        show-trigger="bar"
+        show-trigger="arrow-circle"
         @collapse="collapsed = true"
         @expand="collapsed = false"
         :native-scrollbar="false"
@@ -190,7 +184,7 @@
       }
 
       &-main {
-        padding: 0 10px 10px 10px;
+        padding: 10px;
         overflow-x: hidden;
       }
 
@@ -230,7 +224,7 @@
         }
 
         &-main {
-          padding: 0 10px 10px 10px;
+          padding: 10px;
           height: calc(100vh - 64px);
           position: relative;
           overflow-y: auto;
@@ -244,7 +238,7 @@
         position: fixed;
         left: 0;
         bottom: 0;
-        top: 48px;
+        top: 64px;
       }
 
       .admin-layout-content-son {
@@ -278,11 +272,40 @@
     }
 
     //显示多标签
+    &-show-tabs {
+      .admin-layout-content {
+        &-main {
+          padding: 0 10px 10px 10px;
+        }
+      }
+    }
     &-fix-header.admin-layout-show-tabs {
       .admin-layout-content {
         &-main {
           height: calc(100vh - 64px - 44px);
+          //padding: 0 10px 10px 10px;
         }
+      }
+    }
+
+    //横向菜单
+    &-side-horizontal {
+      //处理顶部菜单
+      .admin-layout-header {
+        .logo {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 15;
+        }
+        :deep(.layout-header) {
+          padding-left: 0px;
+        }
+      }
+
+      //处理内容区域
+      .admin-layout-content-son {
+        padding-left: 0px;
       }
     }
   }

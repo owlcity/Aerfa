@@ -1,5 +1,10 @@
 <template>
-  <div class="layout-header">
+  <div
+    class="layout-header"
+    :class="{
+      'layout-header-horizontal': navMode === 'horizontal',
+    }"
+  >
     <!--顶部菜单-->
     <div
       v-if="navMode === 'horizontal' || (navMode === 'horizontal-mix' && mixMenu)"
@@ -7,7 +12,7 @@
     >
       <div v-if="navMode === 'horizontal'" class="logo">
         <img alt="" src="~@/assets/images/logo.png" />
-        <h2 v-show="!collapsed" class="title">NaiveUiAdmin</h2>
+        <h2 v-show="!collapsed" class="title">NaiveAdmin</h2>
       </div>
       <AsideMenu v-model:location="getMenuLocation" :inverted="getInverted" mode="horizontal" />
     </div>
@@ -63,12 +68,13 @@
       <div
         v-for="item in iconList"
         :key="item.icon.name"
+        v-on="item.eventObject || {}"
         class="layout-header-trigger layout-header-trigger-min"
       >
         <n-tooltip placement="bottom">
           <template #trigger>
             <n-icon size="18">
-              <component :is="item.icon" v-on="item.eventObject || {}" />
+              <component :is="item.icon" />
             </n-icon>
           </template>
           <span>{{ item.tips }}</span>
@@ -370,6 +376,11 @@
     flex: 1;
     z-index: 11;
 
+    :deep(.n-menu--horizontal) {
+      width: calc(100%);
+      overflow-x: auto;
+    }
+
     &-left {
       display: flex;
       align-items: center;
@@ -383,6 +394,7 @@
         overflow: hidden;
         white-space: nowrap;
         padding-left: 10px;
+        min-width: 130px;
 
         img {
           width: auto;
@@ -452,6 +464,13 @@
     &-trigger-min {
       width: auto;
       padding: 0 12px;
+    }
+  }
+
+  .layout-header-horizontal {
+    :deep(.n-menu--horizontal) {
+      width: calc(100% - 130px);
+      overflow-x: auto;
     }
   }
 

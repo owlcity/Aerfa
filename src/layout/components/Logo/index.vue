@@ -14,7 +14,9 @@
   import { inject, computed } from 'vue';
   import { useThemeVars } from 'naive-ui';
   import { useDesignSetting } from '@/hooks/setting/useDesignSetting';
+  import { useProjectSetting } from '@/hooks/setting/useProjectSetting';
 
+  const { getNavTheme } = useProjectSetting();
   const { getDarkTheme } = useDesignSetting();
 
   const isCollapsed = inject('collapsed');
@@ -22,7 +24,17 @@
   const themeVars = useThemeVars();
 
   const getBgColor = computed(() => {
-    return getDarkTheme.value ? themeVars.value.cardColor : themeVars.value.invertedColor;
+    let isLight = getNavTheme.value === 'light';
+    return getDarkTheme.value
+      ? themeVars.value.cardColor
+      : isLight
+      ? '#FFFFFF'
+      : themeVars.value.invertedColor;
+  });
+
+  const getColor = computed(() => {
+    let isLight = getNavTheme.value === 'light';
+    return isLight ? themeVars.value.textColor1 : '#FFFFFF';
   });
 </script>
 
@@ -37,7 +49,7 @@
     overflow: hidden;
     white-space: nowrap;
     background: v-bind(getBgColor);
-    color: #fff;
+    color: v-bind(getColor);
     transition: all 0.2s ease-in-out;
 
     img {
