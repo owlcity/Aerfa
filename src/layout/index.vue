@@ -1,56 +1,53 @@
 <template>
-  <n-layout embedded class="layout" :position="fixeBody" has-sider>
-    <n-layout-sider
-      v-if="isMixMenuNoneSub && (navMode === 'vertical' || navMode === 'horizontal-mix')"
-      show-trigger="bar"
-      @collapse="collapsed = true"
-      :position="fixeLeftSider"
-      @expand="collapsed = false"
-      :collapsed="collapsed"
-      collapse-mode="width"
-      :collapsed-width="64"
-      :width="leftMenuWidth"
-      :native-scrollbar="false"
+  <n-layout class="layout" :position="fixeBody">
+    <n-layout-header :inverted="getHeaderInverted" :position="fixedHeader">
+      <div class="flex">
+        <Logo />
+        <PageHeader @update:collapsed="updateCollapsed" :inverted="inverted" />
+      </div>
+    </n-layout-header>
+    <n-layout
+      has-sider
       :inverted="inverted"
-      class="layout-sider"
+      :position="fixeBody"
+      class="layout-content"
+      :class="{
+        'layout-content-fix': fixedHeader === 'absolute',
+        'layout-content-inverted': getDarkTheme,
+        noMultiTabs: !isMultiTabs,
+        'page-full-screen': isFullscreen && !getDarkTheme,
+      }"
     >
-      <Logo :collapsed="collapsed" />
-      <AsideMenu v-model:collapsed="collapsed" v-model:location="getMenuLocation" />
-    </n-layout-sider>
+      <!-- :position="fixeLeftSider" -->
+      <n-layout-sider
+        v-if="isMixMenuNoneSub && (navMode === 'vertical' || navMode === 'horizontal-mix')"
+        show-trigger="bar"
+        @collapse="collapsed = true"
+        @expand="collapsed = false"
+        :native-scrollbar="false"
+        :collapsed="collapsed"
+        collapse-mode="width"
+        :collapsed-width="64"
+        :width="leftMenuWidth"
+        :inverted="inverted"
+        class="layout-sider"
+      >
+        <AsideMenu v-model:collapsed="collapsed" v-model:location="getMenuLocation" />
+      </n-layout-sider>
 
-    <n-layout embedded :inverted="inverted">
-      <n-layout-header :inverted="getHeaderInverted" :position="fixedHeader">
-        <PageHeader v-model:collapsed="collapsed" :inverted="inverted" />
+      <n-layout embedded class="layout-content-son">
         <TabsView
           v-if="isMultiTabs"
           v-model:collapsed="collapsed"
           @page-full-screen="togglePageFullScreen"
         />
-      </n-layout-header>
-
-      <n-layout
-        embedded
-        :inverted="inverted"
-        :native-scrollbar="false"
-        class="layout-content"
-        :class="{
-          'layout-content-fix': fixedHeader === 'absolute',
-          'layout-content-inverted': getDarkTheme,
-          noMultiTabs: !isMultiTabs,
-          'page-full-screen': isFullscreen && !getDarkTheme,
-        }"
-      >
         <div class="layout-content-main">
           <div class="main-view" ref="adminBodyRef">
             <MainView />
           </div>
         </div>
-        <!--1.15废弃，没啥用，占用操作空间-->
-        <!--        <NLayoutFooter v-if="getShowFooter">-->
-        <!--          <PageFooter />-->
-        <!--        </NLayoutFooter>-->
+        <n-back-top :right="100" />
       </n-layout>
-      <n-back-top :right="100" />
     </n-layout>
   </n-layout>
 </template>
@@ -88,6 +85,7 @@
   const { isFullscreen, toggle } = useFullscreen(adminBodyRef);
 
   provide('isPageFullScreen', isFullscreen);
+  provide('collapsed', collapsed);
 
   watch(
     () => collapsed.value,
@@ -106,6 +104,7 @@
   //固定主体区域
   const fixeBody = computed(() => {
     const { fixed } = unref(getBodySetting);
+    console.log(fixed);
     return fixed ? 'absolute' : 'static';
   });
 
@@ -118,6 +117,11 @@
   //切换内容页全屏
   function togglePageFullScreen() {
     toggle();
+  }
+
+  //菜单折叠
+  function updateCollapsed() {
+    collapsed.value = !collapsed.value;
   }
 
   const isMixMenuNoneSub = computed(() => {
@@ -170,7 +174,7 @@
 <style lang="less" scoped>
   .layout {
     .layout-sider {
-      min-height: 100vh;
+      min-height: calc(100vh - 64px);
       box-shadow: 2px 0 8px 0 rgb(29 35 41 / 5%);
       position: relative;
       z-index: 13;
@@ -182,29 +186,29 @@
       top: 0;
       left: 0;
     }
-
-    .ant-layout {
-      overflow: hidden;
-    }
-
     .layout-right-fix {
       overflow-x: hidden;
       padding-left: 200px;
-      min-height: 100vh;
+      min-height: calc(100vh - 64px);
       transition: all 0.2s ease-in-out;
     }
 
     .layout-content {
       flex: auto;
-      min-height: 100vh;
+      min-height: calc(100vh - 64px);
+      &-son {
+        :deep(.n-layout-scroll-container) {
+          overflow: hidden;
+        }
+      }
     }
 
     .layout-content-fix {
-      padding-top: 108px;
+      top: 64px;
     }
 
     .noMultiTabs {
-      padding-top: 74px;
+      padding-top: 0px;
     }
 
     .layout-content-inverted {
@@ -221,8 +225,10 @@
   }
 
   .layout-content-main {
-    margin: 0 10px 10px;
+    padding: 0 10px 10px 10px;
+    height: calc(100vh - 64px - 44px);
     position: relative;
+    overflow-y: auto;
   }
 
   .layout-content-main-fix {

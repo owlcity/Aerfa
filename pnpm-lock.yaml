@@ -60,7 +60,6 @@ specifiers:
   stylelint-scss: ^3.19.0
   ts-node: ^10.2.1
   typescript: ^4.4.3
-  vfonts: ^0.1.0
   vite: ^2.6.13
   vite-plugin-compression: ^0.3.5
   vite-plugin-html: ^2.1.1
@@ -96,7 +95,6 @@ dependencies:
   print-js: 1.6.0
   qrcode: 1.4.4
   qs: 6.10.1
-  vfonts: 0.1.0
   vue: 3.2.21
   vue-router: 4.0.12_vue@3.2.21
   vue-types: 4.1.1_vue@3.2.21

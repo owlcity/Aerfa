@@ -541,8 +541,8 @@
           overflow: hidden;
 
           &-item {
-            background: var(--color);
-            color: var(--text-color);
+            background: #fff;
+            color: rgb(51, 54, 57);
             height: 32px;
             padding: 6px 16px 4px;
             border-radius: 3px;

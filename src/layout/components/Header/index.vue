@@ -9,19 +9,14 @@
         <img alt="" src="~@/assets/images/logo.png" />
         <h2 v-show="!collapsed" class="title">NaiveUiAdmin</h2>
       </div>
-      <AsideMenu
-        v-model:collapsed="collapsed"
-        v-model:location="getMenuLocation"
-        :inverted="getInverted"
-        mode="horizontal"
-      />
+      <AsideMenu v-model:location="getMenuLocation" :inverted="getInverted" mode="horizontal" />
     </div>
     <!--左侧菜单-->
     <div v-else class="layout-header-left">
       <!-- 菜单收起 -->
       <div
         class="ml-1 layout-header-trigger layout-header-trigger-min collapsed-trigger"
-        @click="() => $emit('update:collapsed', !collapsed)"
+        @click="() => $emit('update:collapsed')"
       >
         <n-icon v-if="collapsed" size="18">
           <MenuUnfoldOutlined />
@@ -166,6 +161,8 @@
   import schoolboy from '@/assets/images/schoolboy.png';
   import { useFullscreen } from '@vueuse/core';
   import { useAsyncRouteStore } from '@/store/modules/asyncRoute';
+
+  defineEmits(['update:collapsed']);
 
   const userStore = useUserStore();
   const useLockscreen = useLockscreenStore();
@@ -370,7 +367,7 @@
     height: @header-height;
     box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
     transition: all 0.2s ease-in-out;
-    width: 100%;
+    flex: 1;
     z-index: 11;
 
     &-left {
