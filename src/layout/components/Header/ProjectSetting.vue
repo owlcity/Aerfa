@@ -151,17 +151,10 @@
           </div>
         </div>
 
-        <!--        <div class="drawer-setting-item">-->
-        <!--          <div class="drawer-setting-item-title"> 固定侧边栏 </div>-->
-        <!--          <div class="drawer-setting-item-action">-->
-        <!--            <n-switch v-model:value="settingStore.menuSetting.fixed" />-->
-        <!--          </div>-->
-        <!--        </div>-->
-
         <div class="drawer-setting-item">
-          <div class="drawer-setting-item-title"> 固定主体区域 </div>
+          <div class="drawer-setting-item-title"> 固定侧边栏 </div>
           <div class="drawer-setting-item-action">
-            <n-switch v-model:value="settingStore.bodySetting.fixed" />
+            <n-switch v-model:value="settingStore.menuSetting.fixed" />
           </div>
         </div>
 

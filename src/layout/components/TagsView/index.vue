@@ -103,11 +103,22 @@
   import { useDesignSetting } from '@/hooks/setting/useDesignSetting';
   import { useProjectSettingStore } from '@/store/modules/projectSetting';
   import { useGo, useRedo } from '@/hooks/web/usePage';
+  import { useThemeVars } from 'naive-ui';
 
   const props = defineProps({
     collapsed: {
       type: Boolean,
     },
+  });
+
+  const themeVars = useThemeVars();
+
+  const getCardColor = computed(() => {
+    return themeVars.value.cardColor;
+  });
+
+  const getBaseColor = computed(() => {
+    return themeVars.value.textColor1;
   });
 
   const emit = defineEmits(['pageFullScreen']);
@@ -541,8 +552,8 @@
           overflow: hidden;
 
           &-item {
-            background: #fff;
-            color: rgb(51, 54, 57);
+            background: v-bind(getCardColor);
+            color: v-bind(getBaseColor);
             height: 32px;
             padding: 6px 16px 4px;
             border-radius: 3px;
@@ -599,7 +610,7 @@
       height: 32px;
       line-height: 32px;
       text-align: center;
-      background: var(--color);
+      background: v-bind(getCardColor);
       border-radius: 2px;
       cursor: pointer;
       //margin-right: 10px;

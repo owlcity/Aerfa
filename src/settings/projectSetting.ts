@@ -12,7 +12,7 @@ const setting = {
     //显示重载按钮
     isReload: true,
   },
-  //主体
+  //主体 废弃
   bodySetting: {
     //固定顶部
     fixed: true,

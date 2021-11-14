@@ -45,6 +45,7 @@
           <div class="flex flex-wrap project-card">
             <n-card
               size="small"
+              :bordered="false"
               class="cursor-pointer project-card-item ms:w-1/2 md:w-1/3"
               hoverable
             >
@@ -63,6 +64,7 @@
             </n-card>
             <n-card
               size="small"
+              :bordered="false"
               class="cursor-pointer project-card-item ms:w-1/2 md:w-1/3"
               hoverable
             >
@@ -79,6 +81,7 @@
             </n-card>
             <n-card
               size="small"
+              :bordered="false"
               class="cursor-pointer project-card-item ms:w-1/2 md:w-1/3"
               hoverable
             >
@@ -95,6 +98,7 @@
             </n-card>
             <n-card
               size="small"
+              :bordered="false"
               class="cursor-pointer project-card-item ms:w-1/2 md:w-1/3"
               hoverable
             >
@@ -111,6 +115,7 @@
             </n-card>
             <n-card
               size="small"
+              :bordered="false"
               class="cursor-pointer project-card-item ms:w-1/2 md:w-1/3"
               hoverable
             >
@@ -127,6 +132,7 @@
             </n-card>
             <n-card
               size="small"
+              :bordered="false"
               class="cursor-pointer project-card-item ms:w-1/2 md:w-1/3"
               hoverable
             >
@@ -308,11 +314,18 @@
 
 <style lang="less" scoped>
   .project-card {
-    margin-right: -6px;
-
     &-item {
-      margin: -1px;
       width: 33.333333%;
+      border: none;
+      border-radius: inherit;
+      border-right: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      &:nth-child(3n) {
+        border-right: none;
+      }
+      &:nth-child(n + 4) {
+        border-bottom: none;
+      }
     }
   }
 </style>
