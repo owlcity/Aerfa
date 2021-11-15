@@ -220,7 +220,8 @@
   }
 
   //页码切换
-  function updatePage(page) {
+  async function updatePage(page) {
+    await restCheckedRowKeys();
     setPagination({ page: page });
     reload();
   }
