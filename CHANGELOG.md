@@ -2,6 +2,15 @@
 
 ## Pending
 
+## 2.1.1 (2021-11-15)
+
+### ✨ Features
+- 优化 `骨架结构布局` 破坏性调整，按需更新（建议是升级）
+- 新增 `侧栏是否固定配置项`
+- 新增 `BasicTable` 选中行内部维护，新增 `restCheckedRowKeys` 和 `checked-row-change` 方法
+- `依赖升级`
+
+
 ## 2.1.0 (2021-11-11)
 
 ### ✨ Features

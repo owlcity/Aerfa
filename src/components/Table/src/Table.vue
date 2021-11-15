@@ -82,6 +82,8 @@
       <n-data-table
         ref="tableElRef"
         v-bind="getBindValues"
+        v-model:checked-row-keys="checkedRowKeys"
+        @update:checked-row-keys="checkedRowKeysChange"
         :pagination="pagination"
         @update:page="updatePage"
         @update:page-size="updatePageSize"
@@ -128,7 +130,7 @@
   const emit = defineEmits([
     'fetch-success',
     'fetch-error',
-    'update:checked-row-keys',
+    'checked-row-change',
     'edit-end',
     'edit-cancel',
     'edit-row-end',
@@ -158,6 +160,7 @@
   const tableElRef = ref<HTMLElement | null>(null);
   const basicTableRef = ref<HTMLElement | null>(null);
   const wrapRef = ref(null);
+  const checkedRowKeys = ref<any>([]);
   let paginationEl: HTMLElement | null;
 
   const tableData = ref<Recordable[]>([]);
@@ -211,7 +214,8 @@
   }
 
   //table内部刷新
-  function reloadTable() {
+  async function reloadTable() {
+    await restCheckedRowKeys();
     reload();
   }
 
@@ -272,6 +276,17 @@
     };
   });
 
+  //选择行
+  function checkedRowKeysChange(rowKeys) {
+    checkedRowKeys.value = rowKeys;
+    emit('checked-row-change', checkedRowKeys);
+  }
+
+  //清空行
+  function restCheckedRowKeys() {
+    checkedRowKeys.value = [];
+  }
+
   //重新计算表格高度
   function redoHeight() {
     computeTableHeight();
@@ -287,6 +302,7 @@
   const tableAction = {
     reload,
     restReload,
+    restCheckedRowKeys,
     redoHeight,
     setColumns,
     setLoading,
@@ -344,6 +360,7 @@
   defineExpose({
     reload,
     restReload,
+    restCheckedRowKeys,
     getDataSource,
     getColumns,
     setColumns,

@@ -19,7 +19,7 @@
         :row-key="(row) => row.id"
         ref="actionRef"
         :actionColumn="actionColumn"
-        @update:checked-row-keys="onCheckedRow"
+        @checked-row-change="onCheckedRow"
         :scroll-x="1090"
       >
         <template #tableTitle>
@@ -322,7 +322,7 @@
   };
 
   function onCheckedRow(rowKeys) {
-    console.log(rowKeys);
+    console.log(rowKeys.value);
   }
 
   function reloadTable() {
