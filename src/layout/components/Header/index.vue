@@ -135,7 +135,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref, unref, watch } from 'vue';
+  import { computed, ref, unref, watch, inject } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { useDialog, useMessage } from 'naive-ui';
   import { TABS_ROUTES } from '@/store/mutation-types';
@@ -180,9 +180,6 @@
     useProjectSetting();
 
   const props = defineProps({
-    collapsed: {
-      type: Boolean,
-    },
     inverted: {
       type: Boolean,
     },
@@ -197,6 +194,8 @@
   const amendPwdRef = ref();
 
   // const username = userStore?.info ? ref(userStore?.info.username) : '';
+
+  const collapsed = inject('collapsed');
 
   const navMode = getNavMode;
 

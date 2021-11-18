@@ -2,6 +2,19 @@
 
 ## Pending
 
+## 2.1.2 (2021-11-18)
+
+### 🐛 Bug Fixes
+- 修复 `锁屏界面` 黑暗主题适配问题
+- 修复 `登录页面` 异常情况，按钮一直处于 loading
+- 修复 `顶部混合菜单` 一级菜单，内容区域布局问题
+- 修复 `BasicSelect` 存储 `localStorage` 空白key
+- 修复 `多标签` 当 `router.push` 带上 `query` 参数报错
+
+### ✨ Features
+- 新增 `按需引入NaiveUi并自动创建.d.ts声明` 可获得代码提示和类型检查
+
+
 ## 2.1.1 (2021-11-15)
 
 ### ✨ Features

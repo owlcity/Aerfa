@@ -5,6 +5,9 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 
 import windiCSS from 'vite-plugin-windicss';
 
+import Components from 'unplugin-vue-components/vite';
+import { NaiveUiResolver } from 'unplugin-vue-components/resolvers';
+
 import { configHtmlPlugin } from './html';
 import { configMockPlugin } from './mock';
 import { configCompressPlugin } from './compress';
@@ -17,6 +20,12 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean, prodMock) 
     vue(),
     // have to
     vueJsx(),
+
+    // 按需引入NaiveUi且自动创建组件声明
+    Components({
+      dts: true,
+      resolvers: [NaiveUiResolver()],
+    }),
   ];
 
   // vite-plugin-windicss

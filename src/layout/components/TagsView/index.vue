@@ -451,7 +451,7 @@
   }
 
   function getTabIndex() {
-    return unref(tabsList).findIndex((item) => item.path === activeKey.value);
+    return unref(tabsList).findIndex((item) => item.fullPath === activeKey.value);
   }
 
   function onClickOutside() {

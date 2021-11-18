@@ -55,12 +55,12 @@
   //触发取新数据
   async function fetch() {
     loading.value = true;
-    const { request, cacheKey } = props;
+    const { request, cacheKey, cache } = props;
     try {
       const res = await request();
       options.value = res || [];
       loading.value = false;
-      Storage.set(cacheKey, res);
+      if (cache && cacheKey && res && res.length) Storage.set(cacheKey, res);
     } catch (error) {
       console.error(error);
     }

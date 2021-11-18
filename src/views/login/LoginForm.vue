@@ -122,16 +122,20 @@
           password,
         };
 
-        const { code, message: msg } = await userStore.login(params);
-        message.destroyAll();
-        if (code == ResultEnum.SUCCESS) {
-          const toPath = decodeURIComponent((route.query?.redirect || '/') as string);
-          message.success('登录成功，即将进入系统');
-          if (route.name === LOGIN_NAME) {
-            router.replace('/');
-          } else router.replace(toPath);
-        } else {
-          message.info(msg || '登录失败');
+        try {
+          const { code, message: msg } = await userStore.login(params);
+          message.destroyAll();
+          if (code == ResultEnum.SUCCESS) {
+            const toPath = decodeURIComponent((route.query?.redirect || '/') as string);
+            message.success('登录成功，即将进入系统');
+            if (route.name === LOGIN_NAME) {
+              router.replace('/');
+            } else router.replace(toPath);
+          } else {
+            message.info(msg || '登录失败');
+          }
+        } finally {
+          loading.value = false;
         }
       } else {
         message.error('请填写完整信息，并且进行验证码校验');

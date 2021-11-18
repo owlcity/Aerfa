@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, nextTick } from 'vue';
+  import { computed } from 'vue';
   import { MessageContent } from '@/components/Application/content/Message';
   import { DialogContent } from '@/components/Application/content/Dialog';
   import { LoadingBarContent } from '@/components/Application/content/Loadingbar';
@@ -33,7 +33,6 @@
    * @type import('naive-ui').GlobalThemeOverrides
    */
   const getThemeOverrides = computed(() => {
-    //nextTick(() => {
     const designStore = useDesignSetting();
     const appTheme = designStore.getAppTheme;
     return {
@@ -41,6 +40,5 @@
         colorLoading: appTheme.value,
       },
     };
-    //});
   });
 </script>

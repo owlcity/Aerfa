@@ -224,7 +224,8 @@ const transform: AxiosTransform = {
     } else {
       console.warn(error, '请求被取消！');
     }
-    return Promise.reject(error);
+    //return Promise.reject(error);
+    return Promise.reject(response?.data);
   },
 };
 

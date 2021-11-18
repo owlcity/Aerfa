@@ -7,6 +7,7 @@
       'admin-layout-fix-side': fixedSide,
       'admin-layout-fix-body': true,
       'admin-layout-side-horizontal': navMode === 'horizontal',
+      'admin-layout-hide-side': !isMixMenuNoneSub,
       'admin-layout-show-tabs': isMultiTabs,
       'admin-layout-collapse': collapsed,
     }"
@@ -268,6 +269,13 @@
         :deep(.layout-header) {
           padding-left: 64px;
         }
+      }
+    }
+
+    //没有左侧菜单
+    &-hide-side {
+      .admin-layout-content-son {
+        padding-left: 0px;
       }
     }
 
