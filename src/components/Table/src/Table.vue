@@ -148,6 +148,7 @@
   const {
     getDataSourceRef,
     getRowKey,
+    getRowClassName,
     reload,
     restReload,
     setTableData,
@@ -224,6 +225,7 @@
       loading: unref(getLoading),
       columns: toRaw(unref(getPageColumns)),
       rowKey: unref(getRowKey),
+      rowClassName: unref(getRowClassName),
       data: tableData,
       size: unref(getTableSize),
       remote: true,
