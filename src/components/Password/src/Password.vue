@@ -63,7 +63,7 @@
 
   const formValue = ref({
     password: props.value,
-    repeat: '',
+    repeat: props.repeat,
   });
 
   const password = ref({
