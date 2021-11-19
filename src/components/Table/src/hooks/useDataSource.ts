@@ -34,6 +34,12 @@ export function useDataSource(
           return 'key';
         };
   });
+  
+  const getRowClassName = computed(() => {
+    const { rowClassName }: any = unref(propsRef);
+    return rowClassName
+  });
+
 
   const getDataSourceRef = computed(() => {
     const dataSource = unref(dataSourceRef);
@@ -170,6 +176,7 @@ export function useDataSource(
   return {
     fetch,
     getRowKey,
+    getRowClassName,
     getDataSourceRef,
     getDataSource,
     setTableData,
