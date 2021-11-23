@@ -64,7 +64,7 @@ export interface FormActionType {
   getFieldsValue: () => Recordable;
   resetFields: () => Promise<void>;
   validate: (nameList?: any[]) => Promise<any>;
-  setLoadingSub(status: boolean) => void;
+  setLoadingSub: (status: boolean) => void;
 }
 
 export type RegisterFn = (formInstance: FormActionType) => void;
