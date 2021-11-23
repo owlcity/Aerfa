@@ -38,6 +38,7 @@ export function useFormEvents({
     const { submitFunc } = unref(getProps);
     if (submitFunc && isFunction(submitFunc)) {
       await submitFunc();
+      loadingSub.value = false;
       return false;
     }
     const formEl = unref(formElRef);

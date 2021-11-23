@@ -1,6 +1,15 @@
 # CHANGELOG
-
 ## Pending
+
+## 2.1.3 (2021-11-23)
+
+### 🐛 Bug Fixes
+- 修复 `ActionItem` 类型定义问题
+- 修复 `BasicForm` 自定义提交逻辑，按钮一直处于 loading
+
+### ✨ Features
+- 新增 `BasicForm.setLoadingSub` 方法
+- `依赖升级`
 
 ## 2.1.2 (2021-11-18)
 
