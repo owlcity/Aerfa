@@ -29,6 +29,18 @@
         <slot name="toolbar"></slot>
 
         <template v-if="isTableSetting">
+          <!--表格斑马纹-->
+          <n-tooltip trigger="hover" v-if="isShowTableStriped">
+            <template #trigger>
+              <div class="table-toolbar-right-icon mr-2">
+                <n-switch v-model:value="striped" />
+              </div>
+            </template>
+            <span>表格斑马纹</span>
+          </n-tooltip>
+
+          <n-divider vertical v-if="isShowTableStriped" />
+
           <!--刷新-->
           <n-tooltip trigger="hover" v-if="isShowTableRedo">
             <template #trigger>
@@ -155,8 +167,9 @@
     },
   ];
 
+  const striped = ref(false);
   const isShowTable = ref(true);
-  const deviceHeight = ref(150);
+  const deviceHeight = ref<Number | String>('auto');
   const tableElRef = ref<HTMLElement | null>(null);
   const basicTableRef = ref<HTMLElement | null>(null);
   const wrapRef = ref(null);
@@ -240,6 +253,9 @@
   //获取表格大小
   const getTableSize = computed(() => tableSize.value);
 
+  //获取斑马纹
+  const getStriped = computed(() => striped.value);
+
   //表格设置工具
   const isTableSetting = computed(() => getProps.value.showTableSetting);
 
@@ -255,9 +271,13 @@
   //是否显示表格全屏按钮
   const isShowTableFullscreen = computed(() => getProps.value.tableSetting?.fullscreen ?? true);
 
+  //是否显示斑马纹开关
+  const isShowTableStriped = computed(() => getProps.value.tableSetting?.striped ?? true);
+
   //计算高度
   const getDeviceHeight = computed(() => {
     const tableData = unref(getDataSourceRef);
+    if (deviceHeight.value === 'auto') return 'auto';
     const maxHeight = tableData.length ? `${unref(deviceHeight)}px` : 'auto';
     return maxHeight;
   });
@@ -272,6 +292,7 @@
       rowKey: unref(getRowKey),
       data: tableData,
       size: unref(getTableSize),
+      striped: unref(getStriped),
       remote: true,
       'max-height': getDeviceHeight.value,
     };

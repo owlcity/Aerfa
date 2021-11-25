@@ -5,4 +5,5 @@ export interface PaginationProps {
   pageSizes?: number[];
   showSizePicker?: boolean;
   showQuickJumper?: boolean;
+  prefix?: any;
 }

@@ -31,6 +31,7 @@ export interface TableSetting {
   size?: boolean;
   setting?: boolean;
   fullscreen?: boolean;
+  striped?: boolean;
 }
 
 export interface BasicTableProps {
@@ -46,4 +47,5 @@ export interface BasicTableProps {
   showTableSetting?: boolean;
   tableSetting?: TableSetting;
   titleTooltip?: string;
+  striped?: boolean;
 }

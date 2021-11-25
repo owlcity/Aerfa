@@ -109,7 +109,7 @@ export function getChildrenRouter(routerMap: Array<any>) {
  * 判断根路由 Router
  * */
 export function isRootRouter(item) {
-  return item.meta?.alwaysShow != true && item.children?.length === 1;
+  return item.meta?.alwaysShow === true && item.children?.length === 1;
 }
 
 /**

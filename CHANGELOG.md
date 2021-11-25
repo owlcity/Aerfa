@@ -1,5 +1,16 @@
 # CHANGELOG
+
+## 2.1.4 (2021-11-25)
 ## Pending
+### 🐛 Bug Fixes
+- 修复 `BasicTable` 自适应高度问题
+- 破坏 `meta.alwaysShow` 取消路由自动计算根路由特性
+
+### ✨ Features
+- 新增 `BasicTable` 斑马纹开关配置
+- 新增 `BasicTable` 分页配置，默认显示总条数，不需要的地方可单独重置
+- 新增 `useTabs` 暴露 `closeCurrent`，`setTitle` 方法，用于外部页面操作多页签
+- 新增 `功能示例->多页签操作示例`
 
 ## 2.1.3 (2021-11-23)
 

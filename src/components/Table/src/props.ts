@@ -57,7 +57,12 @@ export const basicProps = {
       size: true,
       setting: true,
       fullscreen: true,
+      striped: true,
     }),
+  },
+  striped: {
+    type: Boolean,
+    default: false,
   },
   canResize: propTypes.bool.def(true),
   resizeHeightOffset: propTypes.number.def(0),
