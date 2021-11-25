@@ -24,16 +24,18 @@ export function usePagination(refProps: ComputedRef<BasicTableProps>) {
     if (!unref(show) || (isBoolean(pagination) && !pagination)) {
       return false;
     }
-    const { totalField } = APISETTING;
+    const { totalField, countField } = APISETTING;
     const pageCount = unref(configRef)[totalField] || undefined;
+    const itemCount = unref(configRef)[countField] || 0;
     return pageCount
       ? {
           page: 1, //当前页
+          itemCount: itemCount, // 总数
           pageSize: DEFAULTPAGESIZE, //分页大小
           pageSizes: PAGESIZES, // 每页条数
           showSizePicker: true,
           showQuickJumper: true,
-          prefix: () => `共 ${pageCount} 条`, // 不需要可以通过 pagination 重置或者删除
+          prefix: () => `共 ${itemCount} 条`, // 不需要可以通过 pagination 重置或者删除
           ...(isBoolean(pagination) ? {} : pagination),
           ...unref(configRef),
           pageCount,

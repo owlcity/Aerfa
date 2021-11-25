@@ -86,6 +86,7 @@ export default [
         page: Number(page),
         pageSize: Number(pageSize),
         pageCount: 60,
+        itemCount: 60 * Number(pageSize),
         list,
       });
     },

@@ -136,10 +136,12 @@ export default [
           return item.label.indexOf(keywords) != -1;
         });
       }
+      const count = list.length > Number(pageSize) ? Math.ceil(list.length / Number(pageSize)) : 0;
       return resultSuccess({
         page: Number(page),
         pageSize: Number(pageSize),
-        pageCount: list.length > Number(pageSize) ? Math.ceil(list.length / Number(pageSize)) : 0,
+        pageCount: count,
+        itemCount: count * Number(pageSize),
         list,
       });
     },
