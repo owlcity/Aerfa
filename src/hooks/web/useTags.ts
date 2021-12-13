@@ -26,7 +26,7 @@ export function useTabs(_router?: Router) {
   //关闭当前页面
   function closeCurrentTab() {
     tabsViewStore.closeCurrentTab(currentRoute);
-    asyncRouteStore.removeKeepAliveComponents([currentRoute.name]);
+    asyncRouteStore.removeKeepAliveComponents([currentRoute.value.name]);
     const _currentRoute =
       tabsViewStore.getTabList[Math.max(0, tabsViewStore.getTabList.length - 1)];
     router.push(_currentRoute);

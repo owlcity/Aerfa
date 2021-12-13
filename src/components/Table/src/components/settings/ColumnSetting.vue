@@ -31,6 +31,7 @@
               <Draggable v-model="basicColumns" animation="300" item-key="key" @end="draggableEnd">
                 <template #item="{ element }">
                   <div
+                    v-if="element.type != 'selection'"
                     :class="{ 'table-toolbar-inner-checkbox-dark': getDarkTheme === true }"
                     class="table-toolbar-inner-checkbox"
                   >
@@ -130,13 +131,16 @@
     checkList.value = !checkAll.value && !checkPart.value ? [] : checkListArr;
     defaultCheckList.value = !checkAll.value && !checkPart.value ? [] : checkListArr;
 
-    const newColumns = columns.filter(
-      (item) => item.type != 'selection' && item.key != 'action' && item.title != '操作'
-    );
+    const newColumns = columns.filter((item) => item.key != 'action' && item.title != '操作');
     if (!basicColumns.value.length) {
-      basicColumns.value = cloneDeep(newColumns);
+      let reNewColumns = cloneDeep(newColumns);
+      basicColumns.value = reNewColumns;
       cacheColumnsList.value = cloneDeep(newColumns);
     }
+  }
+
+  function filterSelection(columns) {
+    return cloneDeep(columns.filter((item) => item.type != 'selection' && item.key != 'action'));
   }
 
   //切换

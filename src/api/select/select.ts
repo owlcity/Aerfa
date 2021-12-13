@@ -1,4 +1,4 @@
-import http from '@/utils/http/axios';
+import { http } from '@/utils/http/axios';
 
 //获取分类
 export function getClassifyList(params?) {

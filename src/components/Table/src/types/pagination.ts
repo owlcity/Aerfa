@@ -1,6 +1,6 @@
 export interface PaginationProps {
   page?: number; //受控模式下的当前页
-  itemCount: number; //总条数
+  itemCount?: number; //总条数
   pageCount?: number; //总页数
   pageSize?: number; //受控模式下的分页大小
   pageSizes?: number[]; //每页条数， 可自定义

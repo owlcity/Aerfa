@@ -234,3 +234,10 @@ export function cssUnit(value: string | number, unit = 'px') {
     ? `${value}${unit}`
     : value;
 }
+
+/**
+ * 判断是否 url
+ * */
+export function isUrl(url: string) {
+  return /(^http|https:\/\/)/g.test(url);
+}

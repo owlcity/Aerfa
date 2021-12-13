@@ -78,6 +78,7 @@
   import { PlusOutlined, DeleteOutlined, FormOutlined } from '@vicons/antd';
   import { useRouter } from 'vue-router';
   import { renderIcon } from '@/utils';
+  import { log } from 'console';
 
   const rules = {
     name: {
@@ -236,7 +237,7 @@
 
   const params = ref({
     pageSize: 10,
-    name: 'xiaoMa',
+    name: '',
   });
 
   const actionColumn = reactive({
@@ -363,6 +364,7 @@
 
   function handleSubmit(values: Recordable) {
     console.log(values);
+    params.value = Object.assign(formParams, values) as any;
     reloadTable();
   }
 

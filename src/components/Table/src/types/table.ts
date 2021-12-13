@@ -36,16 +36,17 @@ export interface TableSetting {
 
 export interface BasicTableProps {
   title?: string;
-  dataSource: Function;
+  dataSource?: Function | any[];
   columns: any[];
-  pagination: object;
-  showPagination: boolean;
-  actionColumn: any[];
-  canResize: boolean;
-  resizeHeightOffset: number;
+  pagination?: object;
+  showPagination?: boolean;
+  actionColumn?: any[];
+  canResize?: boolean;
+  resizeHeightOffset?: number;
   loading?: boolean;
   showTableSetting?: boolean;
   tableSetting?: TableSetting;
   titleTooltip?: string;
   striped?: boolean;
+  request?: Function;
 }

@@ -1,7 +1,18 @@
 # CHANGELOG
 
-## 2.1.4 (2021-11-25)
 ## Pending
+## 2.1.5 (2021-12-13)
+### 🐛 Bug Fixes
+- 修复 `BasicTable` 选择行与列配置拖拽异常
+- 修复 `BasicTable` 分页总数，无法响应式
+- 修复 `Axios` api地址拼接异常
+
+### ✨ Features
+- 破坏 `Axios` 取消默认导出 `http` 可支持多个请求导出
+- 搜索 `import http from '@/utils/http/axios'` 替换为 `import { http } from '@/utils/http/axios`
+- `依赖升级`
+
+## 2.1.4 (2021-11-25)
 ### 🐛 Bug Fixes
 - 修复 `BasicTable` 自适应高度问题
 - 破坏 `meta.alwaysShow` 取消路由自动计算根路由特性

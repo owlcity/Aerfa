@@ -10,7 +10,7 @@ import { PageEnum } from '@/enums/pageEnum';
 import { useGlobSetting } from '@/hooks/setting';
 
 import { isString } from '@/utils/is/';
-import { deepMerge } from '@/utils';
+import { deepMerge, isUrl } from '@/utils';
 import { setObjToUrlParams } from '@/utils/urlUtils';
 
 import { RequestOptions, Result, CreateAxiosOptions } from './types';
@@ -126,11 +126,13 @@ const transform: AxiosTransform = {
   beforeRequestHook: (config, options) => {
     const { apiUrl, joinPrefix, joinParamsToUrl, formatDate, joinTime = true, urlPrefix } = options;
 
-    if (joinPrefix) {
+    const isUrlStr = isUrl(config.url);
+
+    if (!isUrlStr && joinPrefix) {
       config.url = `${urlPrefix}${config.url}`;
     }
 
-    if (apiUrl && isString(apiUrl)) {
+    if (!isUrlStr && apiUrl && isString(apiUrl)) {
       config.url = `${apiUrl}${config.url}`;
     }
     const params = config.params || {};
@@ -272,4 +274,14 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
   );
 }
 
-export default createAxios();
+export const http = createAxios();
+
+// 项目，多个不同 api 地址，直接在这里导出多个
+// src/api ts 里面接口，就可以单独使用这个请求，
+// import { httpTwo } from '@/utils/http/axios'
+// export const httpTwo = createAxios({
+//   requestOptions: {
+//     apiUrl: 'http://localhost:9001',
+//     urlPrefix: 'api',
+//   },
+// });
