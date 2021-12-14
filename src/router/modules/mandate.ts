@@ -6,7 +6,7 @@ import { renderIcon } from '@/utils/index';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/mandate',
-    name: 'https://www.naiveadmin.com/price/index',
+    name: 'https://www.naiveadmin.com/authorize/index',
     component: Layout,
     meta: {
       title: '获取授权',
