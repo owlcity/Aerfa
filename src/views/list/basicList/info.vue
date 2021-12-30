@@ -21,21 +21,34 @@
         <n-space>
           <label>测试页面缓存</label>
           <n-input placeholder="输入点内容试试" />
+          <n-button type="primary" @click="setTabsTitle">更新当前页面标题</n-button>
         </n-space>
       </div>
     </n-card>
   </div>
 </template>
 
-<script>
-  import { defineComponent } from 'vue';
-
-  export default defineComponent({
+<script lang="ts">
+  export default {
     name: 'BasicInfo',
-    setup() {
-      return {};
-    },
-  });
+  };
+</script>
+<script lang="ts" setup>
+  import { useMessage } from 'naive-ui';
+  import { useTabs } from '@/hooks/web/useTags';
+  import { useRoute } from 'vue-router';
+
+  const route = useRoute(); // 第一步
+  const useTagsHooks = useTabs();
+  const message = useMessage();
+
+  function setTabsTitle() {
+    const id = route.params && route.params.id;
+    useTagsHooks.setTitle(`基础详情：id-${id}`, {
+      fullPath: `/list/basic-info/${id}`,
+    });
+    message.success('设置成功');
+  }
 </script>
 
 <style lang="less" scoped></style>

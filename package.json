@@ -1,6 +1,6 @@
 {
   "name": "naive-admin",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "author": {
     "name": "Ahjung",
     "email": "735878602@qq.com",
@@ -44,7 +44,7 @@
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",
-    "naive-ui": "^2.21.5",
+    "naive-ui": "^2.23.2",
     "perfect-scrollbar": "^1.5.3",
     "pinia": "^2.0.6",
     "print-js": "^1.6.0",

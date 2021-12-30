@@ -126,7 +126,7 @@ const transform: AxiosTransform = {
   beforeRequestHook: (config, options) => {
     const { apiUrl, joinPrefix, joinParamsToUrl, formatDate, joinTime = true, urlPrefix } = options;
 
-    const isUrlStr = isUrl(config.url);
+    const isUrlStr = isUrl(config.url as string);
 
     if (!isUrlStr && joinPrefix) {
       config.url = `${urlPrefix}${config.url}`;

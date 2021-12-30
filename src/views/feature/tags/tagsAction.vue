@@ -35,7 +35,7 @@
   }
 
   function setTabsTitleSpecific() {
-    useTagsHooks.setTitle('指定页面标题', { name: 'basic-list' });
+    useTagsHooks.setTitle('指定页面标题', { name: '/list/basic-list' });
     message.success('设置成功');
   }
 

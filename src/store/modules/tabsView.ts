@@ -134,7 +134,7 @@ export const useTabsViewStore = defineStore({
     // 设置标题
     async setTabTitle(title: string, route: RouteLocationNormalized) {
       this.tabsList.forEach((item) => {
-        if (item.name === route.name) {
+        if (item.fullPath === route.fullPath) {
           item.meta.title = title;
         }
       });

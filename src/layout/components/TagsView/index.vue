@@ -263,7 +263,8 @@
   watch(
     () => route.fullPath,
     (to) => {
-      if (whiteList.includes(route.name as string)) return;
+      // 如果您用的路由模式是 hash 请去掉，|| route.hash 判断条件
+      if (whiteList.includes(route.name as string) || route.hash) return;
       activeKey.value = to;
       currentTabRoute.value = null;
       refreshCurrent.value = false;
