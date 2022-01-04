@@ -1,6 +1,6 @@
 <template>
-  <n-drawer v-model:show="isDrawer" :native-scrollbar="false" :placement="placement" :width="width">
-    <n-drawer-content :title="title">
+  <n-drawer v-model:show="isDrawer" :placement="placement" :width="width">
+    <n-drawer-content :title="title" :native-scrollbar="false">
       <div class="drawer">
         <n-divider title-placement="center">主题</n-divider>
 
@@ -244,7 +244,7 @@
     },
     width: {
       type: Number,
-      default: 255,
+      default: 264,
     },
   });
   const { getAppTheme } = useDesignSetting();
