@@ -54,6 +54,8 @@ export interface FormProps {
   submitOnReset?: boolean;
   baseGridStyle?: CSSProperties;
   draggable?: boolean;
+  collapsed?: boolean;
+  collapsedRows?: number;
 }
 
 export interface FormActionType {
