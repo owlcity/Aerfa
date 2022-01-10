@@ -40,7 +40,6 @@
     "date-fns": "^2.27.0",
     "echarts": "^5.2.2",
     "element-resize-detector": "^1.2.3",
-    "intro.js": "^4.3.0",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",

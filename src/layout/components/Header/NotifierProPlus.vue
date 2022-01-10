@@ -218,7 +218,7 @@
 
 <style lang="less" scoped>
   .news-badge {
-    ::v-deep(.n-badge-sup) {
+    :deep(.n-badge-sup) {
       top: -10px;
     }
   }

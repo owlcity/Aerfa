@@ -36,11 +36,11 @@
 
 <script lang="ts" setup>
   import { ref } from 'vue';
-  import { BasicForm } from '@/components/Form/index';
+  import { BasicForm, FormSchema } from '@/components/Form/index';
   import { useMessage } from 'naive-ui';
   import { Password } from '@/components/Password';
 
-  const schemas = [
+  const schemas: FormSchema[] = [
     {
       field: 'id',
       defaultValue: 128,

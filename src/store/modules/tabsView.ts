@@ -95,7 +95,7 @@ export const useTabsViewStore = defineStore({
       if (index > 0) {
         const leftTabs = this.tabsList.slice(0, index);
         const newLeftTabs = filterCurrentRoute(leftTabs, activeKey);
-        this.delKeepAliveNames(newRightTabs);
+        this.delKeepAliveNames(newLeftTabs);
         this.tabsList = filterNewTabs(newLeftTabs, this.tabsList, activeKey);
       }
     },

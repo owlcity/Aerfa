@@ -282,7 +282,7 @@
         margin-top: 6px;
       }
 
-      ::v-deep(.n-card .n-card__footer) {
+      :deep(.n-card .n-card__footer) {
         padding: 0;
       }
 
@@ -304,7 +304,7 @@
           margin: 14px 0 0 0;
           padding: 0;
 
-          ::v-deep(.n-scrollbar .n-scrollbar-container .n-scrollbar-content) {
+          :deep(.n-scrollbar .n-scrollbar-container .n-scrollbar-content) {
             max-height: 640px;
           }
 

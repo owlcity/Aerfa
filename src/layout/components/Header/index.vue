@@ -20,6 +20,7 @@
     <div v-else class="layout-header-left">
       <!-- 菜单收起 -->
       <div
+        id="collapsed-trigger"
         class="ml-1 layout-header-trigger layout-header-trigger-min collapsed-trigger"
         @click="() => $emit('update:collapsed')"
       >
@@ -110,6 +111,7 @@
       </div>
       <!--设置-->
       <div
+        id="setting-trigger"
         class="layout-header-trigger layout-header-trigger-min setting-trigger"
         @click="openSetting"
       >
@@ -406,7 +408,7 @@
         }
       }
 
-      ::v-deep(.ant-breadcrumb span:last-child .link-text) {
+      :deep(.ant-breadcrumb span:last-child .link-text) {
         color: #515a6e;
       }
 
@@ -482,7 +484,7 @@
     }
 
     .layout-header-left {
-      ::v-deep(.n-breadcrumb .n-breadcrumb-item:last-child .n-breadcrumb-item__link) {
+      :deep(.n-breadcrumb .n-breadcrumb-item:last-child .n-breadcrumb-item__link) {
         color: #515a6e;
       }
     }

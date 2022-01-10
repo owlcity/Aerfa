@@ -48,7 +48,7 @@
     max-width: 560px;
     margin: 40px auto 0;
 
-    ::v-deep(.n-result-content) {
+    :deep(.n-result-content) {
       background-color: #fafafa;
       padding: 24px 40px;
     }
