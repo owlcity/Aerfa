@@ -254,7 +254,7 @@
       &-icon {
         margin-left: 12px;
         font-size: 16px;
-        color: var(--text-color);
+        color: var(--n-text-color);
         cursor: pointer;
 
         :hover {

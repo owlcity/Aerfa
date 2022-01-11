@@ -353,7 +353,7 @@
     const { bottomIncludeBody } = getViewportOffset(headEl);
     const headerH = 64;
     let paginationH = 2;
-    let marginH = 20;
+    let marginH = 22;
     if (!isBoolean(pagination)) {
       paginationEl = tableEl.querySelector('.n-data-table__pagination') as HTMLElement;
       if (paginationEl) {
@@ -423,7 +423,7 @@
         margin-left: 12px;
         font-size: 16px;
         cursor: pointer;
-        color: var(--text-color);
+        color: var(--n-text-color);
 
         :hover {
           color: v-bind(getAppTheme);

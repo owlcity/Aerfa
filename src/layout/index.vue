@@ -59,6 +59,15 @@
       </n-layout>
     </n-layout>
   </n-layout>
+
+  <!--项目配置-->
+  <ProjectSetting ref="drawerSetting" />
+
+  <div class="shadow-lg circular" @click="openSetting">
+    <n-icon size="20">
+      <SettingOutlined class="transition ease-in-out transform delay-150 hover:animate-spin" />
+    </n-icon>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -72,16 +81,21 @@
   import { useDesignSetting } from '@/hooks/setting/useDesignSetting';
   import { useRoute } from 'vue-router';
   import { useProjectSettingStore } from '@/store/modules/projectSetting';
+  import ProjectSetting from './components/Header/ProjectSetting.vue';
   import { useFullscreen } from '@vueuse/core';
+  import { SettingOutlined } from '@vicons/antd';
+  import { useDesignSettingStore } from '@/store/modules/designSetting';
 
   const { getDarkTheme } = useDesignSetting();
   const { getNavMode, getNavTheme, getHeaderSetting, getMenuSetting, getMultiTabsSetting } =
     useProjectSetting();
 
   const settingStore = useProjectSettingStore();
+  const designStore = useDesignSettingStore();
 
   const navMode = getNavMode;
 
+  const drawerSetting = ref();
   const collapsed = ref<boolean>(false);
   const adminBodyRef = ref<HTMLElement | null>(null);
 
@@ -89,6 +103,7 @@
 
   provide('isPageFullScreen', isFullscreen);
   provide('collapsed', collapsed);
+  provide('openSetting', openSetting);
 
   watch(
     () => collapsed.value,
@@ -119,6 +134,17 @@
   function updateCollapsed() {
     collapsed.value = !collapsed.value;
   }
+
+  //打开设置
+  function openSetting() {
+    const { openDrawer } = drawerSetting.value;
+    openDrawer();
+  }
+
+  //获取主题风格色
+  const getAppTheme = computed(() => {
+    return designStore.appTheme;
+  });
 
   const isMixMenuNoneSub = computed(() => {
     const mixMenu = settingStore.menuSetting.mixMenu;
@@ -331,5 +357,23 @@
         background: #000;
       }
     }
+  }
+
+  .circular {
+    position: fixed;
+    right: -2px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: v-bind(getAppTheme);
+    font-size: 24px;
+    color: #fff;
+    border-radius: 10px 0 0 10px;
+    cursor: pointer;
+    z-index: 200;
   }
 </style>

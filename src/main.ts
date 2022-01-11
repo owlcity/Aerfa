@@ -1,6 +1,4 @@
-import 'virtual:windi-base.css';
-import 'virtual:windi-components.css';
-import 'virtual:windi-utilities.css';
+import './styles/tailwind.css';
 import './styles/index.less';
 import { createApp } from 'vue';
 import App from './App.vue';
@@ -37,6 +35,11 @@ async function bootstrap() {
 
   // 路由准备就绪后挂载APP实例
   await router.isReady();
+
+  // 动态的插入 meta 标签 会导致 ui框架样式 低于 tailwindcss 样式
+  const meta = document.createElement('meta');
+  meta.name = 'naive-ui-style';
+  document.head.appendChild(meta);
 
   app.mount('#app', true);
 }

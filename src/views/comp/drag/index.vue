@@ -155,7 +155,7 @@
     .draggable-li {
       width: 100%;
       padding: 16px 10px;
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--n-border-color);
     }
   }
 </style>

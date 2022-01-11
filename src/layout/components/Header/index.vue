@@ -417,7 +417,7 @@
       }
 
       &-menu {
-        color: var(--text-color);
+        color: var(--n-text-color);
       }
     }
 

@@ -7,7 +7,7 @@
         </template>
       </BasicForm>
     </n-card>
-    <n-card :bordered="false" class="mb-3 proCard">
+    <n-card :bordered="false" class="proCard">
       <BasicTable
         :columns="columns"
         :request="loadDataTable"

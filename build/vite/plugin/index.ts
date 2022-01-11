@@ -3,8 +3,6 @@ import type { Plugin } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 
-import windiCSS from 'vite-plugin-windicss';
-
 import Components from 'unplugin-vue-components/vite';
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers';
 
@@ -27,9 +25,6 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean, prodMock) 
       resolvers: [NaiveUiResolver()],
     }),
   ];
-
-  // vite-plugin-windicss
-  vitePlugins.push(windiCSS());
 
   // vite-plugin-html
   vitePlugins.push(configHtmlPlugin(viteEnv, isBuild));

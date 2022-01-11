@@ -89,7 +89,8 @@ export default [
       // const token = getRequestToken(request);
       // if (!token) return resultError('Invalid token');
       //此处随机了，为了模拟不同角色权限
-      const randomNum = Math.floor(Math.random() * 2 + 1);
+      //const randomNum = Math.floor(Math.random() * 2 + 1);
+      const randomNum = 1;
       adminInfo.permissions = (randomNum === 1 ? adminPermissions : ordinaryPermissions) as never[];
       adminInfo.role_type = randomNum;
       return resultSuccess(adminInfo);

@@ -225,7 +225,7 @@
             <n-card size="small" class="cursor-pointer project-card-item" hoverable>
               <div class="flex flex-col justify-center text-gray-500">
                 <span class="text-center">
-                  <n-icon size="30" color="#68c755">
+                  <n-icon size="28" color="#68c755">
                     <DashboardOutlined />
                   </n-icon>
                 </span>
@@ -235,7 +235,7 @@
             <n-card size="small" class="cursor-pointer project-card-item" hoverable>
               <div class="flex flex-col justify-center text-gray-500">
                 <span class="text-center">
-                  <n-icon size="30" color="#fab251">
+                  <n-icon size="28" color="#fab251">
                     <ProfileOutlined />
                   </n-icon>
                 </span>
@@ -245,7 +245,7 @@
             <n-card size="small" class="cursor-pointer project-card-item" hoverable>
               <div class="flex flex-col justify-center text-gray-500">
                 <span class="text-center">
-                  <n-icon size="30" color="#1890ff">
+                  <n-icon size="28" color="#1890ff">
                     <FileProtectOutlined />
                   </n-icon>
                 </span>
@@ -255,7 +255,7 @@
             <n-card size="small" class="cursor-pointer project-card-item" hoverable>
               <div class="flex flex-col justify-center text-gray-500">
                 <span class="text-center">
-                  <n-icon size="30" color="#f06b96">
+                  <n-icon size="28" color="#f06b96">
                     <ApartmentOutlined />
                   </n-icon>
                 </span>
@@ -265,7 +265,7 @@
             <n-card size="small" class="cursor-pointer project-card-item" hoverable>
               <div class="flex flex-col justify-center text-gray-500">
                 <span class="text-center">
-                  <n-icon size="30" color="#7238d1">
+                  <n-icon size="28" color="#7238d1">
                     <SettingOutlined />
                   </n-icon>
                 </span>
@@ -275,7 +275,7 @@
             <n-card size="small" class="cursor-pointer project-card-item" hoverable>
               <div class="flex flex-col justify-center text-gray-500">
                 <span class="text-center">
-                  <n-icon size="30" color="#5cdbd3">
+                  <n-icon size="28" color="#5cdbd3">
                     <MailOutlined />
                   </n-icon>
                 </span>
@@ -318,8 +318,8 @@
       width: 33.333333%;
       border: none;
       border-radius: inherit;
-      border-right: 1px solid var(--border-color);
-      border-bottom: 1px solid var(--border-color);
+      border-right: 1px solid var(--n-n-border-color);
+      border-bottom: 1px solid var(--n-n-border-color);
       &:nth-child(3n) {
         border-right: none;
       }

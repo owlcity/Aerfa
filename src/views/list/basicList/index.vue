@@ -1,6 +1,6 @@
 <template>
   <div>
-    <n-card :bordered="false" class="pt-3 mb-2 proCard">
+    <n-card :bordered="false" class="pt-3 mb-3 proCard">
       <BasicForm
         @register="register"
         @submit="handleSubmit"
@@ -12,7 +12,7 @@
         </template>
       </BasicForm>
     </n-card>
-    <n-card :bordered="false" class="mb-2 proCard">
+    <n-card :bordered="false" class="proCard">
       <BasicTable
         :columns="columns"
         :request="loadDataTable"
@@ -78,7 +78,6 @@
   import { PlusOutlined, DeleteOutlined, FormOutlined } from '@vicons/antd';
   import { useRouter } from 'vue-router';
   import { renderIcon } from '@/utils';
-  import { log } from 'console';
 
   const rules = {
     name: {

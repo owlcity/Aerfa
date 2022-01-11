@@ -275,8 +275,8 @@
     &-card {
       width: 560px;
       padding: 0;
-      background: var(--color);
-      box-shadow: var(--box-shadow);
+      background: var(--n-color);
+      box-shadow: var(--n-box-shadow);
 
       &-input {
         margin-top: 6px;
@@ -317,12 +317,12 @@
             a {
               display: flex;
               align-items: center;
-              background: var(--color);
+              background: var(--n-color);
               border-radius: 4px;
               padding: 0 12px;
               width: 100%;
-              color: var(--text-color);
-              border-bottom: 1px solid var(--border-color);
+              color: var(--n-text-color);
+              border-bottom: 1px solid var(--n-border-color);
 
               .n-icon {
                 color: #969faf;
@@ -331,7 +331,7 @@
 
             &-content {
               align-items: center;
-              color: var(--text-color);
+              color: var(--n-text-color);
               display: flex;
               flex-direction: row;
               height: 56px;
@@ -347,7 +347,7 @@
 
             &-on {
               a {
-                background-color: var(--color-target);
+                background-color: var(--n-color-target);
                 color: #fff;
 
                 .n-icon {
@@ -365,9 +365,9 @@
 
       &-footer {
         align-items: center;
-        background: var(--color);
+        background: var(--n-color);
         border-radius: 0 0 8px 8px;
-        box-shadow: var(--box-shadow);
+        box-shadow: var(--n-box-shadow);
         display: flex;
         flex-shrink: 0;
         height: 44px;
@@ -394,7 +394,7 @@
 
           &-icon {
             align-items: center;
-            background: linear-gradient(-225deg, var(--color), var(--color));
+            background: linear-gradient(-225deg, var(--n-color), var(--n-color));
             border-radius: 2px;
             box-shadow: inset 0 -2px 0 0 #cdcde6, inset 0 0 1px 1px #fff,
               0 1px 2px 1px rgba(30, 35, 90, 0.4);
@@ -411,6 +411,6 @@
   }
 
   .light-item-bg {
-    background: var(--border-color);
+    background: var(--n-border-color);
   }
 </style>

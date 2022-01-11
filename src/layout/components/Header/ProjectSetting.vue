@@ -137,10 +137,15 @@
         <div class="drawer-setting-item">
           <div class="drawer-setting-item-title"> 分割菜单</div>
           <div class="drawer-setting-item-action">
-            <n-switch
-              v-model:value="settingStore.menuSetting.mixMenu"
-              :disabled="settingStore.navMode !== 'horizontal-mix'"
-            />
+            <n-tooltip trigger="hover">
+              <template #trigger>
+                <n-switch
+                  v-model:value="settingStore.menuSetting.mixMenu"
+                  :disabled="settingStore.navMode !== 'horizontal-mix'"
+                />
+              </template>
+              顶部菜单混合模式可用
+            </n-tooltip>
           </div>
         </div>
 

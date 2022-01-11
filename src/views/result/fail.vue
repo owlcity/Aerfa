@@ -56,7 +56,7 @@
     &-extra {
       padding: 24px 40px;
       text-align: left;
-      background: var(--border-color);
+      background: var(--n-border-color);
       border-radius: 4px;
     }
   }
