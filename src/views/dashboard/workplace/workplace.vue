@@ -222,7 +222,12 @@
           title="快捷操作"
         >
           <div class="flex flex-wrap project-card">
-            <n-card size="small" class="cursor-pointer project-card-item" hoverable>
+            <n-card
+              size="small"
+              class="cursor-pointer project-card-item"
+              :bordered="false"
+              hoverable
+            >
               <div class="flex flex-col justify-center text-gray-500">
                 <span class="text-center">
                   <n-icon size="28" color="#68c755">
@@ -232,7 +237,12 @@
                 <span class="text-center text-lx">主控台</span>
               </div>
             </n-card>
-            <n-card size="small" class="cursor-pointer project-card-item" hoverable>
+            <n-card
+              size="small"
+              class="cursor-pointer project-card-item"
+              :bordered="false"
+              hoverable
+            >
               <div class="flex flex-col justify-center text-gray-500">
                 <span class="text-center">
                   <n-icon size="28" color="#fab251">
@@ -242,7 +252,12 @@
                 <span class="text-center text-lx">列表</span>
               </div>
             </n-card>
-            <n-card size="small" class="cursor-pointer project-card-item" hoverable>
+            <n-card
+              size="small"
+              class="cursor-pointer project-card-item"
+              :bordered="false"
+              hoverable
+            >
               <div class="flex flex-col justify-center text-gray-500">
                 <span class="text-center">
                   <n-icon size="28" color="#1890ff">
@@ -252,7 +267,12 @@
                 <span class="text-center text-lx">表单</span>
               </div>
             </n-card>
-            <n-card size="small" class="cursor-pointer project-card-item" hoverable>
+            <n-card
+              size="small"
+              class="cursor-pointer project-card-item"
+              :bordered="false"
+              hoverable
+            >
               <div class="flex flex-col justify-center text-gray-500">
                 <span class="text-center">
                   <n-icon size="28" color="#f06b96">
@@ -262,7 +282,12 @@
                 <span class="text-center text-lx">权限管理</span>
               </div>
             </n-card>
-            <n-card size="small" class="cursor-pointer project-card-item" hoverable>
+            <n-card
+              size="small"
+              class="cursor-pointer project-card-item"
+              :bordered="false"
+              hoverable
+            >
               <div class="flex flex-col justify-center text-gray-500">
                 <span class="text-center">
                   <n-icon size="28" color="#7238d1">
@@ -272,7 +297,12 @@
                 <span class="text-center text-lx">系统管理</span>
               </div>
             </n-card>
-            <n-card size="small" class="cursor-pointer project-card-item" hoverable>
+            <n-card
+              size="small"
+              class="cursor-pointer project-card-item"
+              :bordered="false"
+              hoverable
+            >
               <div class="flex flex-col justify-center text-gray-500">
                 <span class="text-center">
                   <n-icon size="28" color="#5cdbd3">
@@ -318,8 +348,8 @@
       width: 33.333333%;
       border: none;
       border-radius: inherit;
-      border-right: 1px solid var(--n-n-border-color);
-      border-bottom: 1px solid var(--n-n-border-color);
+      border-right: 1px solid var(--n-border-color);
+      border-bottom: 1px solid var(--n-border-color);
       &:nth-child(3n) {
         border-right: none;
       }
