@@ -32,7 +32,7 @@
           <!--表格斑马纹-->
           <n-tooltip trigger="hover" v-if="isShowTableStriped">
             <template #trigger>
-              <div class="mr-2 table-toolbar-right-icon">
+              <div class="table-toolbar-right-icon mr-2">
                 <n-switch v-model:value="striped" />
               </div>
             </template>
@@ -40,18 +40,6 @@
           </n-tooltip>
 
           <n-divider vertical v-if="isShowTableStriped" />
-
-          <!--查询-->
-          <n-tooltip trigger="hover" v-if="isShowTableQuery">
-            <template #trigger>
-              <div class="table-toolbar-right-icon" @click="foldQueryChange">
-                <n-icon size="18">
-                  <SearchOutlined />
-                </n-icon>
-              </div>
-            </template>
-            <span>{{ foldQuery ? '展开查询' : '收起查询' }}</span>
-          </n-tooltip>
 
           <!--刷新-->
           <n-tooltip trigger="hover" v-if="isShowTableRedo">
@@ -102,20 +90,14 @@
         </template>
       </div>
     </div>
-    <div class="mb-4 table-checked-row" v-if="getCheckedRowAlert">
-      <n-alert type="info" :show-icon="false">
-        <n-space justify="space-between">
-          <span>已选择 {{ checkedRowKeys.length }} 项</span>
-          <n-button type="info" text @click="restCheckedRowKeys">取消选择</n-button>
-        </n-space>
-      </n-alert>
-    </div>
     <div class="s-table" v-if="isShowTable">
       <n-data-table
         ref="tableElRef"
         v-bind="getBindValues"
         v-model:checked-row-keys="checkedRowKeys"
         @update:checked-row-keys="checkedRowKeysChange"
+        @update:filters="handleFiltersChange"
+        @update:sorter="handleSorterChange"
         :pagination="pagination"
         @update:page="updatePage"
         @update:page-size="updatePageSize"
@@ -129,7 +111,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, unref, toRaw, computed, onMounted, nextTick } from 'vue';
+  import { ref, unref, toRaw, computed, onMounted, nextTick, h } from 'vue';
 
   import { createTableContext } from './hooks/useTableContext';
   import ColumnSetting from './components/settings/ColumnSetting.vue';
@@ -152,10 +134,10 @@
     QuestionCircleOutlined,
     FullscreenExitOutlined,
     FullscreenOutlined,
-    SearchOutlined,
   } from '@vicons/antd';
   import { useFullscreen } from '@vueuse/core';
-
+  import { NSpace, NIcon, NButton, NInput } from 'naive-ui';
+  import { SearchOutline } from '@vicons/ionicons5';
   const props = defineProps({
     ...basicProps,
   });
@@ -168,7 +150,6 @@
     'edit-cancel',
     'edit-row-end',
     'edit-change',
-    'fold-query-change',
   ]);
 
   const densityOptions = [
@@ -189,7 +170,6 @@
     },
   ];
 
-  const foldQuery = ref(false);
   const striped = ref(false);
   const isShowTable = ref(true);
   const deviceHeight = ref<Number | String>('auto');
@@ -221,7 +201,6 @@
   const {
     getDataSourceRef,
     getRowKey,
-    getRowClassName,
     reload,
     restReload,
     setTableData,
@@ -245,21 +224,43 @@
 
   const tableSize = ref(unref(getProps as any).size || 'medium');
 
-  //是否显示 选中行提示
-  const getCheckedRowAlert = computed(() => {
-    return unref(getProps as any).checkedRowAlert && checkedRowKeys.value.length;
-  });
-
   //表格全屏
   function toggleTableFullScreen() {
     toggle();
   }
 
   //table内部刷新
-  async function reloadTable() {
+  async function reloadTable(opt?) {
     await restCheckedRowKeys();
-    reload();
+    //TODO：这里获取filter和order参数
+    const filters = getAllFilter();
+    // console.log('reloadTable:', filters);
+    reload(merger(filters, opt));
   }
+
+  //深copy: https://juejin.cn/post/6882549580559777800
+  const merger = (...opts) => {
+    let res = {};
+
+    let combine = (opt) => {
+      for (let prop in opt) {
+        if (opt.hasOwnProperty(prop)) {
+          //下面是深拷贝与浅拷贝的区别，用到了递归的思想
+          if (Object.prototype.toString.call(opt[prop]) === '[object Object]') {
+            res[prop] = merger(res[prop], opt[prop]);
+          } else {
+            res[prop] = opt[prop];
+          }
+        }
+      }
+    };
+
+    //扩张运算符将两个对象合并到一个数组里因此可以调用length方法
+    for (let i = 0; i < opts.length; i++) {
+      combine(opts[i]);
+    }
+    return res;
+  };
 
   //页码切换
   async function updatePage(page) {
@@ -270,7 +271,6 @@
 
   //分页数量切换
   function updatePageSize(size) {
-    console.log('🚀 ~ file: Table.vue ~ line 272 ~ updatePageSize ~ size', size);
     setPagination({ page: 1, pageSize: size });
     reload();
   }
@@ -304,9 +304,6 @@
   //是否显示斑马纹开关
   const isShowTableStriped = computed(() => getProps.value.tableSetting?.striped ?? true);
 
-  //是否显示查询表单 AdvancedTable 组件独有
-  const isShowTableQuery = computed(() => getProps.value.tableSetting?.query ?? true);
-
   //计算高度
   const getDeviceHeight = computed(() => {
     const tableData = unref(getDataSourceRef);
@@ -322,8 +319,8 @@
       ...unref(getProps),
       loading: unref(getLoading),
       columns: toRaw(unref(getPageColumns)),
+      // columns: getPageColumns.value,
       rowKey: unref(getRowKey),
-      rowClassName: unref(getRowClassName),
       data: tableData,
       size: unref(getTableSize),
       striped: unref(getStriped),
@@ -332,24 +329,189 @@
     };
   });
 
-  //折叠查询
-  function foldQueryChange() {
-    foldQuery.value = !foldQuery.value;
-    emit('fold-query-change', foldQuery.value);
-  }
-
   //选择行
   function checkedRowKeysChange(rowKeys) {
     checkedRowKeys.value = rowKeys;
     emit('checked-row-change', checkedRowKeys);
-    redoHeight();
   }
 
+  // #region anson:hack
+  const handleSorterChange = (sorter) => {
+    // console.log(sorter, unref(tableElRef));
+    ref(unref(getProps).columns).value.forEach((column) => {
+      if (column.sortOrder === undefined) return;
+      if (!sorter) {
+        column.sortOrder = false;
+        return;
+      }
+      if (column.key === sorter.columnKey) {
+        // tableElRef.value.sort(column.key, sorter.order);
+        column.sortOrder = sorter.order;
+        // console.log('column:', column);
+      } else {
+        column.sortOrder = false;
+      }
+    });
+    //TODO：这里要获取所有的sorter和filters
+    reloadTable();
+  };
+
+  const handleFiltersChange = (filters, sourceColumn) => {
+    // console.log('handleFiltersChange', filters, sourceColumn);
+    ref(unref(getProps).columns).value.forEach((column) => {
+      /** column.sortOrder !== undefined means it is uncontrolled */
+      if (column.filter === undefined) return;
+      if (!filters) {
+        // column.sortOrder = false;
+        return;
+      }
+      if (column.key === sourceColumn.key) {
+        column.filterOptionValue = filters[sourceColumn.key];
+        // console.log('column2:', column);
+      }
+    });
+    // reload({ filters });
+    reloadTable();
+    // emit('update:filters', filters, sourceColumn);
+  };
+
+  // 自定义搜索，还需要自定义下拉搜索
+  const createSearch = () => {
+    let inputVal = ref();
+    const renderFilterIcon = () => {
+      return h(
+        NIcon,
+        {
+          color: inputVal.value ? '#0e7a0d' : '',
+        },
+        { default: () => h(SearchOutline) }
+      );
+    };
+    const renderFilterMenu = (ctx) => {
+      const { hide } = ctx;
+      // const that = this;
+      // console.log('ctx:', ctx, this);
+      return h(
+        NSpace,
+        {
+          style: { padding: '6px' },
+          vertical: true,
+        },
+        {
+          default: () => [
+            h(
+              NInput,
+              {
+                size: 'small',
+                value: inputVal,
+                onInput: (val) => {
+                  inputVal.value = val;
+                  // console.log('change:', val);
+                  // emit('update:inputVal', val);
+                  // filterColumn.filterOptionValue = '1';
+                },
+              },
+              null
+            ),
+            h(
+              NSpace,
+              {
+                // style: { padding: '12px' },
+                justify: 'end',
+              },
+              {
+                default: () => [
+                  h(
+                    NButton,
+                    {
+                      size: 'tiny',
+                      onClick: () => {
+                        inputVal.value = '';
+                        reloadTable();
+                        hide();
+                        // filterColumn.filterOptionValue = '1';
+                      },
+                    },
+                    { default: () => '重置' }
+                  ),
+                  h(
+                    NButton,
+                    {
+                      size: 'tiny',
+                      type: 'primary',
+                      onClick: () => {
+                        // console.log('ctx2:', inputVal);
+                        reloadTable();
+                        hide();
+                        // filterColumn.filterOptionValue = '1';
+                      },
+                    },
+                    { default: () => '确认' }
+                  ),
+                ],
+              }
+            ),
+          ],
+        }
+      );
+    };
+    return { renderFilterIcon, renderFilterMenu, inputVal };
+  };
+  const registerSearch = () => {
+    ref(unref(getProps).columns).value.forEach((column) => {
+      if (column.search) {
+        const { renderFilterIcon, renderFilterMenu, inputVal } = createSearch();
+        column.renderFilterIcon = renderFilterIcon;
+        column.renderFilterMenu = renderFilterMenu;
+        column.inputVal = inputVal;
+        column.filter = 'default';
+      }
+    });
+  };
+
+  function getAllFilter() {
+    // let filters: any = [];
+    let filter: any = null;
+    let order: any = null;
+    getPageColumns.value.forEach((column) => {
+      if (column.sortOrder) {
+        if (!order) order = {};
+        order[column.key] = column.sortOrder.replace('end', '');
+      }
+      const inlist = toRaw(column.filterOptionValue);
+
+      if (inlist && inlist.length > 0) {
+        // filters.push({
+        //   key: column.key,
+        //   filters: toRaw(column.filterOptionValue),
+        // });
+        if (!filter) filter = {};
+        filter[column.key] = { _in: inlist };
+      }
+      if (column.search && column.inputVal) {
+        let reg = '_eq';
+        if (column.searchReg) {
+          reg = column.searchReg;
+        }
+        let obj = {};
+        let input = column.inputVal;
+        if (column.searchFixKey) {
+          input = column.searchFixKey(input);
+        }
+        obj[reg] = input;
+        // console.log('column.inputVal', column);
+        if (!filter) filter = {};
+        filter[column.key] = obj;
+      }
+    });
+    return { order, where: filter };
+  }
+  // #endregion
   //清空行
   function restCheckedRowKeys() {
     checkedRowKeys.value = [];
+    //需要emit出去，不然监听不到
     emit('checked-row-change', checkedRowKeys);
-    redoHeight();
   }
 
   //重新计算表格高度
@@ -367,6 +529,7 @@
   const tableAction = {
     reload,
     restReload,
+    // reloadTable,
     restCheckedRowKeys,
     redoHeight,
     setColumns,
@@ -416,6 +579,7 @@
   useWindowSizeFn(computeTableHeight, 280);
 
   onMounted(() => {
+    registerSearch();
     nextTick(() => {
       computeTableHeight();
     });
@@ -425,6 +589,7 @@
   defineExpose({
     reload,
     restReload,
+    reloadTable, //anson add
     restCheckedRowKeys,
     getDataSource,
     getColumns,
@@ -446,7 +611,7 @@
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      flex: 1;
+      flex: 2;
 
       &-title {
         display: flex;
