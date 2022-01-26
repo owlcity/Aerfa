@@ -4,7 +4,7 @@ import { PermissionsEnum } from '@/enums/permissionsEnum';
 export interface ActionItem extends NButton.props {
   onClick?: Fn;
   label?: string;
-  color?: 'success' | 'error' | 'warning';
+  color?: string;
   icon?: string;
   popConfirm?: PopConfirm;
   disabled?: boolean;

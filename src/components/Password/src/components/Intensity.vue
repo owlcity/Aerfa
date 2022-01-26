@@ -60,7 +60,7 @@
   import { useDesignSetting } from '@/hooks/setting/useDesignSetting';
 
   const { getAppTheme } = useDesignSetting();
-  const props = defineProps({
+  defineProps({
     value: {
       type: String,
       default: '',

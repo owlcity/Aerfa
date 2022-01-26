@@ -1,4 +1,4 @@
-import http from '@/utils/http/axios';
+import { http } from '@/utils/http/axios';
 
 //图片上传
 export function upload(data) {

@@ -19,6 +19,7 @@
               accept="image/*"
               action="http://www.mocky.io/v2/5e4bafc63100007100d8b70f"
               @before-upload="beforeUpload"
+              style="width: auto"
             >
               <n-tooltip placement="bottom" trigger="hover">
                 <template #trigger>

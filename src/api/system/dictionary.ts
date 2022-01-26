@@ -1,9 +1,9 @@
-import http from '@/utils/http/axios';
+import { http } from '@/utils/http/axios';
 
 /**
  * @description: 获取字典列表
  */
-export function getDictionary(params) {
+export function getDictionary(params?) {
   return http.request({
     url: '/dictionary/list',
     method: 'get',

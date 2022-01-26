@@ -57,7 +57,7 @@
 
   const props = defineProps({ ...basicProps });
 
-  const emit = defineEmits(['change', 'focus']);
+  const emit = defineEmits(['change', 'focus', 'update:value']);
 
   const isSuccess = ref(false);
 
@@ -95,6 +95,7 @@
 
   function inputChange(value) {
     emit('change', value);
+    emit('update:value', value);
     password.value.strength = getStrength(value);
   }
 

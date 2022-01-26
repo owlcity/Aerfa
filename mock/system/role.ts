@@ -37,7 +37,8 @@ export default [
       return resultSuccess({
         page: Number(page),
         pageSize: Number(pageSize),
-        pageCount: 60,
+        pageCount: 30,
+        itemCount: 30 * Number(pageSize),
         list,
       });
     },

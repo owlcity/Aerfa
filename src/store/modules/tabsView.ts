@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import { RouteLocationNormalized } from 'vue-router';
 import { useAsyncRouteStore } from '@/store/modules/asyncRoute';
+import { storage } from '@/utils/Storage';
+import { TABS_ROUTES } from '@/store/mutation-types';
 
 // 不需要出现在标签页中的路由
 const whiteList = ['Redirect', 'Login'];
@@ -48,7 +50,11 @@ export const useTabsViewStore = defineStore({
   state: (): ITabsViewState => ({
     tabsList: [],
   }),
-  getters: {},
+  getters: {
+    getTabList(): RouteLocationNormalized[] {
+      return this.tabsList;
+    },
+  },
   actions: {
     //查找设置缓存name
     findKeepAliveNames(list) {
@@ -89,7 +95,7 @@ export const useTabsViewStore = defineStore({
       if (index > 0) {
         const leftTabs = this.tabsList.slice(0, index);
         const newLeftTabs = filterCurrentRoute(leftTabs, activeKey);
-        this.delKeepAliveNames(newRightTabs);
+        this.delKeepAliveNames(newLeftTabs);
         this.tabsList = filterNewTabs(newLeftTabs, this.tabsList, activeKey);
       }
     },
@@ -124,6 +130,27 @@ export const useTabsViewStore = defineStore({
     closeAllTabs() {
       this.delKeepAliveNames(this.tabsList);
       this.tabsList = retainAffixRoute(this.tabsList);
+    },
+    // 设置标题
+    async setTabTitle(title: string, route: RouteLocationNormalized) {
+      this.tabsList.forEach((item) => {
+        if (item.fullPath === route.fullPath) {
+          item.meta.title = title;
+        }
+      });
+      storage.set(TABS_ROUTES, JSON.stringify(this.tabsList));
+    },
+    // 设置状态
+    async setTabState(params, route: RouteLocationNormalized) {
+      this.tabsList.forEach((item) => {
+        if (item.fullPath === route.fullPath) {
+          item.meta = {
+            ...item.meta,
+            ...params,
+          };
+        }
+      });
+      storage.set(TABS_ROUTES, JSON.stringify(this.tabsList));
     },
   },
 });

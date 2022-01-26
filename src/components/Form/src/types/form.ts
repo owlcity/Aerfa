@@ -13,12 +13,12 @@ export interface componentProps {
 
 export interface FormSchema {
   field: string;
-  label: string;
+  label?: string;
   labelMessage?: string;
   labelMessageStyle?: object | string;
   defaultValue?: any;
   component?: ComponentType;
-  componentProps?: object;
+  componentProps?: any;
   slot?: string;
   rules?: object | object[];
   giProps?: GridItemProps;
@@ -54,6 +54,8 @@ export interface FormProps {
   submitOnReset?: boolean;
   baseGridStyle?: CSSProperties;
   draggable?: boolean;
+  collapsed?: boolean;
+  collapsedRows?: number;
 }
 
 export interface FormActionType {
@@ -64,6 +66,7 @@ export interface FormActionType {
   getFieldsValue: () => Recordable;
   resetFields: () => Promise<void>;
   validate: (nameList?: any[]) => Promise<any>;
+  setLoadingSub: (status: boolean) => void;
 }
 
 export type RegisterFn = (formInstance: FormActionType) => void;

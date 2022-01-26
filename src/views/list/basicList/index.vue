@@ -1,6 +1,6 @@
 <template>
   <div>
-    <n-card :bordered="false" class="pt-3 mb-2 proCard">
+    <n-card :bordered="false" class="pt-3 mb-3 proCard">
       <BasicForm
         @register="register"
         @submit="handleSubmit"
@@ -12,14 +12,14 @@
         </template>
       </BasicForm>
     </n-card>
-    <n-card :bordered="false" class="mb-2 proCard">
+    <n-card :bordered="false" class="proCard">
       <BasicTable
         :columns="columns"
         :request="loadDataTable"
         :row-key="(row) => row.id"
         ref="actionRef"
         :actionColumn="actionColumn"
-        @update:checked-row-keys="onCheckedRow"
+        @checked-row-change="onCheckedRow"
         :scroll-x="1090"
       >
         <template #tableTitle>
@@ -72,15 +72,13 @@
   import { h, reactive, ref } from 'vue';
   import { useMessage } from 'naive-ui';
   import { BasicTable, TableAction } from '@/components/Table';
-  import { BasicForm, useForm } from '@/components/Form/index';
+  import { BasicForm, useForm, FormSchema } from '@/components/Form/index';
   import { getTableList } from '@/api/table/list';
   import { columns } from './columns';
   import { PlusOutlined, DeleteOutlined, FormOutlined } from '@vicons/antd';
-  import { useRouter } from 'vue-router';
-  import { usePermission } from '@/hooks/web/usePermission';
+  import { useRouter, useRoute } from 'vue-router';
   import { renderIcon } from '@/utils';
 
-  const { hasSomePermission } = usePermission();
   const rules = {
     name: {
       required: true,
@@ -100,7 +98,7 @@
     },
   };
 
-  const schemas = [
+  const schemas: FormSchema[] = [
     {
       field: 'name',
       labelMessage: '这是一个提示',
@@ -224,6 +222,7 @@
   ];
 
   const router = useRouter();
+  const route = useRoute();
   const formRef: any = ref(null);
   const message = useMessage();
   const actionRef = ref();
@@ -237,8 +236,8 @@
   });
 
   const params = ref({
-    pageSize: 10,
-    name: 'xiaoMa',
+    name: '',
+    id: route.params.id,
   });
 
   const actionColumn = reactive({
@@ -324,7 +323,7 @@
   };
 
   function onCheckedRow(rowKeys) {
-    console.log(rowKeys);
+    console.log(rowKeys.value);
   }
 
   function reloadTable() {
@@ -365,6 +364,7 @@
 
   function handleSubmit(values: Recordable) {
     console.log(values);
+    params.value = Object.assign(formParams, values) as any;
     reloadTable();
   }
 

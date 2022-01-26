@@ -1,13 +1,13 @@
 <template>
   <div>
-    <n-card :bordered="false" class="pt-3 mb-4 proCard">
+    <n-card :bordered="false" class="pt-3 mb-3 proCard">
       <BasicForm @register="register" @submit="handleSubmit" @reset="handleReset">
         <template #statusSlot="{ model, field }">
           <n-input v-model:value="model[field]" />
         </template>
       </BasicForm>
     </n-card>
-    <n-card :bordered="false" class="mb-4 proCard">
+    <n-card :bordered="false" class="proCard">
       <BasicTable
         :columns="columns"
         :request="loadDataTable"

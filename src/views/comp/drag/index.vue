@@ -4,13 +4,13 @@
       <n-card :bordered="false" title="拖拽"> 常用于卡片，事项，预约，流程，计划等， </n-card>
     </div>
 
-    <n-alert title="花式拖拽演示" type="info" class="mt-4">
+    <n-alert title="花式拖拽演示" type="info" class="mt-3">
       每个卡片，都可以上下拖拽顺序，另外不同卡片，也可以拖拽过去，拖拽过来，都不在话下呢，快试试O(∩_∩)O哈哈~
     </n-alert>
 
     <n-grid
       cols="1 s:2 m:3 l:4 xl:4 2xl:4"
-      class="mt-4 proCard"
+      class="mt-3 proCard"
       responsive="screen"
       :x-gap="12"
       :y-gap="8"
@@ -155,7 +155,7 @@
     .draggable-li {
       width: 100%;
       padding: 16px 10px;
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--n-border-color);
     }
   }
 </style>

@@ -10,9 +10,10 @@ import { PageEnum } from '@/enums/pageEnum';
 import { useGlobSetting } from '@/hooks/setting';
 
 import { isString } from '@/utils/is/';
+import { deepMerge, isUrl } from '@/utils';
 import { setObjToUrlParams } from '@/utils/urlUtils';
 
-import { RequestOptions, Result } from './types';
+import { RequestOptions, Result, CreateAxiosOptions } from './types';
 
 import { useUserStoreWidthOut } from '@/store/modules/user';
 
@@ -69,7 +70,7 @@ const transform: AxiosTransform = {
         // 是否显示自定义信息提示
         $dialog.success({
           type: 'success',
-          info: successMessageText || message || '操作成功！',
+          content: successMessageText || message || '操作成功！',
         });
       } else if (!hasSuccess && (errorMessageText || isShowErrorMessage)) {
         // 是否显示自定义信息提示
@@ -123,13 +124,15 @@ const transform: AxiosTransform = {
 
   // 请求之前处理config
   beforeRequestHook: (config, options) => {
-    const { apiUrl, joinPrefix, joinParamsToUrl, formatDate, joinTime = true } = options;
+    const { apiUrl, joinPrefix, joinParamsToUrl, formatDate, joinTime = true, urlPrefix } = options;
 
-    if (joinPrefix) {
+    const isUrlStr = isUrl(config.url as string);
+
+    if (!isUrlStr && joinPrefix) {
       config.url = `${urlPrefix}${config.url}`;
     }
 
-    if (apiUrl && isString(apiUrl)) {
+    if (!isUrlStr && apiUrl && isString(apiUrl)) {
       config.url = `${apiUrl}${config.url}`;
     }
     const params = config.params || {};
@@ -146,7 +149,7 @@ const transform: AxiosTransform = {
     } else {
       if (!isString(params)) {
         formatDate && formatRequestDate(params);
-        if (Reflect.has(config, 'data') && config.data && Object.keys(config.data).length) {
+        if (Reflect.has(config, 'data') && config.data && Object.keys(config.data).length > 0) {
           config.data = data;
           config.params = params;
         } else {
@@ -171,13 +174,15 @@ const transform: AxiosTransform = {
   /**
    * @description: 请求拦截器处理
    */
-  requestInterceptors: (config) => {
+  requestInterceptors: (config, options) => {
     // 请求之前处理config
     const userStore = useUserStoreWidthOut();
     const token = userStore.getToken;
-    if (token) {
+    if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
       // jwt token
-      config.headers.token = token;
+      (config as Recordable).headers.Authorization = options.authenticationScheme
+        ? `${options.authenticationScheme} ${token}`
+        : token;
     }
     return config;
   },
@@ -221,35 +226,62 @@ const transform: AxiosTransform = {
     } else {
       console.warn(error, '请求被取消！');
     }
-    return Promise.reject(error);
+    //return Promise.reject(error);
+    return Promise.reject(response?.data);
   },
 };
 
-const Axios = new VAxios({
-  timeout: 10 * 1000,
-  // 接口前缀
-  prefixUrl: urlPrefix,
-  headers: { 'Content-Type': ContentTypeEnum.JSON },
-  // 数据处理方式
-  transform,
-  // 配置项，下面的选项都可以在独立的接口请求中覆盖
-  requestOptions: {
-    // 默认将prefix 添加到url
-    joinPrefix: true,
-    // 是否返回原生响应头 比如：需要获取响应头时使用该属性
-    isReturnNativeResponse: false,
-    // 需要对返回数据进行处理
-    isTransformResponse: true,
-    // post请求的时候添加参数到url
-    joinParamsToUrl: false,
-    // 格式化提交参数时间
-    formatDate: true,
-    // 消息提示类型
-    errorMessageMode: 'none',
-    // 接口地址
-    apiUrl: globSetting.apiUrl as string,
-  },
-  withCredentials: false,
-});
+function createAxios(opt?: Partial<CreateAxiosOptions>) {
+  return new VAxios(
+    deepMerge(
+      {
+        timeout: 10 * 1000,
+        authenticationScheme: '',
+        // 接口前缀
+        prefixUrl: urlPrefix,
+        headers: { 'Content-Type': ContentTypeEnum.JSON },
+        // 数据处理方式
+        transform,
+        // 配置项，下面的选项都可以在独立的接口请求中覆盖
+        requestOptions: {
+          // 默认将prefix 添加到url
+          joinPrefix: true,
+          // 是否返回原生响应头 比如：需要获取响应头时使用该属性
+          isReturnNativeResponse: false,
+          // 需要对返回数据进行处理
+          isTransformResponse: true,
+          // post请求的时候添加参数到url
+          joinParamsToUrl: false,
+          // 格式化提交参数时间
+          formatDate: true,
+          // 消息提示类型
+          errorMessageMode: 'none',
+          // 接口地址
+          apiUrl: globSetting.apiUrl,
+          // 接口拼接地址
+          urlPrefix: urlPrefix,
+          //  是否加入时间戳
+          joinTime: true,
+          // 忽略重复请求
+          ignoreCancelToken: true,
+          // 是否携带token
+          withToken: true,
+        },
+        withCredentials: false,
+      },
+      opt || {}
+    )
+  );
+}
 
-export default Axios;
+export const http = createAxios();
+
+// 项目，多个不同 api 地址，直接在这里导出多个
+// src/api ts 里面接口，就可以单独使用这个请求，
+// import { httpTwo } from '@/utils/http/axios'
+// export const httpTwo = createAxios({
+//   requestOptions: {
+//     apiUrl: 'http://localhost:9001',
+//     urlPrefix: 'api',
+//   },
+// });

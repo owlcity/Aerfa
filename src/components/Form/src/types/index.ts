@@ -4,6 +4,7 @@ export type ComponentType =
   | 'NSelect'
   | 'NTreeSelect'
   | 'NRadio'
+  | 'NRadioGroup'
   | 'NCheckbox'
   | 'NAutoComplete'
   | 'NCascader'

@@ -268,6 +268,11 @@
     propsRef.value = deepMerge(unref(propsRef) || {}, formProps);
   }
 
+  //更新loading状态
+  function setLoadingSub(status: boolean): void {
+    loadingSub.value = status;
+  }
+
   const formActionType: Partial<FormActionType> = {
     getFieldsValue,
     setFieldsValue,
@@ -275,6 +280,7 @@
     validate,
     clearValidate,
     setProps,
+    setLoadingSub,
     submit: handleSubmit,
   };
 
@@ -294,6 +300,10 @@
   onMounted(() => {
     initDefault();
     emit('register', formActionType);
+  });
+
+  defineExpose({
+    ...formActionType,
   });
 </script>
 

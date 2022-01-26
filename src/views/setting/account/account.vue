@@ -30,7 +30,7 @@
     background: #f0faff;
     color: #2d8cf0;
 
-    ::v-deep(.n-thing-main .n-thing-header .n-thing-header__title) {
+    :deep(.n-thing-main .n-thing-header .n-thing-header__title) {
       color: #2d8cf0;
     }
 

@@ -3,12 +3,12 @@
     <div class="n-layout-page-header">
       <n-card :bordered="false" title="右键菜单"> 右键菜单示例，指定元素右键显示操作菜单 </n-card>
     </div>
-    <n-card :bordered="false" class="mt-4 proCard">
+    <n-card :bordered="false" class="mt-3 proCard">
       <n-alert :show-icon="false" title="右键展示菜单" type="info">
         <n-button class="mt-2" type="primary" @contextmenu="handleContextMenu">右键试试</n-button>
       </n-alert>
 
-      <n-alert :show-icon="false" title="头像组件右键展示菜单" type="info" class="mt-4">
+      <n-alert :show-icon="false" title="头像组件右键展示菜单" type="info" class="mt-3">
         <n-avatar
         :size="80"
         src="https://naive-ui-admin-docs.vercel.app/logo.png"

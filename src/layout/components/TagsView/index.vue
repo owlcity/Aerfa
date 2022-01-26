@@ -37,7 +37,10 @@
                 @contextmenu="handleContextMenu($event, element, index)"
                 @click.stop="goPage(element)"
               >
-                <span>{{ element.meta.title }}</span>
+                <span
+                  >{{ element.meta.title
+                  }}<n-badge class="ml-1" v-if="element.meta.state === 'undone'" type="warning" dot
+                /></span>
                 <n-icon v-if="!element.meta.affix" size="14" @click.stop="closeTabItem(element)">
                   <CloseOutlined />
                 </n-icon>
@@ -74,7 +77,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref, unref, provide, watch, onMounted, nextTick, toRaw } from 'vue';
+  import { computed, ref, unref, provide, watch, onMounted, nextTick, toRaw, inject } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { storage } from '@/utils/Storage';
   import { TABS_ROUTES } from '@/store/mutation-types';
@@ -95,12 +98,15 @@
     DoubleLeftOutlined,
     DoubleRightOutlined,
     MinusOutlined,
+    CompressOutlined,
+    ExpandOutlined,
   } from '@vicons/antd';
   import { renderIcon } from '@/utils/index';
   import elementResizeDetectorMaker from 'element-resize-detector';
   import { useDesignSetting } from '@/hooks/setting/useDesignSetting';
   import { useProjectSettingStore } from '@/store/modules/projectSetting';
   import { useGo, useRedo } from '@/hooks/web/usePage';
+  import { useThemeVars, useDialog } from 'naive-ui';
 
   const props = defineProps({
     collapsed: {
@@ -108,12 +114,24 @@
     },
   });
 
+  const themeVars = useThemeVars();
+
+  const getCardColor = computed(() => {
+    return themeVars.value.cardColor;
+  });
+
+  const getBaseColor = computed(() => {
+    return themeVars.value.textColor1;
+  });
+
+  const emit = defineEmits(['pageFullScreen']);
+
   const { getDarkTheme, getAppTheme } = useDesignSetting();
   const { getNavMode, getMenuSetting } = useProjectSetting();
   const settingStore = useProjectSettingStore();
   const go = useGo();
-  const redo = useRedo();
   const message = useMessage();
+  const dialog = useDialog();
   const route = useRoute();
   const router = useRouter();
   const tabsViewStore = useTabsViewStore();
@@ -165,10 +183,17 @@
     };
   });
 
+  const getPageFullScreen = inject('isPageFullScreen');
+
   //tags 右键右侧下拉菜单
   const TabsMenuOptions = computed(() => {
     const disabled = unref(tabsList).length === 1;
     return [
+      {
+        label: unref(getPageFullScreen) ? '退出全屏' : '内容全屏',
+        key: '7',
+        icon: getPageFullScreen ? renderIcon(CompressOutlined) : renderIcon(ExpandOutlined),
+      },
       {
         label: '刷新当前',
         key: '1',
@@ -242,7 +267,8 @@
   watch(
     () => route.fullPath,
     (to) => {
-      if (whiteList.includes(route.name as string)) return;
+      // 如果您用的路由模式是 hash 请去掉，|| route.hash 判断条件
+      if (whiteList.includes(route.name as string) || route.hash) return;
       activeKey.value = to;
       currentTabRoute.value = null;
       refreshCurrent.value = false;
@@ -263,6 +289,24 @@
     if (tabsList.value.length === 1) {
       return message.warning('这已经是最后一页，不能再关闭了！');
     }
+    const routeInfo = unref(route);
+    //判断当前页标签状态 阻止关闭 只是提供思路，更多个性化功能，自行调整
+    if (routeInfo.meta.state && routeInfo.meta.state === 'undone') {
+      const { content } = routeInfo.meta.dialogOptions;
+      dialog.info({
+        title: '提示',
+        content,
+        positiveText: '确定',
+        negativeText: '取消',
+        onPositiveClick: () => {
+          directRemoveTab(route);
+        },
+        onNegativeClick: () => {},
+      });
+    } else directRemoveTab(route);
+  };
+
+  function directRemoveTab(route) {
     delKeepAliveCompName();
     tabsViewStore.closeCurrentTab(route);
     asyncRouteStore.removeKeepAliveComponents([route.value.name]);
@@ -273,7 +317,7 @@
       router.push(currentRoute);
     }
     updateNavScroll();
-  };
+  }
 
   // 刷新页面
   async function reloadPage() {
@@ -342,6 +386,10 @@
       //关闭右侧
       case '6':
         closeRight(getCurrentTabRoute);
+        break;
+      //内容页全屏
+      case '7':
+        emit('pageFullScreen');
         break;
     }
     updateNavScroll();
@@ -426,7 +474,7 @@
   }
 
   function getTabIndex() {
-    return unref(tabsList).findIndex((item) => item.path === activeKey.value);
+    return unref(tabsList).findIndex((item) => item.fullPath === activeKey.value);
   }
 
   function onClickOutside() {
@@ -527,8 +575,8 @@
           overflow: hidden;
 
           &-item {
-            background: var(--color);
-            color: var(--text-color);
+            background: v-bind(getCardColor);
+            color: v-bind(getBaseColor);
             height: 32px;
             padding: 6px 16px 4px;
             border-radius: 3px;
@@ -585,7 +633,7 @@
       height: 32px;
       line-height: 32px;
       text-align: center;
-      background: var(--color);
+      background: v-bind(getCardColor);
       border-radius: 2px;
       cursor: pointer;
       //margin-right: 10px;

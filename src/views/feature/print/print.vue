@@ -3,7 +3,7 @@
     <div class="n-layout-page-header">
       <n-card :bordered="false" title="打印场景"> json打印表格，图片打印 </n-card>
     </div>
-    <n-card :bordered="false" class="mt-4 proCard">
+    <n-card :bordered="false" class="mt-3 proCard">
       <n-space>
         <n-button type="primary" @click="jsonPrint">打印表格</n-button>
         <n-button type="primary" @click="imagePrint">打印图片</n-button>

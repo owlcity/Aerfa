@@ -3,7 +3,7 @@
     <div class="n-layout-page-header">
       <n-card :bordered="false" title="导出示例"> 根据JSON格式的数据进行导出 </n-card>
     </div>
-    <n-card :bordered="false" class="mt-4 proCard">
+    <n-card :bordered="false" class="mt-3 proCard">
       <BasicTable
         title="表格列表"
         titleTooltip="这是一个提示"

@@ -78,19 +78,16 @@ export const useUserStore = defineStore({
 
     // 获取用户信息
     GetInfo() {
-      const that = this;
       return new Promise((resolve, reject) => {
         getUserInfo()
           .then((res) => {
             const result = res;
             if (result.permissions && result.permissions.length) {
               const permissionsList = result.permissions;
-              that.setPermissions(permissionsList);
-              that.setUserInfo(result);
-            } else {
-              reject(new Error('getInfo: permissionsList must be a non-null array !'));
+              this.setPermissions(permissionsList);
             }
-            that.setAvatar(result.avatar);
+            this.setUserInfo(result);
+            this.setAvatar(result.avatar);
             resolve(res);
           })
           .catch((error) => {

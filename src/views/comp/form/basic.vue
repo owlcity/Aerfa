@@ -5,7 +5,7 @@
         基础表单，用于向用户收集表单信息，并展示 Password 组件使用示例</n-card
       >
     </div>
-    <n-card :bordered="false" class="mt-4 proCard">
+    <n-card :bordered="false" class="mt-3 proCard">
       <div class="BasicForm">
         <BasicForm
           submitButtonText="提交预约"
@@ -36,11 +36,11 @@
 
 <script lang="ts" setup>
   import { ref } from 'vue';
-  import { BasicForm } from '@/components/Form/index';
+  import { BasicForm, FormSchema } from '@/components/Form/index';
   import { useMessage } from 'naive-ui';
   import { Password } from '@/components/Password';
 
-  const schemas = [
+  const schemas: FormSchema[] = [
     {
       field: 'id',
       defaultValue: 128,

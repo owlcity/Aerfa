@@ -1,57 +1,77 @@
 <template>
-  <n-layout embedded class="layout" :position="fixeBody" has-sider>
-    <n-layout-sider
-      v-if="isMixMenuNoneSub && (navMode === 'vertical' || navMode === 'horizontal-mix')"
-      show-trigger="bar"
-      @collapse="collapsed = true"
-      :position="fixeLeftSider"
-      @expand="collapsed = false"
-      :collapsed="collapsed"
-      collapse-mode="width"
-      :collapsed-width="64"
-      :width="leftMenuWidth"
-      :native-scrollbar="false"
-      :inverted="inverted"
-      class="layout-sider"
-    >
-      <Logo :collapsed="collapsed" />
-      <AsideMenu v-model:collapsed="collapsed" v-model:location="getMenuLocation" />
-    </n-layout-sider>
+  <n-layout
+    class="admin-layout"
+    :inverted="inverted"
+    :class="{
+      'admin-layout-fix-header': fixedHeader,
+      'admin-layout-fix-side': fixedSide,
+      'admin-layout-fix-body': true,
+      'admin-layout-side-horizontal': navMode === 'horizontal',
+      'admin-layout-hide-side': !isMixMenuNoneSub,
+      'admin-layout-show-tabs': isMultiTabs,
+      'admin-layout-collapse': collapsed,
+    }"
+  >
+    <n-layout-header :inverted="getHeaderInverted" class="admin-layout-header">
+      <div class="flex">
+        <Logo v-if="navMode != 'horizontal'" />
+        <PageHeader @update:collapsed="updateCollapsed" :inverted="inverted" />
+      </div>
+    </n-layout-header>
 
-    <n-layout embedded :inverted="inverted">
-      <n-layout-header :inverted="getHeaderInverted" :position="fixedHeader">
-        <PageHeader v-model:collapsed="collapsed" :inverted="inverted" />
-        <TabsView v-if="isMultiTabs" v-model:collapsed="collapsed" />
-      </n-layout-header>
+    <n-layout has-sider :inverted="inverted" class="admin-layout-content">
+      <n-layout-sider
+        v-if="isMixMenuNoneSub && (navMode === 'vertical' || navMode === 'horizontal-mix')"
+        show-trigger="arrow-circle"
+        @collapse="collapsed = true"
+        @expand="collapsed = false"
+        :native-scrollbar="false"
+        :collapsed="collapsed"
+        collapse-mode="width"
+        :collapsed-width="64"
+        :width="leftMenuWidth"
+        :inverted="inverted"
+        class="admin-layout-sider"
+      >
+        <AsideMenu v-model:collapsed="collapsed" v-model:location="getMenuLocation" />
+      </n-layout-sider>
 
       <n-layout
         embedded
         :inverted="inverted"
-        :native-scrollbar="false"
-        class="layout-content"
+        class="admin-layout-content-son"
         :class="{
-          'layout-content-fix': fixedHeader === 'absolute',
           'layout-content-inverted': getDarkTheme,
-          noMultiTabs: !isMultiTabs,
+          'page-full-screen': isFullscreen && !getDarkTheme,
         }"
       >
-        <div class="layout-content-main">
-          <div class="main-view">
+        <TabsView
+          v-if="isMultiTabs"
+          v-model:collapsed="collapsed"
+          @page-full-screen="togglePageFullScreen"
+        />
+        <div class="admin-layout-content-main">
+          <div class="main-view" ref="adminBodyRef">
             <MainView />
           </div>
         </div>
-        <!--1.15废弃，没啥用，占用操作空间-->
-        <!--        <NLayoutFooter v-if="getShowFooter">-->
-        <!--          <PageFooter />-->
-        <!--        </NLayoutFooter>-->
+        <n-back-top :right="100" />
       </n-layout>
-      <n-back-top :right="100" />
     </n-layout>
   </n-layout>
+
+  <!--项目配置-->
+  <ProjectSetting ref="drawerSetting" />
+
+  <div class="shadow-lg circular" @click="openSetting">
+    <n-icon size="20">
+      <SettingOutlined class="transition ease-in-out transform delay-150 hover:animate-spin" />
+    </n-icon>
+  </div>
 </template>
 
 <script lang="ts" setup>
-  import { ref, unref, computed, onMounted, watch } from 'vue';
+  import { ref, unref, computed, onMounted, watch, provide } from 'vue';
   import { Logo } from './components/Logo';
   import { TabsView } from './components/TagsView';
   import { MainView } from './components/Main';
@@ -59,26 +79,31 @@
   import { PageHeader } from './components/Header';
   import { useProjectSetting } from '@/hooks/setting/useProjectSetting';
   import { useDesignSetting } from '@/hooks/setting/useDesignSetting';
-  import { useLoadingBar } from 'naive-ui';
   import { useRoute } from 'vue-router';
-  import { useEventListener } from '@vueuse/core';
   import { useProjectSettingStore } from '@/store/modules/projectSetting';
+  import ProjectSetting from './components/Header/ProjectSetting.vue';
+  import { useFullscreen } from '@vueuse/core';
+  import { SettingOutlined } from '@vicons/antd';
+  import { useDesignSettingStore } from '@/store/modules/designSetting';
 
   const { getDarkTheme } = useDesignSetting();
-  const {
-    getNavMode,
-    getNavTheme,
-    getHeaderSetting,
-    getBodySetting,
-    getMenuSetting,
-    getMultiTabsSetting,
-  } = useProjectSetting();
+  const { getNavMode, getNavTheme, getHeaderSetting, getMenuSetting, getMultiTabsSetting } =
+    useProjectSetting();
 
   const settingStore = useProjectSettingStore();
+  const designStore = useDesignSettingStore();
 
   const navMode = getNavMode;
 
+  const drawerSetting = ref();
   const collapsed = ref<boolean>(false);
+  const adminBodyRef = ref<HTMLElement | null>(null);
+
+  const { isFullscreen, toggle } = useFullscreen(adminBodyRef);
+
+  provide('isPageFullScreen', isFullscreen);
+  provide('collapsed', collapsed);
+  provide('openSetting', openSetting);
 
   watch(
     () => collapsed.value,
@@ -91,19 +116,34 @@
   //固定顶部
   const fixedHeader = computed(() => {
     const { fixed } = unref(getHeaderSetting);
-    return fixed ? 'absolute' : 'static';
-  });
-
-  //固定主体区域
-  const fixeBody = computed(() => {
-    const { fixed } = unref(getBodySetting);
-    return fixed ? 'absolute' : 'static';
+    return fixed;
   });
 
   //固定侧边栏
-  const fixeLeftSider = computed(() => {
+  const fixedSide = computed(() => {
     const { fixed } = unref(getMenuSetting);
-    return fixed ? 'absolute' : 'static';
+    return fixed;
+  });
+
+  //切换内容页全屏
+  function togglePageFullScreen() {
+    toggle();
+  }
+
+  //菜单折叠
+  function updateCollapsed() {
+    collapsed.value = !collapsed.value;
+  }
+
+  //打开设置
+  function openSetting() {
+    const { openDrawer } = drawerSetting.value;
+    openDrawer();
+  }
+
+  //获取主题风格色
+  const getAppTheme = computed(() => {
+    return designStore.appTheme;
   });
 
   const isMixMenuNoneSub = computed(() => {
@@ -116,17 +156,8 @@
     return true;
   });
 
-  const fixedMenu = computed(() => {
-    const { fixed } = unref(getHeaderSetting);
-    return fixed ? 'absolute' : 'static';
-  });
-
   const isMultiTabs = computed(() => {
     return unref(getMultiTabsSetting).show;
-  });
-
-  const fixedMulti = computed(() => {
-    return unref(getMultiTabsSetting).fixed;
   });
 
   const inverted = computed(() => {
@@ -143,24 +174,14 @@
     return collapsed.value ? minMenuWidth : menuWidth;
   });
 
-  const getChangeStyle = computed(() => {
-    const { minMenuWidth, menuWidth } = unref(getMenuSetting);
-    return {
-      'padding-left': collapsed.value ? `${minMenuWidth}px` : `${menuWidth}px`,
-    };
-  });
-
   const getMenuLocation = computed(() => {
     return 'left';
   });
 
+  //看自身需求是否保留吧，这个用处不是很大
   const watchWidth = () => {
-    const isFullScreen =
-      document.fullScreen ||
-      document.mozFullScreen ||
-      document.webkitIsFullScreen ||
-      document.msFullscreenElement;
-    if (isFullScreen) return;
+    const { isFullscreen: isFullscreen } = useFullscreen();
+    if (isFullscreen.value) return;
     const Width = document.body.clientWidth;
     if (Width < 750) {
       collapsed.value = true;
@@ -173,45 +194,34 @@
 </script>
 
 <style lang="less" scoped>
-  .layout {
-    .layout-sider {
-      min-height: 100vh;
+  .admin-layout {
+    //侧边栏
+    &-sider {
+      min-height: calc(100vh - 64px);
       box-shadow: 2px 0 8px 0 rgb(29 35 41 / 5%);
       position: relative;
       z-index: 13;
       transition: all 0.2s ease-in-out;
     }
 
-    .layout-sider-fix {
-      position: fixed;
-      top: 0;
-      left: 0;
+    //主体内容区域
+    &-content {
+      :deep(.n-layout-scroll-container) {
+        overflow: hidden;
+      }
+
+      &-main {
+        padding: 10px;
+        overflow-x: hidden;
+      }
+
+      &-son {
+        transition: padding-left 0.3s cubic-bezier(0.2, 0, 0, 1) 0s,
+          box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1) 0s;
+      }
     }
 
-    .ant-layout {
-      overflow: hidden;
-    }
-
-    .layout-right-fix {
-      overflow-x: hidden;
-      padding-left: 200px;
-      min-height: 100vh;
-      transition: all 0.2s ease-in-out;
-    }
-
-    .layout-content {
-      flex: auto;
-      min-height: 100vh;
-    }
-
-    .layout-content-fix {
-      padding-top: 108px;
-    }
-
-    .noMultiTabs {
-      padding-top: 74px;
-    }
-
+    //深色主题
     .layout-content-inverted {
       background: rgb(16, 16, 20);
     }
@@ -223,18 +233,147 @@
     .n-layout-footer {
       background: none;
     }
+
+    // 固定顶部
+    &-fix-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+
+      .admin-layout-content {
+        flex: auto;
+        min-height: calc(100vh - 64px);
+        &-son {
+          :deep(.n-layout-scroll-container) {
+            overflow: hidden;
+          }
+        }
+
+        &-main {
+          padding: 10px;
+          height: calc(100vh - 64px);
+          position: relative;
+          overflow-y: auto;
+        }
+      }
+    }
+
+    //固定侧栏
+    &-fix-side {
+      .admin-layout-sider {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        top: 64px;
+      }
+
+      .admin-layout-content-son {
+        padding-left: 200px;
+      }
+
+      .admin-layout-header {
+        .logo {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 15;
+        }
+        :deep(.layout-header) {
+          padding-left: 200px;
+        }
+      }
+    }
+
+    //折叠
+    &-collapse {
+      .admin-layout-content-son {
+        padding-left: 64px;
+      }
+
+      .admin-layout-header {
+        :deep(.layout-header) {
+          padding-left: 64px;
+        }
+      }
+    }
+
+    //没有左侧菜单
+    &-hide-side {
+      .admin-layout-content-son {
+        padding-left: 0px;
+      }
+    }
+
+    //显示多标签
+    &-show-tabs {
+      .admin-layout-content {
+        &-main {
+          padding: 0 10px 10px 10px;
+        }
+      }
+    }
+    &-fix-header.admin-layout-show-tabs {
+      .admin-layout-content {
+        &-main {
+          height: calc(100vh - 64px - 44px);
+          //padding: 0 10px 10px 10px;
+        }
+      }
+    }
+
+    //横向菜单
+    &-side-horizontal {
+      //处理顶部菜单
+      .admin-layout-header {
+        .logo {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 15;
+        }
+        :deep(.layout-header) {
+          padding-left: 0px;
+        }
+      }
+
+      //处理内容区域
+      .admin-layout-content-son {
+        padding-left: 0px;
+      }
+    }
   }
 
-  .layout-content-main {
-    margin: 0 10px 10px;
-    position: relative;
+  //内容全屏
+  .page-full-screen {
+    .main-view {
+      background: #f0f2f5;
+    }
   }
 
-  .layout-content-main-fix {
-    padding-top: 44px;
+  .dark {
+    .page-full-screen {
+      .main-view {
+        background: #000;
+      }
+    }
   }
 
-  .main-view-fix {
-    padding-top: 44px;
+  .circular {
+    position: fixed;
+    right: -2px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: v-bind(getAppTheme);
+    font-size: 24px;
+    color: #fff;
+    border-radius: 10px 0 0 10px;
+    cursor: pointer;
+    z-index: 200;
   }
 </style>

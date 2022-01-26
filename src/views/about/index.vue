@@ -9,7 +9,7 @@
     <n-card
       :bordered="false"
       title="项目信息"
-      class="mt-4 proCard"
+      class="mt-3 proCard"
       size="small"
       :segmented="{ content: 'hard' }"
     >
@@ -50,7 +50,7 @@
     <n-card
       :bordered="false"
       title="开发环境依赖"
-      class="mt-4 proCard"
+      class="mt-3 proCard"
       size="small"
       :segmented="{ content: 'hard' }"
     >
@@ -64,7 +64,7 @@
     <n-card
       :bordered="false"
       title="生产环境依赖"
-      class="mt-4 proCard"
+      class="mt-3 proCard"
       size="small"
       :segmented="{ content: 'hard' }"
     >

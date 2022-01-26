@@ -1,4 +1,5 @@
-export default [
+import { FormSchema } from '@/components/Modal';
+export const schemas: FormSchema[] = [
   {
     field: 'username',
     component: 'NInput',

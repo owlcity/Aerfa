@@ -23,7 +23,7 @@
   import { BasicForm, useForm } from '@/components/Form/index';
   import { basicModal, useModal } from '@/components/Modal';
   import { Password } from '@/components/Password';
-  import schemas from './modalSchemas.ts';
+  import { schemas } from './modalSchemas';
   import { useMessage } from 'naive-ui';
 
   const message = useMessage();
@@ -42,7 +42,7 @@
   const title = ref(props.title);
 
   //创建form
-  const [registerForm, { submit, setFieldsValue }] = useForm({
+  const [registerForm, { submit, setFieldsValue, getFieldsValue }] = useForm({
     gridProps: { cols: 2 },
     collapsed: false,
     collapsedRows: 12,
@@ -65,8 +65,10 @@
     const formRes = await submit();
     if (formRes) {
       // const { isEdit } = props;
+      console.log('表单值：', getFieldsValue());
       message.error('抱歉，您没有操作权限');
       //message.success(isEdit ? '修改成功' : '添加成功');
+      setSubLoading(false);
       closeModal();
     } else {
       message.error('验证失败，请填写完整信息');

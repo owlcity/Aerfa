@@ -15,6 +15,7 @@ export interface BasicColumn extends TableBaseColumn {
   auth?: string[];
   // 业务控制是否显示
   ifShow?: boolean | ((column: BasicColumn) => boolean);
+  editCellRender?: Recordable;
 }
 
 export interface TableActionType {
@@ -29,18 +30,24 @@ export interface TableSetting {
   redo?: boolean;
   size?: boolean;
   setting?: boolean;
+  fullscreen?: boolean;
+  striped?: boolean;
+  query?: boolean;
 }
 
 export interface BasicTableProps {
   title?: string;
-  dataSource: Function;
+  dataSource?: Function | any[];
   columns: any[];
-  pagination: object;
-  showPagination: boolean;
-  actionColumn: any[];
-  canResize: boolean;
-  resizeHeightOffset: number;
+  pagination?: object;
+  showPagination?: boolean;
+  actionColumn?: object;
+  canResize?: boolean;
+  resizeHeightOffset?: number;
   loading?: boolean;
   showTableSetting?: boolean;
   tableSetting?: TableSetting;
+  titleTooltip?: string;
+  striped?: boolean;
+  request?: Function;
 }

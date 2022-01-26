@@ -6,26 +6,26 @@
         单独使用也可以哦~
       </n-card>
     </div>
-    <n-card :bordered="false" class="mt-4 proCard">
+    <n-card :bordered="false" class="mt-3 proCard">
       <n-alert title="基础效果" type="info"> 密码长度，6-32，复杂密码</n-alert>
-      <Password class="mt-4" />
+      <Password class="mt-3" />
 
       <n-alert title="设定密码长度" type="info">比如来个，( 12 - 16 个字符 )</n-alert>
-      <Password :min-length="12" :max-length="16" class="mt-4" />
+      <Password :min-length="12" :max-length="16" class="mt-3" />
 
       <n-alert title="简单密码" type="info"
         >不需要满足字母、数字及特殊字符两种或以上组合条件
       </n-alert>
-      <Password class="mt-4" :complexity="false" />
+      <Password class="mt-3" :complexity="false" />
 
       <n-alert title="自定义密码强度等级提示语" type="info">
         支持4个等级配置，1 - 4 默认4个等级名称分别为： 1. 弱不禁风 2. 平淡无奇 3. 出神入化 4.
         登峰造极
       </n-alert>
-      <Password class="mt-4" :level="{ 1: '很Low', 2: '一般Low', 3: '没那么Low', 4: '不Low了' }" />
+      <Password class="mt-3" :level="{ 1: '很Low', 2: '一般Low', 3: '没那么Low', 4: '不Low了' }" />
 
       <n-alert title="再次确认密码" type="info" />
-      <Password :repeat="true" class="mt-4" />
+      <Password :repeat="true" class="mt-3" />
     </n-card>
   </div>
 </template>

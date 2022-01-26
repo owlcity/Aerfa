@@ -17,18 +17,17 @@
           :popoverVisible="getRuleVisible"
           :rule="getRule"
           :ruleMessage="ruleMessage"
-          :style="getWrapperStyle"
           @pressEnter="handleEnter"
           @options-change="handleOptionsChange"
           @click="(e) => e.stopPropagation()"
         />
       </div>
       <div v-if="!getRowEditable" class="editable-cell-action">
-        <n-icon class="mx-2 cursor-pointer">
-          <CheckOutlined @click.stop="handleSubmit" />
+        <n-icon class="mx-1 cursor-pointer" @click.stop="handleSubmit">
+          <CheckOutlined />
         </n-icon>
-        <n-icon class="mx-2 cursor-pointer">
-          <CloseOutlined @click.stop="handleCancel" />
+        <n-icon class="mx-1 cursor-pointer" @click.stop="handleCancel">
+          <CloseOutlined />
         </n-icon>
       </div>
     </div>
@@ -54,7 +53,7 @@
   import { EventEnum } from '@/components/Table/src/componentMap';
   import { Render } from '@/components/Render';
 
-  import { milliseconds, format } from 'date-fns';
+  import { milliseconds } from 'date-fns';
   import { LabelValueOptions } from '/#/index';
 
   export default defineComponent({
@@ -152,15 +151,6 @@
         const option = options.find((item) => `${item.value}` === `${value}`);
 
         return option?.label ?? value;
-      });
-
-      const getWrapperStyle = computed((): CSSProperties => {
-        // if (unref(getIsCheckComp) || unref(getRowEditable)) {
-        //   return {};
-        // }
-        return {
-          width: 'calc(100% - 48px)',
-        };
       });
 
       const getWrapperClass = computed(() => {
@@ -310,7 +300,7 @@
         optionsRef.value = options;
       }
 
-      function initCbs(cbs: 'submitCbs' | 'validCbs' | 'cancelCbs', handle: Fn) {
+      function initCbs(cbs: 'submitCbs' | 'validCbs' | 'cancelCbs', handle) {
         if (props.record) {
         /* eslint-disable  */
         isArray(props.record[cbs])
@@ -365,7 +355,6 @@
       getRuleVisible,
       getComponentProps,
       handleOptionsChange,
-      getWrapperStyle,
       getWrapperClass,
       getRowEditable,
       getValues,

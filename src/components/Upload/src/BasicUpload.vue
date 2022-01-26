@@ -28,7 +28,7 @@
         <div
           class="upload-card-item upload-card-item-select-picture"
           :style="getCSSProperties"
-          v-if="imgList.length < maxNumber"
+          v-if="imgList.length < getMaxNumber"
         >
           <n-upload
             v-bind="$props"
@@ -49,8 +49,8 @@
 
     <!--上传图片-->
     <n-space>
-      <n-alert title="提示" type="info" v-if="helpText" class="flex w-full">
-        {{ helpText }}
+      <n-alert title="提示" type="info" v-if="getHelpText" class="flex w-full">
+        {{ getHelpText }}
       </n-alert>
     </n-space>
   </div>
@@ -80,6 +80,14 @@
   const globSetting = useGlobSetting();
 
   const props = defineProps({ ...basicProps });
+
+  const getMaxNumber = computed(() => {
+    return props.maxNumber;
+  });
+
+  const getHelpText = computed(() => {
+    return props.helpText;
+  });
 
   const emit = defineEmits(['uploadChange', 'delete']);
 
@@ -162,18 +170,22 @@
 
   //上传结束
   function finish({ event: Event }) {
-    const res = eval('(' + Event.target.response + ')');
-    const infoField = componentSetting.upload.apiSetting.infoField;
-    const { code } = res;
-    const message = res.msg || res.message || '上传失败';
-    const result = res[infoField];
-    //成功
-    if (code === ResultEnum.SUCCESS) {
-      let imgUrl: string = getImgUrl(result.photo);
-      imgList.value.push(imgUrl as never);
-      originalImgList.value.push(result.photo as never);
-      emit('uploadChange', originalImgList.value);
-    } else message.error(message);
+    try {
+      const res = eval('(' + Event.target.response + ')');
+      const { infoField, imgField } = componentSetting.upload.apiSetting;
+      const { code } = res;
+      const msg = res.msg || res.message || '上传失败';
+      const result = res[infoField];
+      //成功
+      if (code === ResultEnum.SUCCESS) {
+        let imgUrl: string = getImgUrl(result[imgField]);
+        imgList.value.push(imgUrl as never);
+        originalImgList.value.push(result[imgField] as never);
+        emit('uploadChange', originalImgList.value);
+      } else message.error(msg);
+    } catch (error) {
+      console.error(error);
+    }
   }
 </script>
 

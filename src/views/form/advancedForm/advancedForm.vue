@@ -15,7 +15,7 @@
     >
       <n-card
         :bordered="false"
-        class="mt-4 proCard"
+        class="mt-3 proCard"
         title="预约信息"
         size="small"
         :segmented="{
@@ -103,7 +103,7 @@
 
       <n-card
         :bordered="false"
-        class="mt-4 proCard"
+        class="mt-3 proCard"
         title="就诊信息"
         size="small"
         :segmented="{
@@ -180,7 +180,7 @@
 
       <n-card
         :bordered="false"
-        class="mt-4 proCard"
+        class="mt-3 proCard"
         title="就诊信息"
         size="small"
         :segmented="{

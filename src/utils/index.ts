@@ -77,7 +77,9 @@ export function generatorMenuMix(routerMap: Array<any>, routerName: string, loca
     });
     return firstRouter;
   } else {
-    return getChildrenRouter(newRouter.filter((item) => item.name === routerName));
+    const currentRouters = newRouter.filter((item) => item.name === routerName);
+    const childrenRouter = currentRouters.length ? currentRouters[0].children || [] : [];
+    return getChildrenRouter(childrenRouter);
   }
 }
 
@@ -107,7 +109,7 @@ export function getChildrenRouter(routerMap: Array<any>) {
  * 判断根路由 Router
  * */
 export function isRootRouter(item) {
-  return item.meta?.alwaysShow != true && item.children?.length === 1;
+  return item.meta?.alwaysShow === true && item.children?.length === 1;
 }
 
 /**
@@ -231,4 +233,11 @@ export function cssUnit(value: string | number, unit = 'px') {
   return isNumber(value) || (isString(value) && value.indexOf(unit as string) === -1)
     ? `${value}${unit}`
     : value;
+}
+
+/**
+ * 判断是否 url
+ * */
+export function isUrl(url: string) {
+  return /(^http|https:\/\/)/g.test(url);
 }

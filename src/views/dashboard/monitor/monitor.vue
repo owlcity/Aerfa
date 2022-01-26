@@ -14,16 +14,16 @@
           </template>
           <div class="flex justify-between px-1 py-1">
             <n-skeleton v-if="loading" :width="100" size="medium" />
-            <CountTo v-else :startVal="1" :endVal="visits.dayVisits" class="text-3xl" />
+            <CountTo v-else :startVal="1" :endVal="info.visits.dayVisits" class="text-3xl" />
           </div>
           <div class="flex justify-between px-1 py-1">
             <div class="text-sn">
               <n-skeleton v-if="loading" :width="100" size="medium" />
               <template v-else>
                 日同比
-                <CountTo :startVal="1" suffix="%" :endVal="visits.rise" />
+                <CountTo :startVal="1" suffix="%" :endVal="info.visits.rise" />
                 <n-icon size="12" color="#00ff6f">
-                  <component is="CaretUpOutlined" />
+                  <CaretUpOutlined />
                 </n-icon>
               </template>
             </div>
@@ -31,9 +31,9 @@
               <n-skeleton v-if="loading" :width="100" size="medium" />
               <template v-else>
                 周同比
-                <CountTo :startVal="1" suffix="%" :endVal="visits.decline" />
+                <CountTo :startVal="1" suffix="%" :endVal="info.visits.decline" />
                 <n-icon size="12" color="#ffde66">
-                  <component is="CaretDownOutlined" />
+                  <CaretDownOutlined />
                 </n-icon>
               </template>
             </div>
@@ -44,7 +44,7 @@
               <template v-else>
                 <div class="text-sn"> 总访问量：</div>
                 <div class="text-sn">
-                  <CountTo :startVal="1" :endVal="visits.amount" />
+                  <CountTo :startVal="1" :endVal="info.visits.amount" />
                 </div>
               </template>
             </div>
@@ -67,7 +67,7 @@
               v-else
               prefix="￥"
               :startVal="1"
-              :endVal="saleroom.weekSaleroom"
+              :endVal="info.saleroom.weekSaleroom"
               class="text-3xl"
             />
           </div>
@@ -75,7 +75,7 @@
             <div class="flex-1 text-sn">
               <n-progress
                 type="line"
-                :percentage="saleroom.degree"
+                :percentage="info.saleroom.degree"
                 :indicator-placement="'inside'"
                 processing
               />
@@ -87,7 +87,7 @@
               <template v-else>
                 <div class="text-sn"> 总销售额：</div>
                 <div class="text-sn">
-                  <CountTo prefix="￥" :startVal="1" :endVal="saleroom.amount" />
+                  <CountTo prefix="￥" :startVal="1" :endVal="info.saleroom.amount" />
                 </div>
               </template>
             </div>
@@ -106,16 +106,16 @@
           </template>
           <div class="flex justify-between px-1 py-1">
             <n-skeleton v-if="loading" :width="100" size="medium" />
-            <CountTo v-else :startVal="1" :endVal="orderLarge.weekLarge" class="text-3xl" />
+            <CountTo v-else :startVal="1" :endVal="info.orderLarge.weekLarge" class="text-3xl" />
           </div>
           <div class="flex justify-between px-1 py-1">
             <div class="text-sn">
               <n-skeleton v-if="loading" :width="100" size="medium" />
               <template v-else>
                 日同比
-                <CountTo :startVal="1" suffix="%" :endVal="orderLarge.rise" />
+                <CountTo :startVal="1" suffix="%" :endVal="info.orderLarge.rise" />
                 <n-icon size="12" color="#00ff6f">
-                  <component is="CaretUpOutlined" />
+                  <CaretUpOutlined />
                 </n-icon>
               </template>
             </div>
@@ -123,9 +123,9 @@
               <n-skeleton v-if="loading" :width="100" size="medium" />
               <template v-else>
                 周同比
-                <CountTo :startVal="1" suffix="%" :endVal="orderLarge.rise" />
+                <CountTo :startVal="1" suffix="%" :endVal="info.orderLarge.rise" />
                 <n-icon size="12" color="#ffde66">
-                  <component is="CaretDownOutlined" />
+                  <CaretDownOutlined />
                 </n-icon>
               </template>
             </div>
@@ -136,7 +136,7 @@
               <template v-else>
                 <div class="text-sn"> 转化率：</div>
                 <div class="text-sn">
-                  <CountTo :startVal="1" suffix="%" :endVal="orderLarge.amount" />
+                  <CountTo :startVal="1" suffix="%" :endVal="info.orderLarge.amount" />
                 </div>
               </template>
             </div>
@@ -155,16 +155,22 @@
           </template>
           <div class="flex justify-between px-1 py-1">
             <n-skeleton v-if="loading" :width="100" size="medium" />
-            <CountTo v-else prefix="￥" :startVal="1" :endVal="volume.weekLarge" class="text-3xl" />
+            <CountTo
+              v-else
+              prefix="￥"
+              :startVal="1"
+              :endVal="info.volume.weekLarge"
+              class="text-3xl"
+            />
           </div>
           <div class="flex justify-between px-1 py-1">
             <div class="text-sn">
               <n-skeleton v-if="loading" :width="100" size="medium" />
               <template v-else>
                 月同比
-                <CountTo :startVal="1" suffix="%" :endVal="volume.rise" />
+                <CountTo :startVal="1" suffix="%" :endVal="info.volume.rise" />
                 <n-icon size="12" color="#00ff6f">
-                  <component is="CaretUpOutlined" />
+                  <CaretUpOutlined />
                 </n-icon>
               </template>
             </div>
@@ -172,9 +178,9 @@
               <n-skeleton v-if="loading" :width="100" size="medium" />
               <template v-else>
                 月同比
-                <CountTo :startVal="1" suffix="%" :endVal="volume.decline" />
+                <CountTo :startVal="1" suffix="%" :endVal="info.volume.decline" />
                 <n-icon size="12" color="#ffde66">
-                  <component is="CaretDownOutlined" />
+                  <CaretDownOutlined />
                 </n-icon>
               </template>
             </div>
@@ -185,7 +191,7 @@
               <template v-else>
                 <div class="text-sn"> 总成交额：</div>
                 <div class="text-sn">
-                  <CountTo prefix="￥" :startVal="1" :endVal="volume.amount" />
+                  <CountTo prefix="￥" :startVal="1" :endVal="info.volume.amount" />
                 </div>
               </template>
             </div>
@@ -195,8 +201,8 @@
     </n-grid>
 
     <!--导航卡片-->
-    <div class="mt-4">
-      <n-grid cols="1 s:2 m:3 l:8 xl:8 2xl:8" responsive="screen" :x-gap="16" :y-gap="8">
+    <div class="mt-3">
+      <n-grid cols="1 s:2 m:3 l:8 xl:8 2xl:8" responsive="screen" :x-gap="12" :y-gap="8">
         <n-grid-item v-for="(item, index) in iconList" :key="index">
           <n-card content-style="padding-top: 0;" size="small" :bordered="false">
             <template #footer>
@@ -224,7 +230,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, reactive } from 'vue';
   import { getConsoleInfo } from '@/api/dashboard/console';
   import VisiTab from '../console/components/VisiTab.vue';
   import { CountTo } from '@/components/CountTo/index';
@@ -241,13 +247,13 @@
     SettingOutlined,
   } from '@vicons/antd';
 
-  const cardHeaderStyle = ref({ 'border-bottom': '1px solid #eee', 'font-size': '16px' });
-
   const loading = ref(true);
-  const visits = ref({});
-  const saleroom = ref({});
-  const orderLarge = ref({});
-  const volume = ref({});
+  const info = reactive<any>({
+    saleroom: {},
+    orderLarge: {},
+    visits: {},
+    volume: {},
+  });
 
   // 图标列表
   const iconList = [
@@ -326,11 +332,11 @@
   ];
 
   onMounted(async () => {
-    const { visits, saleroom, orderLarge, volume } = await getConsoleInfo();
-    visits.value = visits;
-    saleroom.value = saleroom;
-    orderLarge.value = orderLarge;
-    volume.value = volume;
+    const res = await getConsoleInfo();
+    info.saleroom = res.saleroom;
+    info.orderLarge = res.orderLarge;
+    info.visits = res.visits;
+    info.volume = res.volume;
     loading.value = false;
   });
 </script>

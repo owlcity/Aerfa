@@ -1,5 +1,10 @@
 <template>
-  <div class="layout-header">
+  <div
+    class="layout-header"
+    :class="{
+      'layout-header-horizontal': navMode === 'horizontal',
+    }"
+  >
     <!--顶部菜单-->
     <div
       v-if="navMode === 'horizontal' || (navMode === 'horizontal-mix' && mixMenu)"
@@ -7,21 +12,17 @@
     >
       <div v-if="navMode === 'horizontal'" class="logo">
         <img alt="" src="~@/assets/images/logo.png" />
-        <h2 v-show="!collapsed" class="title">NaiveUiAdmin</h2>
+        <h2 v-show="!collapsed" class="title">NaiveAdmin</h2>
       </div>
-      <AsideMenu
-        v-model:collapsed="collapsed"
-        v-model:location="getMenuLocation"
-        :inverted="getInverted"
-        mode="horizontal"
-      />
+      <AsideMenu v-model:location="getMenuLocation" :inverted="getInverted" mode="horizontal" />
     </div>
     <!--左侧菜单-->
     <div v-else class="layout-header-left">
       <!-- 菜单收起 -->
       <div
+        id="collapsed-trigger"
         class="ml-1 layout-header-trigger layout-header-trigger-min collapsed-trigger"
-        @click="() => $emit('update:collapsed', !collapsed)"
+        @click="() => $emit('update:collapsed')"
       >
         <n-icon v-if="collapsed" size="18">
           <MenuUnfoldOutlined />
@@ -68,12 +69,13 @@
       <div
         v-for="item in iconList"
         :key="item.icon.name"
+        v-on="item.eventObject || {}"
         class="layout-header-trigger layout-header-trigger-min"
       >
         <n-tooltip placement="bottom">
           <template #trigger>
             <n-icon size="18">
-              <component :is="item.icon" v-on="item.eventObject || {}" />
+              <component :is="item.icon" />
             </n-icon>
           </template>
           <span>{{ item.tips }}</span>
@@ -109,6 +111,7 @@
       </div>
       <!--设置-->
       <div
+        id="setting-trigger"
         class="layout-header-trigger layout-header-trigger-min setting-trigger"
         @click="openSetting"
       >
@@ -134,7 +137,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, markRaw, ref, unref, watch } from 'vue';
+  import { computed, ref, unref, watch, inject } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { useDialog, useMessage } from 'naive-ui';
   import { TABS_ROUTES } from '@/store/mutation-types';
@@ -164,8 +167,10 @@
   import { LockClosedOutline } from '@vicons/ionicons5';
   import { PageEnum } from '@/enums/pageEnum';
   import schoolboy from '@/assets/images/schoolboy.png';
-  import { RedirectName } from '@/router/constant';
   import { useFullscreen } from '@vueuse/core';
+  import { useAsyncRouteStore } from '@/store/modules/asyncRoute';
+
+  defineEmits(['update:collapsed']);
 
   const userStore = useUserStore();
   const useLockscreen = useLockscreenStore();
@@ -177,16 +182,12 @@
     useProjectSetting();
 
   const props = defineProps({
-    collapsed: {
-      type: Boolean,
-    },
     inverted: {
       type: Boolean,
     },
   });
 
   const go = useGo();
-  const redo = useRedo();
 
   const BASE_LOGIN_NAME = PageEnum.BASE_LOGIN_NAME;
 
@@ -196,7 +197,7 @@
 
   // const username = userStore?.info ? ref(userStore?.info.username) : '';
 
-  const fullscreenIcon = markRaw(FullscreenOutlined);
+  const collapsed = inject('collapsed');
 
   const navMode = getNavMode;
 
@@ -220,6 +221,7 @@
   const router = useRouter();
   const route = useRoute();
   const { isFullscreen, toggle } = useFullscreen();
+  const asyncRouteStore = useAsyncRouteStore();
 
   const generator: any = (routerMap) => {
     return routerMap
@@ -255,6 +257,7 @@
     { immediate: true }
   );
 
+  // eslint-disable-next-line vue/return-in-computed-property
   const breadcrumbList = computed(() => {
     if (!isRefresh.value) return generator(route.matched);
   });
@@ -277,6 +280,7 @@
           message.success('成功退出登录');
           // 移除标签页
           localStorage.removeItem(TABS_ROUTES);
+          asyncRouteStore.setDynamicAddedRoute(false);
           router.replace({
             name: BASE_LOGIN_NAME,
             query: {
@@ -370,8 +374,13 @@
     height: @header-height;
     box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
     transition: all 0.2s ease-in-out;
-    width: 100%;
+    flex: 1;
     z-index: 11;
+
+    :deep(.n-menu--horizontal) {
+      width: calc(100%);
+      overflow-x: auto;
+    }
 
     &-left {
       display: flex;
@@ -386,6 +395,7 @@
         overflow: hidden;
         white-space: nowrap;
         padding-left: 10px;
+        min-width: 130px;
 
         img {
           width: auto;
@@ -398,7 +408,7 @@
         }
       }
 
-      ::v-deep(.ant-breadcrumb span:last-child .link-text) {
+      :deep(.ant-breadcrumb span:last-child .link-text) {
         color: #515a6e;
       }
 
@@ -407,7 +417,7 @@
       }
 
       &-menu {
-        color: var(--text-color);
+        color: var(--n-text-color);
       }
     }
 
@@ -458,6 +468,13 @@
     }
   }
 
+  .layout-header-horizontal {
+    :deep(.n-menu--horizontal) {
+      width: calc(100% - 130px);
+      overflow-x: auto;
+    }
+  }
+
   .layout-header-light {
     background: #fff;
     color: #515a6e;
@@ -467,7 +484,7 @@
     }
 
     .layout-header-left {
-      ::v-deep(.n-breadcrumb .n-breadcrumb-item:last-child .n-breadcrumb-item__link) {
+      :deep(.n-breadcrumb .n-breadcrumb-item:last-child .n-breadcrumb-item__link) {
         color: #515a6e;
       }
     }

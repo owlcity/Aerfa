@@ -19,7 +19,7 @@ export const columns = [
     // 默认必填校验
     editRule: true,
     edit: true,
-    width: 200,
+    width: 80,
     editCellRender: (value) => {
       return h(
         NTag,

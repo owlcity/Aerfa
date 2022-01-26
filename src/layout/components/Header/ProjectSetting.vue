@@ -1,6 +1,6 @@
 <template>
-  <n-drawer v-model:show="isDrawer" :native-scrollbar="false" :placement="placement" :width="width">
-    <n-drawer-content :title="title">
+  <n-drawer v-model:show="isDrawer" :placement="placement" :width="width">
+    <n-drawer-content :title="title" :native-scrollbar="false" closable>
       <div class="drawer">
         <n-divider title-placement="center">主题</n-divider>
 
@@ -137,10 +137,15 @@
         <div class="drawer-setting-item">
           <div class="drawer-setting-item-title"> 分割菜单</div>
           <div class="drawer-setting-item-action">
-            <n-switch
-              v-model:value="settingStore.menuSetting.mixMenu"
-              :disabled="settingStore.navMode !== 'horizontal-mix'"
-            />
+            <n-tooltip trigger="hover">
+              <template #trigger>
+                <n-switch
+                  v-model:value="settingStore.menuSetting.mixMenu"
+                  :disabled="settingStore.navMode !== 'horizontal-mix'"
+                />
+              </template>
+              顶部菜单混合模式可用
+            </n-tooltip>
           </div>
         </div>
 
@@ -151,17 +156,10 @@
           </div>
         </div>
 
-        <!--        <div class="drawer-setting-item">-->
-        <!--          <div class="drawer-setting-item-title"> 固定侧边栏 </div>-->
-        <!--          <div class="drawer-setting-item-action">-->
-        <!--            <n-switch v-model:value="settingStore.menuSetting.fixed" />-->
-        <!--          </div>-->
-        <!--        </div>-->
-
         <div class="drawer-setting-item">
-          <div class="drawer-setting-item-title"> 固定主体区域 </div>
+          <div class="drawer-setting-item-title"> 固定侧边栏 </div>
           <div class="drawer-setting-item-action">
-            <n-switch v-model:value="settingStore.bodySetting.fixed" />
+            <n-switch v-model:value="settingStore.menuSetting.fixed" />
           </div>
         </div>
 
@@ -251,7 +249,7 @@
     },
     width: {
       type: Number,
-      default: 255,
+      default: 264,
     },
   });
   const { getAppTheme } = useDesignSetting();
@@ -372,7 +370,7 @@
     }
 
     .dark-switch .n-switch {
-      ::v-deep(.n-switch__rail) {
+      :deep(.n-switch__rail) {
         background-color: #000e1c;
       }
     }

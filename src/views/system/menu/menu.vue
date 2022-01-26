@@ -5,7 +5,7 @@
         页面数据为 Mock 示例数据，非真实数据。
       </n-card>
     </div>
-    <n-grid class="mt-4" cols="1 s:1 m:1 l:3 xl:3 2xl:3" responsive="screen" :x-gap="12">
+    <n-grid class="mt-3" cols="1 s:1 m:1 l:3 xl:3 2xl:3" responsive="screen" :x-gap="12">
       <n-gi span="1">
         <n-card :segmented="{ content: 'hard' }" :bordered="false" size="small">
           <template #header>

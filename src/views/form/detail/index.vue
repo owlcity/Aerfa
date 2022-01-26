@@ -8,7 +8,7 @@
     <n-card
       :bordered="false"
       title="基本信息"
-      class="mt-4 proCard"
+      class="mt-3 proCard"
       size="small"
       :segmented="{ content: 'hard' }"
     >
@@ -29,7 +29,7 @@
     <n-card
       :bordered="false"
       title="其它信息"
-      class="mt-4 proCard"
+      class="mt-3 proCard"
       size="small"
       :segmented="{ content: 'hard' }"
     >
@@ -50,7 +50,7 @@
     <n-card
       :bordered="false"
       title="表格信息"
-      class="mt-4 proCard"
+      class="mt-3 proCard"
       size="small"
       :segmented="{ content: 'hard' }"
     >

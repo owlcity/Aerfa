@@ -1,7 +1,7 @@
 <template>
-  <n-modal id="basic-modal" v-bind="getBindValue" :style="getWidth" v-model:show="isModal" @close="onCloseModal">
+  <n-modal :id="basicModalId" v-bind="getBindValue" :style="getWidth" v-model:show="isModal" @close="onCloseModal">
     <template #header>
-      <div id="basic-modal-bar" class="w-full" :class="{'cursor-move':isDraggable === true}">
+      <div :id="basicModalBarId" class="w-full" :class="{'cursor-move':isDraggable}">
         {{ getBindValue.title }}
       </div>
     </template>
@@ -34,8 +34,8 @@
   import { basicProps } from './props';
   import startDrag from '@/utils/Drag';
   import { deepMerge } from '@/utils';
-  import { FormProps } from '@/components/Form';
   import { ModalProps, ModalMethods } from './type';
+  import { uniqueId } from 'lodash-es';
 
   const attrs = useAttrs();
   const props = defineProps({ ...basicProps });
@@ -46,6 +46,9 @@
 
   const isModal = ref(false);
   const subLoading = ref(false);
+
+  const basicModalId = uniqueId('basic-modal-');
+  const basicModalBarId = uniqueId('basic-modal-bar-');
 
   const getProps = computed(() => {
     return { ...props, ...(unref(propsRef) as any) };
@@ -65,6 +68,10 @@
     propsRef.value = deepMerge(unref(propsRef) || ({} as any), modalProps);
   }
 
+  const isDraggable = computed(() => {
+    return unref(getProps).isDraggable;
+  })
+
   const getBindValue = computed(() => {
     return {
       ...attrs,
@@ -81,8 +88,8 @@
     isModal.value = true;
     if (!unref(getProps).isDraggable) return;
     nextTick(() => {
-      const oBox = document.getElementById('basic-modal');
-      const oBar = document.getElementById('basic-modal-bar');
+      const oBox = document.getElementById(basicModalId);
+      const oBar = document.getElementById(basicModalBarId);
       if (!oBox || !oBar) {
         console.warn('not found modal');
         return

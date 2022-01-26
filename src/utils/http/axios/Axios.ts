@@ -5,8 +5,8 @@ import { AxiosCanceler } from './axiosCancel';
 import { isFunction } from '@/utils/is';
 import { cloneDeep } from 'lodash-es';
 
-import type { RequestOptions, CreateAxiosOptions, Result } from './types';
-// import { ContentTypeEnum } from '/@/enums/httpEnum';
+import type { RequestOptions, CreateAxiosOptions, Result, UploadFileParams } from './types';
+import { ContentTypeEnum } from '@/enums/httpEnum';
 
 export * from './axiosTransform';
 
@@ -62,6 +62,11 @@ export class VAxios {
     if (beforeRequestHook && isFunction(beforeRequestHook)) {
       conf = beforeRequestHook(conf, opt);
     }
+
+    //这里重新 赋值成最新的配置
+    // @ts-ignore
+    conf.requestOptions = opt;
+
     return new Promise((resolve, reject) => {
       this.axiosInstance
         .request<any, AxiosResponse<Result>>(conf)
@@ -101,25 +106,43 @@ export class VAxios {
     return transform;
   }
 
-  // /**
-  //  * @description:  文件上传
-  //  */
-  // uploadFiles(config: AxiosRequestConfig, params: File[]) {
-  //   const formData = new FormData();
+  /**
+   * @description:  文件上传
+   */
+  uploadFile<T = any>(config: AxiosRequestConfig, params: UploadFileParams) {
+    const formData = new window.FormData();
+    const customFilename = params.name || 'file';
 
-  //   Object.keys(params).forEach((key) => {
-  //     formData.append(key, params[key as any]);
-  //   });
+    if (params.filename) {
+      formData.append(customFilename, params.file, params.filename);
+    } else {
+      formData.append(customFilename, params.file);
+    }
 
-  //   return this.request({
-  //     ...config,
-  //     method: 'POST',
-  //     data: formData,
-  //     headers: {
-  //       'Content-type': ContentTypeEnum.FORM_DATA,
-  //     },
-  //   });
-  // }
+    if (params.data) {
+      Object.keys(params.data).forEach((key) => {
+        const value = params.data![key];
+        if (Array.isArray(value)) {
+          value.forEach((item) => {
+            formData.append(`${key}[]`, item);
+          });
+          return;
+        }
+
+        formData.append(key, params.data![key]);
+      });
+    }
+
+    return this.axiosInstance.request<T>({
+      method: 'POST',
+      data: formData,
+      headers: {
+        'Content-type': ContentTypeEnum.FORM_DATA,
+        ignoreCancelToken: true,
+      },
+      ...config,
+    });
+  }
 
   /**
    * @description: 拦截器配置
@@ -140,10 +163,17 @@ export class VAxios {
 
     // 请求拦截器配置处理
     this.axiosInstance.interceptors.request.use((config: AxiosRequestConfig) => {
-      const { headers: { ignoreCancelToken } = { ignoreCancelToken: false } } = config;
-      !ignoreCancelToken && axiosCanceler.addPending(config);
+      const {
+        headers: { ignoreCancelToken },
+      } = config;
+      const ignoreCancel =
+        ignoreCancelToken !== undefined
+          ? ignoreCancelToken
+          : this.options.requestOptions?.ignoreCancelToken;
+
+      !ignoreCancel && axiosCanceler.addPending(config);
       if (requestInterceptors && isFunction(requestInterceptors)) {
-        config = requestInterceptors(config);
+        config = requestInterceptors(config, this.options);
       }
       return config;
     }, undefined);

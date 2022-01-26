@@ -24,10 +24,11 @@ const routes: Array<RouteRecordRaw> = [
       title: '列表页面',
       icon: renderIcon(TableOutlined),
       sort: 2,
+      permissions: ['basic_list'],
     },
     children: [
       {
-        path: 'basic-list',
+        path: 'basic-list/:id?',
         name: 'basic-list',
         meta: {
           title: '基础列表',

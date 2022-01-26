@@ -33,7 +33,7 @@
         </n-grid>
       </n-card>
     </div>
-    <n-grid class="mt-4" cols="2 s:1 m:1 l:2 xl:2 2xl:2" responsive="screen" :x-gap="12" :y-gap="9">
+    <n-grid class="mt-3" cols="2 s:1 m:1 l:2 xl:2 2xl:2" responsive="screen" :x-gap="12" :y-gap="9">
       <n-gi>
         <n-card
           :segmented="{ content: 'hard' }"
@@ -45,6 +45,7 @@
           <div class="flex flex-wrap project-card">
             <n-card
               size="small"
+              :bordered="false"
               class="cursor-pointer project-card-item ms:w-1/2 md:w-1/3"
               hoverable
             >
@@ -63,6 +64,7 @@
             </n-card>
             <n-card
               size="small"
+              :bordered="false"
               class="cursor-pointer project-card-item ms:w-1/2 md:w-1/3"
               hoverable
             >
@@ -79,6 +81,7 @@
             </n-card>
             <n-card
               size="small"
+              :bordered="false"
               class="cursor-pointer project-card-item ms:w-1/2 md:w-1/3"
               hoverable
             >
@@ -95,6 +98,7 @@
             </n-card>
             <n-card
               size="small"
+              :bordered="false"
               class="cursor-pointer project-card-item ms:w-1/2 md:w-1/3"
               hoverable
             >
@@ -111,6 +115,7 @@
             </n-card>
             <n-card
               size="small"
+              :bordered="false"
               class="cursor-pointer project-card-item ms:w-1/2 md:w-1/3"
               hoverable
             >
@@ -127,6 +132,7 @@
             </n-card>
             <n-card
               size="small"
+              :bordered="false"
               class="cursor-pointer project-card-item ms:w-1/2 md:w-1/3"
               hoverable
             >
@@ -150,7 +156,7 @@
           :bordered="false"
           size="small"
           title="动态"
-          class="mt-4"
+          class="mt-3"
         >
           <template #header-extra><a href="javascript:;">更多</a></template>
           <n-list>
@@ -216,60 +222,90 @@
           title="快捷操作"
         >
           <div class="flex flex-wrap project-card">
-            <n-card size="small" class="cursor-pointer project-card-item" hoverable>
+            <n-card
+              size="small"
+              class="cursor-pointer project-card-item"
+              :bordered="false"
+              hoverable
+            >
               <div class="flex flex-col justify-center text-gray-500">
                 <span class="text-center">
-                  <n-icon size="30" color="#68c755">
+                  <n-icon size="28" color="#68c755">
                     <DashboardOutlined />
                   </n-icon>
                 </span>
                 <span class="text-center text-lx">主控台</span>
               </div>
             </n-card>
-            <n-card size="small" class="cursor-pointer project-card-item" hoverable>
+            <n-card
+              size="small"
+              class="cursor-pointer project-card-item"
+              :bordered="false"
+              hoverable
+            >
               <div class="flex flex-col justify-center text-gray-500">
                 <span class="text-center">
-                  <n-icon size="30" color="#fab251">
+                  <n-icon size="28" color="#fab251">
                     <ProfileOutlined />
                   </n-icon>
                 </span>
                 <span class="text-center text-lx">列表</span>
               </div>
             </n-card>
-            <n-card size="small" class="cursor-pointer project-card-item" hoverable>
+            <n-card
+              size="small"
+              class="cursor-pointer project-card-item"
+              :bordered="false"
+              hoverable
+            >
               <div class="flex flex-col justify-center text-gray-500">
                 <span class="text-center">
-                  <n-icon size="30" color="#1890ff">
+                  <n-icon size="28" color="#1890ff">
                     <FileProtectOutlined />
                   </n-icon>
                 </span>
                 <span class="text-center text-lx">表单</span>
               </div>
             </n-card>
-            <n-card size="small" class="cursor-pointer project-card-item" hoverable>
+            <n-card
+              size="small"
+              class="cursor-pointer project-card-item"
+              :bordered="false"
+              hoverable
+            >
               <div class="flex flex-col justify-center text-gray-500">
                 <span class="text-center">
-                  <n-icon size="30" color="#f06b96">
+                  <n-icon size="28" color="#f06b96">
                     <ApartmentOutlined />
                   </n-icon>
                 </span>
                 <span class="text-center text-lx">权限管理</span>
               </div>
             </n-card>
-            <n-card size="small" class="cursor-pointer project-card-item" hoverable>
+            <n-card
+              size="small"
+              class="cursor-pointer project-card-item"
+              :bordered="false"
+              hoverable
+            >
               <div class="flex flex-col justify-center text-gray-500">
                 <span class="text-center">
-                  <n-icon size="30" color="#7238d1">
+                  <n-icon size="28" color="#7238d1">
                     <SettingOutlined />
                   </n-icon>
                 </span>
                 <span class="text-center text-lx">系统管理</span>
               </div>
             </n-card>
-            <n-card size="small" class="cursor-pointer project-card-item" hoverable>
+            <n-card
+              size="small"
+              class="cursor-pointer project-card-item"
+              :bordered="false"
+              hoverable
+            >
               <div class="flex flex-col justify-center text-gray-500">
                 <span class="text-center">
-                  <n-icon size="30" color="#5cdbd3">
+                  <n-icon size="28" color="#5cdbd3">
                     <MailOutlined />
                   </n-icon>
                 </span>
@@ -282,7 +318,7 @@
           :segmented="{ content: 'hard' }"
           :bordered="false"
           size="small"
-          class="pt-4 pb-3 mt-4"
+          class="pt-4 pb-3 mt-3"
         >
           <img src="~@/assets/images/Business.svg" class="w-full" />
         </n-card>
@@ -308,11 +344,18 @@
 
 <style lang="less" scoped>
   .project-card {
-    margin-right: -6px;
-
     &-item {
-      margin: -1px;
       width: 33.333333%;
+      border: none;
+      border-radius: inherit;
+      border-right: 1px solid var(--n-border-color);
+      border-bottom: 1px solid var(--n-border-color);
+      &:nth-child(3n) {
+        border-right: none;
+      }
+      &:nth-child(n + 4) {
+        border-bottom: none;
+      }
     }
   }
 </style>

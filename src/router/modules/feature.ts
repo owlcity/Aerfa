@@ -81,12 +81,12 @@ const routes: Array<RouteRecordRaw> = [
         ],
       },
       {
-        path: 'index',
-        name: 'setup-index',
+        path: 'tagsAction',
+        name: 'TagsAction',
         meta: {
-          title: '引导页',
+          title: '多页签操作',
         },
-        component: () => import('@/views/setup/index.vue'),
+        component: () => import('@/views/feature/tags/tagsAction.vue'),
       },
     ],
   },

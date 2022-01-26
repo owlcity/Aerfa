@@ -1,6 +1,118 @@
 # CHANGELOG
-
 ## Pending
+
+## 2.1.8 (2022-01-26)
+
+### 💎 功能优化
+- 优化 `BasicForm` 导出操作方法
+
+### ✨ 新增功能
+- 新增 `basicModal` 动态创建 `id` 支持嵌套弹窗拖动
+- 新增 `BasicTable` 表格查询展开收起，配合 `form` 表单
+- 新增 `BasicTable` 选中行 `alert` 提示，可配置开关
+- 新增 `BasicTable` `tableSetting` 配置新增 `query` 字段
+- 新增 `多页签` 状态设置，特定场景，可实现二次确认提示是否关闭（参考：功能示例->多页签操作）
+- `依赖升级`
+
+## 2.1.7 (2022-01-11)
+
+### 💎 功能优化
+- 优化 `::v-deep` 修改为 `:deep`
+- 优化 `页面ts类型` 
+- 优化 `表格单元格编辑` 
+### 🐛 问题修复
+- 移除 `引导页示例`
+- 修复 `css变量前缀` 和UI组件库不一致
+
+### ✨ 新增功能
+- 新增 `Tailwindcss 3.x` 移除 `windicss`
+- 新增 `项目配置` 悬浮入口
+- `依赖升级`
+
+## 2.1.6 (2021-12-30)
+
+### 🐛 Bug Fixes
+- 修复 `路由history跳转锚点` 多标签重复创建问题
+- 变更 `多标签操作` `setTitle` 方法，传 `fullPath` 路径（依然存在缺陷）
+
+### ✨ Features
+- 新增 `菜单权限-FIXED模式` 随机（普通管理员/超级管理员）角色权限演示
+- 新增 `菜单权限-BACK模式` 随机（普通管理员/超级管理员）角色权限演示
+- 说明 `超级管理员` 拥有 `主控台、列表页面` 权限，`普通管理员` 拥有 `主控台` 权限，可退出登录，或者刷新页面测试
+- 测试 `退出登录>重新登录` 或者 `刷新页面` 查看效果
+- `依赖升级`
+
+## 2.1.5 (2021-12-13)
+### 🐛 Bug Fixes
+- 修复 `BasicTable` 选择行与列配置拖拽异常
+- 修复 `BasicTable` 分页总数，无法响应式
+- 修复 `Axios` api地址拼接异常
+
+### ✨ Features
+- 破坏 `Axios` 取消默认导出 `http` 可支持多个请求导出
+- 搜索 `import http from '@/utils/http/axios'` 替换为 `import { http } from '@/utils/http/axios`
+- `依赖升级`
+
+## 2.1.4 (2021-11-25)
+### 🐛 Bug Fixes
+- 修复 `BasicTable` 自适应高度问题
+- 破坏 `meta.alwaysShow` 取消路由自动计算根路由特性
+
+### ✨ Features
+- 新增 `BasicTable` 斑马纹开关配置
+- 新增 `BasicTable` 分页配置，默认显示总条数，不需要的地方可单独重置
+- 新增 `useTabs` 暴露 `closeCurrent`，`setTitle` 方法，用于外部页面操作多页签
+- 新增 `功能示例->多页签操作示例`
+
+## 2.1.3 (2021-11-23)
+
+### 🐛 Bug Fixes
+- 修复 `ActionItem` 类型定义问题
+- 修复 `BasicForm` 自定义提交逻辑，按钮一直处于 loading
+
+### ✨ Features
+- 新增 `BasicForm.setLoadingSub` 方法
+- `依赖升级`
+
+## 2.1.2 (2021-11-18)
+
+### 🐛 Bug Fixes
+- 修复 `锁屏界面` 黑暗主题适配问题
+- 修复 `登录页面` 异常情况，按钮一直处于 loading
+- 修复 `顶部混合菜单` 一级菜单，内容区域布局问题
+- 修复 `BasicSelect` 存储 `localStorage` 空白key
+- 修复 `多标签` 当 `router.push` 带上 `query` 参数报错
+
+### ✨ Features
+- 新增 `按需引入NaiveUi并自动创建.d.ts声明` 可获得代码提示和类型检查
+
+
+## 2.1.1 (2021-11-15)
+
+### ✨ Features
+- 优化 `骨架结构布局` 破坏性调整，按需更新（建议是升级）
+- 新增 `侧栏是否固定配置项`
+- 新增 `BasicTable` 选中行内部维护，新增 `restCheckedRowKeys` 和 `checked-row-change` 方法
+- `依赖升级`
+
+
+## 2.1.0 (2021-11-11)
+
+### ✨ Features
+- 优化 `加载图标`
+- 优化 `顶部分割菜单`
+- 新增 `表格全屏` 
+- 新增 `内容页全屏` 
+
+## 2.0.9 (2021-11-05)
+
+### 🐛 Bug Fixes
+- 优化 `页面卡片间距` 用 `mt-3` 统一
+
+### ✨ Features
+- 引入 `windicss` 代替 `tailwindcss` 提高开发效率
+- 引入 `pnpm` 代替 `yarn` 升级方法，删除 `node_modules` 运行 pnpm install 
+- `依赖升级`
 
 ## 2.0.8 (2021-11-03)
 
