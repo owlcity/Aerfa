@@ -32,7 +32,7 @@
           <!--表格斑马纹-->
           <n-tooltip trigger="hover" v-if="isShowTableStriped">
             <template #trigger>
-              <div class="table-toolbar-right-icon mr-2">
+              <div class="mr-2 table-toolbar-right-icon">
                 <n-switch v-model:value="striped" />
               </div>
             </template>
@@ -138,6 +138,8 @@
   import { useFullscreen } from '@vueuse/core';
   import { NSpace, NIcon, NButton, NInput } from 'naive-ui';
   import { SearchOutline } from '@vicons/ionicons5';
+  import { merge } from 'lodash-es';
+
   const props = defineProps({
     ...basicProps,
   });
@@ -234,33 +236,8 @@
     await restCheckedRowKeys();
     //TODO：这里获取filter和order参数
     const filters = getAllFilter();
-    // console.log('reloadTable:', filters);
-    reload(merger(filters, opt));
+    reload(merge(filters, opt));
   }
-
-  //深copy: https://juejin.cn/post/6882549580559777800
-  const merger = (...opts) => {
-    let res = {};
-
-    let combine = (opt) => {
-      for (let prop in opt) {
-        if (opt.hasOwnProperty(prop)) {
-          //下面是深拷贝与浅拷贝的区别，用到了递归的思想
-          if (Object.prototype.toString.call(opt[prop]) === '[object Object]') {
-            res[prop] = merger(res[prop], opt[prop]);
-          } else {
-            res[prop] = opt[prop];
-          }
-        }
-      }
-    };
-
-    //扩张运算符将两个对象合并到一个数组里因此可以调用length方法
-    for (let i = 0; i < opts.length; i++) {
-      combine(opts[i]);
-    }
-    return res;
-  };
 
   //页码切换
   async function updatePage(page) {
@@ -319,7 +296,6 @@
       ...unref(getProps),
       loading: unref(getLoading),
       columns: toRaw(unref(getPageColumns)),
-      // columns: getPageColumns.value,
       rowKey: unref(getRowKey),
       data: tableData,
       size: unref(getTableSize),
@@ -337,7 +313,6 @@
 
   // #region anson:hack
   const handleSorterChange = (sorter) => {
-    // console.log(sorter, unref(tableElRef));
     ref(unref(getProps).columns).value.forEach((column) => {
       if (column.sortOrder === undefined) return;
       if (!sorter) {
@@ -345,9 +320,7 @@
         return;
       }
       if (column.key === sorter.columnKey) {
-        // tableElRef.value.sort(column.key, sorter.order);
         column.sortOrder = sorter.order;
-        // console.log('column:', column);
       } else {
         column.sortOrder = false;
       }
@@ -357,22 +330,17 @@
   };
 
   const handleFiltersChange = (filters, sourceColumn) => {
-    // console.log('handleFiltersChange', filters, sourceColumn);
     ref(unref(getProps).columns).value.forEach((column) => {
       /** column.sortOrder !== undefined means it is uncontrolled */
       if (column.filter === undefined) return;
       if (!filters) {
-        // column.sortOrder = false;
         return;
       }
       if (column.key === sourceColumn.key) {
         column.filterOptionValue = filters[sourceColumn.key];
-        // console.log('column2:', column);
       }
     });
-    // reload({ filters });
     reloadTable();
-    // emit('update:filters', filters, sourceColumn);
   };
 
   // 自定义搜索，还需要自定义下拉搜索
@@ -389,8 +357,6 @@
     };
     const renderFilterMenu = (ctx) => {
       const { hide } = ctx;
-      // const that = this;
-      // console.log('ctx:', ctx, this);
       return h(
         NSpace,
         {
@@ -406,9 +372,6 @@
                 value: inputVal,
                 onInput: (val) => {
                   inputVal.value = val;
-                  // console.log('change:', val);
-                  // emit('update:inputVal', val);
-                  // filterColumn.filterOptionValue = '1';
                 },
               },
               null
@@ -416,7 +379,6 @@
             h(
               NSpace,
               {
-                // style: { padding: '12px' },
                 justify: 'end',
               },
               {
@@ -429,7 +391,6 @@
                         inputVal.value = '';
                         reloadTable();
                         hide();
-                        // filterColumn.filterOptionValue = '1';
                       },
                     },
                     { default: () => '重置' }
@@ -440,10 +401,8 @@
                       size: 'tiny',
                       type: 'primary',
                       onClick: () => {
-                        // console.log('ctx2:', inputVal);
                         reloadTable();
                         hide();
-                        // filterColumn.filterOptionValue = '1';
                       },
                     },
                     { default: () => '确认' }
@@ -457,6 +416,7 @@
     };
     return { renderFilterIcon, renderFilterMenu, inputVal };
   };
+
   const registerSearch = () => {
     ref(unref(getProps).columns).value.forEach((column) => {
       if (column.search) {
@@ -470,10 +430,9 @@
   };
 
   function getAllFilter() {
-    // let filters: any = [];
     let filter: any = null;
     let order: any = null;
-    getPageColumns.value.forEach((column) => {
+    getPageColumns.value.forEach((column: any) => {
       if (column.sortOrder) {
         if (!order) order = {};
         order[column.key] = column.sortOrder.replace('end', '');
@@ -481,10 +440,6 @@
       const inlist = toRaw(column.filterOptionValue);
 
       if (inlist && inlist.length > 0) {
-        // filters.push({
-        //   key: column.key,
-        //   filters: toRaw(column.filterOptionValue),
-        // });
         if (!filter) filter = {};
         filter[column.key] = { _in: inlist };
       }
@@ -499,7 +454,6 @@
           input = column.searchFixKey(input);
         }
         obj[reg] = input;
-        // console.log('column.inputVal', column);
         if (!filter) filter = {};
         filter[column.key] = obj;
       }
