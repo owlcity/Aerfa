@@ -34,12 +34,11 @@ export function useDataSource(
           return 'key';
         };
   });
-  
+
   const getRowClassName = computed(() => {
     const { rowClassName }: any = unref(propsRef);
-    return rowClassName
+    return rowClassName;
   });
-
 
   const getDataSourceRef = computed(() => {
     const dataSource = unref(dataSourceRef);
@@ -93,7 +92,7 @@ export function useDataSource(
           const currentTotalPage = Math.ceil(resultTotal / pageSize);
           setPagination({
             page: currentTotalPage,
-            [itemCount]: total,
+            itemCount: total,
           });
           return await fetch(opt);
         }
@@ -101,13 +100,13 @@ export function useDataSource(
 
       dataSourceRef.value = results;
       setPagination({
-        [pageField]: currentPage,
-        [totalField]: resultTotal,
-        [itemCount]: total,
+        page: currentPage,
+        pageCount: resultTotal,
+        itemCount: total,
       });
       if (opt && opt[pageField]) {
         setPagination({
-          [pageField]: opt[pageField] || 1,
+          page: opt[pageField] || 1,
         });
       }
       emit('fetch-success', {
@@ -116,11 +115,10 @@ export function useDataSource(
       });
     } catch (error) {
       console.error(error);
-      const totalField = APISETTING.totalField;
       emit('fetch-error', error);
       dataSourceRef.value = [];
       setPagination({
-        [totalField]: 0,
+        pageCount: 0,
       });
     } finally {
       setLoading(false);

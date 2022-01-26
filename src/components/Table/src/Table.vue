@@ -242,7 +242,7 @@
   //页码切换
   async function updatePage(page) {
     await restCheckedRowKeys();
-    setPagination({ page: page });
+    setPagination({ page });
     reload();
   }
 
