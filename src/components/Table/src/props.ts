@@ -33,6 +33,10 @@ export const basicProps = {
     type: [String, Function] as PropType<string | ((record) => string)>,
     default: undefined,
   },
+  rowClassName: {
+    type: [String, Function] as PropType<string | ((record) => string)>,
+    default: undefined,
+  },
   pagination: {
     type: [Object, Boolean],
     default: () => {},
