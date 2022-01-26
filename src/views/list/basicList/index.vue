@@ -76,7 +76,7 @@
   import { getTableList } from '@/api/table/list';
   import { columns } from './columns';
   import { PlusOutlined, DeleteOutlined, FormOutlined } from '@vicons/antd';
-  import { useRouter } from 'vue-router';
+  import { useRouter, useRoute } from 'vue-router';
   import { renderIcon } from '@/utils';
 
   const rules = {
@@ -222,6 +222,7 @@
   ];
 
   const router = useRouter();
+  const route = useRoute();
   const formRef: any = ref(null);
   const message = useMessage();
   const actionRef = ref();
@@ -235,8 +236,8 @@
   });
 
   const params = ref({
-    pageSize: 10,
     name: '',
+    id: route.params.id,
   });
 
   const actionColumn = reactive({

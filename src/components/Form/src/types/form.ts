@@ -13,7 +13,7 @@ export interface componentProps {
 
 export interface FormSchema {
   field: string;
-  label: string;
+  label?: string;
   labelMessage?: string;
   labelMessageStyle?: object | string;
   defaultValue?: any;

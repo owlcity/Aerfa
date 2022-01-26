@@ -32,6 +32,7 @@ export interface TableSetting {
   setting?: boolean;
   fullscreen?: boolean;
   striped?: boolean;
+  query?: boolean;
 }
 
 export interface BasicTableProps {
@@ -40,7 +41,7 @@ export interface BasicTableProps {
   columns: any[];
   pagination?: object;
   showPagination?: boolean;
-  actionColumn?: any[];
+  actionColumn?: object;
   canResize?: boolean;
   resizeHeightOffset?: number;
   loading?: boolean;

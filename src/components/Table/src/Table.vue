@@ -32,7 +32,7 @@
           <!--表格斑马纹-->
           <n-tooltip trigger="hover" v-if="isShowTableStriped">
             <template #trigger>
-              <div class="table-toolbar-right-icon mr-2">
+              <div class="mr-2 table-toolbar-right-icon">
                 <n-switch v-model:value="striped" />
               </div>
             </template>
@@ -40,6 +40,18 @@
           </n-tooltip>
 
           <n-divider vertical v-if="isShowTableStriped" />
+
+          <!--查询-->
+          <n-tooltip trigger="hover" v-if="isShowTableQuery">
+            <template #trigger>
+              <div class="table-toolbar-right-icon" @click="foldQueryChange">
+                <n-icon size="18">
+                  <SearchOutlined />
+                </n-icon>
+              </div>
+            </template>
+            <span>{{ foldQuery ? '展开查询' : '收起查询' }}</span>
+          </n-tooltip>
 
           <!--刷新-->
           <n-tooltip trigger="hover" v-if="isShowTableRedo">
@@ -90,6 +102,14 @@
         </template>
       </div>
     </div>
+    <div class="mb-4 table-checked-row" v-if="getCheckedRowAlert">
+      <n-alert type="info" :show-icon="false">
+        <n-space justify="space-between">
+          <span>已选择 {{ checkedRowKeys.length }} 项</span>
+          <n-button type="info" text @click="restCheckedRowKeys">取消选择</n-button>
+        </n-space>
+      </n-alert>
+    </div>
     <div class="s-table" v-if="isShowTable">
       <n-data-table
         ref="tableElRef"
@@ -132,6 +152,7 @@
     QuestionCircleOutlined,
     FullscreenExitOutlined,
     FullscreenOutlined,
+    SearchOutlined,
   } from '@vicons/antd';
   import { useFullscreen } from '@vueuse/core';
 
@@ -147,6 +168,7 @@
     'edit-cancel',
     'edit-row-end',
     'edit-change',
+    'fold-query-change',
   ]);
 
   const densityOptions = [
@@ -167,6 +189,7 @@
     },
   ];
 
+  const foldQuery = ref(false);
   const striped = ref(false);
   const isShowTable = ref(true);
   const deviceHeight = ref<Number | String>('auto');
@@ -221,6 +244,11 @@
 
   const tableSize = ref(unref(getProps as any).size || 'medium');
 
+  //是否显示 选中行提示
+  const getCheckedRowAlert = computed(() => {
+    return unref(getProps as any).checkedRowAlert && checkedRowKeys.value.length;
+  });
+
   //表格全屏
   function toggleTableFullScreen() {
     toggle();
@@ -241,6 +269,7 @@
 
   //分页数量切换
   function updatePageSize(size) {
+    console.log('🚀 ~ file: Table.vue ~ line 272 ~ updatePageSize ~ size', size);
     setPagination({ page: 1, pageSize: size });
     reload();
   }
@@ -274,6 +303,9 @@
   //是否显示斑马纹开关
   const isShowTableStriped = computed(() => getProps.value.tableSetting?.striped ?? true);
 
+  //是否显示查询表单 AdvancedTable 组件独有
+  const isShowTableQuery = computed(() => getProps.value.tableSetting?.query ?? true);
+
   //计算高度
   const getDeviceHeight = computed(() => {
     const tableData = unref(getDataSourceRef);
@@ -298,15 +330,24 @@
     };
   });
 
+  //折叠查询
+  function foldQueryChange() {
+    foldQuery.value = !foldQuery.value;
+    emit('fold-query-change', foldQuery.value);
+  }
+
   //选择行
   function checkedRowKeysChange(rowKeys) {
     checkedRowKeys.value = rowKeys;
     emit('checked-row-change', checkedRowKeys);
+    redoHeight();
   }
 
   //清空行
   function restCheckedRowKeys() {
     checkedRowKeys.value = [];
+    emit('checked-row-change', checkedRowKeys);
+    redoHeight();
   }
 
   //重新计算表格高度

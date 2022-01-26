@@ -6,7 +6,7 @@
         <div class="view-account-top-logo">
           <img src="~@/assets/images/account-logo.png" alt="" />
         </div>
-        <div class="view-account-top-desc">Naive Ui Admin中台前端/设计解决方案</div>
+        <div class="view-account-top-desc">Naive Admin中台前端/设计解决方案</div>
       </div>
       <div class="view-account-form">
         <n-form

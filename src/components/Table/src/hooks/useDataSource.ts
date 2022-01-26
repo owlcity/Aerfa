@@ -56,7 +56,6 @@ export function useDataSource(
       const itemCount = APISETTING.countField;
       let pageParams = {};
       const { page = 1, pageSize = DEFAULTPAGESIZE } = unref(getPaginationInfo) as PaginationProps;
-
       if ((isBoolean(pagination) && !pagination) || isBoolean(getPaginationInfo)) {
         pageParams = {};
       } else {
@@ -66,7 +65,6 @@ export function useDataSource(
 
       const params = {
         ...pageParams,
-        ...pagination,
         ...opt,
       };
 

@@ -58,9 +58,15 @@ export const basicProps = {
       setting: true,
       fullscreen: true,
       striped: true,
+      //AdvancedTable 组件独有
+      query: false,
     }),
   },
   striped: {
+    type: Boolean,
+    default: false,
+  },
+  checkedRowAlert: {
     type: Boolean,
     default: false,
   },

@@ -140,5 +140,17 @@ export const useTabsViewStore = defineStore({
       });
       storage.set(TABS_ROUTES, JSON.stringify(this.tabsList));
     },
+    // 设置状态
+    async setTabState(params, route: RouteLocationNormalized) {
+      this.tabsList.forEach((item) => {
+        if (item.fullPath === route.fullPath) {
+          item.meta = {
+            ...item.meta,
+            ...params,
+          };
+        }
+      });
+      storage.set(TABS_ROUTES, JSON.stringify(this.tabsList));
+    },
   },
 });

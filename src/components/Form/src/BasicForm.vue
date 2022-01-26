@@ -301,6 +301,10 @@
     initDefault();
     emit('register', formActionType);
   });
+
+  defineExpose({
+    ...formActionType,
+  });
 </script>
 
 <style lang="less" scoped>

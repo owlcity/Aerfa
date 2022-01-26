@@ -68,8 +68,14 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       // }
     },
     optimizeDeps: {
-      include: [],
-      exclude: ['vue-demi'],
+      include: [
+        'element-resize-detector',
+        'vuedraggable',
+        'date-fns',
+        '@vicons/ionicons5',
+        '@vicons/antd',
+      ],
+      exclude: [],
     },
     build: {
       target: 'es2015',

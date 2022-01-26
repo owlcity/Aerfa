@@ -9,6 +9,11 @@ export function useTabs(_router?: Router) {
   const tabsViewStore = useTabsViewStore();
   const router = _router || useRouter();
 
+  interface StateParame {
+    state?: String;
+    dialogOptions?: Object;
+  }
+
   const { currentRoute } = router;
 
   //默认是操作当前页面 也可以传入 router
@@ -32,8 +37,15 @@ export function useTabs(_router?: Router) {
     router.push(_currentRoute);
   }
 
+  //更新tab状态
+  async function setTabState(params: StateParame) {
+    const targetTab = getCurrentTab();
+    await tabsViewStore.setTabState(params, targetTab);
+  }
+
   return {
     closeCurrent: () => closeCurrentTab(),
     setTitle: (title: string, tab?: object) => updateTabTitle(title, tab),
+    setTabState,
   };
 }

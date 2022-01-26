@@ -37,7 +37,10 @@
                 @contextmenu="handleContextMenu($event, element, index)"
                 @click.stop="goPage(element)"
               >
-                <span>{{ element.meta.title }}</span>
+                <span
+                  >{{ element.meta.title
+                  }}<n-badge class="ml-1" v-if="element.meta.state === 'undone'" type="warning" dot
+                /></span>
                 <n-icon v-if="!element.meta.affix" size="14" @click.stop="closeTabItem(element)">
                   <CloseOutlined />
                 </n-icon>
@@ -103,7 +106,7 @@
   import { useDesignSetting } from '@/hooks/setting/useDesignSetting';
   import { useProjectSettingStore } from '@/store/modules/projectSetting';
   import { useGo, useRedo } from '@/hooks/web/usePage';
-  import { useThemeVars } from 'naive-ui';
+  import { useThemeVars, useDialog } from 'naive-ui';
 
   const props = defineProps({
     collapsed: {
@@ -128,6 +131,7 @@
   const settingStore = useProjectSettingStore();
   const go = useGo();
   const message = useMessage();
+  const dialog = useDialog();
   const route = useRoute();
   const router = useRouter();
   const tabsViewStore = useTabsViewStore();
@@ -285,6 +289,24 @@
     if (tabsList.value.length === 1) {
       return message.warning('这已经是最后一页，不能再关闭了！');
     }
+    const routeInfo = unref(route);
+    //判断当前页标签状态 阻止关闭 只是提供思路，更多个性化功能，自行调整
+    if (routeInfo.meta.state && routeInfo.meta.state === 'undone') {
+      const { content } = routeInfo.meta.dialogOptions;
+      dialog.info({
+        title: '提示',
+        content,
+        positiveText: '确定',
+        negativeText: '取消',
+        onPositiveClick: () => {
+          directRemoveTab(route);
+        },
+        onNegativeClick: () => {},
+      });
+    } else directRemoveTab(route);
+  };
+
+  function directRemoveTab(route) {
     delKeepAliveCompName();
     tabsViewStore.closeCurrentTab(route);
     asyncRouteStore.removeKeepAliveComponents([route.value.name]);
@@ -295,7 +317,7 @@
       router.push(currentRoute);
     }
     updateNavScroll();
-  };
+  }
 
   // 刷新页面
   async function reloadPage() {
