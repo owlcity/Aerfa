@@ -44,7 +44,7 @@
           <!--刷新-->
           <n-tooltip trigger="hover" v-if="isShowTableRedo">
             <template #trigger>
-              <div class="table-toolbar-right-icon" @click="reloadTable">
+              <div class="table-toolbar-right-icon" @click="reloadTable()">
                 <n-icon size="18">
                   <ReloadOutlined />
                 </n-icon>
@@ -483,7 +483,7 @@
   const tableAction = {
     reload,
     restReload,
-    // reloadTable,
+    reloadTable,
     restCheckedRowKeys,
     redoHeight,
     setColumns,
