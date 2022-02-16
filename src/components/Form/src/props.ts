@@ -72,7 +72,7 @@ export const basicProps = {
   //是否折叠
   collapsed: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   //默认展示的行数
   collapsedRows: {

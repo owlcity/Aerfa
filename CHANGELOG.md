@@ -1,5 +1,11 @@
 # CHANGELOG
+
 ## Pending
+## 2.1.9 (2022-02-18)
+### 🐛 Bug Fixes
+- 修复 `BasicUpload` 组件，回显问题
+- 修复 `BasicForm` 组件 `collapsed` 无效
+- 修复 `表格编辑` 时间格式化异常 [#92](https://github.com/jekip/naive-ui-admin/issues/92)
 
 ## 2.1.8 (2022-01-26)
 

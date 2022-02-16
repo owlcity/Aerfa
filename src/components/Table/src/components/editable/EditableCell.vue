@@ -53,7 +53,7 @@
   import { EventEnum } from '@/components/Table/src/componentMap';
   import { Render } from '@/components/Render';
 
-  import { milliseconds } from 'date-fns';
+  import { parseISO, format } from 'date-fns';
   import { LabelValueOptions } from '/#/index';
 
   export default defineComponent({
@@ -108,16 +108,28 @@
 
         const isCheckValue = unref(getIsCheckComp);
 
-        const valueField = isCheckValue ? 'checked' : 'value';
+        let valueField = isCheckValue ? 'checked' : 'value';
         const val = unref(currentValueRef);
 
         let value = isCheckValue ? (isNumber(val) && isBoolean(val) ? val : !!val) : val;
 
-        if (isString(value) && component === 'NDatePicker') {
-          value = milliseconds(value as Duration);
-        } else if (isArray(value) && component === 'NDatePicker') {
-          value = value.map((item) => milliseconds(item));
+        //TODO 特殊处理 NDatePicker 可能要根据项目 规范自行调整代码
+        if (component === 'NDatePicker') {
+          if (isString(value)) {
+            if (compProps.valueFormat) {
+              valueField = 'formatted-value';
+            } else {
+              value = parseISO(value as any).getTime();
+            }
+          } else if (isArray(value)) {
+            if (compProps.valueFormat) {
+              valueField = 'formatted-value';
+            } else {
+              value = value.map((item) => parseISO(item).getTime());
+            }
+          }
         }
+
         const onEvent: any = editComponent ? EventEnum[editComponent] : undefined;
 
         return {
@@ -187,6 +199,7 @@
 
       async function handleChange(e: any) {
         const component = unref(getComponent);
+        const compProps = props.column?.editComponentProps ?? {};
         if (!e) {
           currentValueRef.value = e;
         } else if (e?.target && Reflect.has(e.target, 'value')) {
@@ -197,10 +210,20 @@
           currentValueRef.value = e;
         }
 
-        //TODO 根据组件格式化值
-        // if (component === 'NDatePicker') {
-        //   currentValueRef.value = format(currentValueRef.value,'yyyy-MM-dd HH:mm:ss');
-        // }
+        //TODO 特殊处理 NDatePicker 可能要根据项目 规范自行调整代码
+        if (component === 'NDatePicker') {
+          if (isNumber(currentValueRef.value)) {
+            if (compProps.valueFormat) {
+              currentValueRef.value = format(currentValueRef.value, compProps.valueFormat);
+            }
+          } else if (isArray(currentValueRef.value)) {
+            if (compProps.valueFormat) {
+              currentValueRef.value = currentValueRef.value.map((item) => {
+                format(item, compProps.valueFormat);
+              });
+            }
+          }
+        }
 
         const onChange = props.column?.editComponentProps?.onChange;
         if (onChange && isFunction(onChange)) onChange(...arguments);

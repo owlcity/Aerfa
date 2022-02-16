@@ -47,8 +47,8 @@
       </div>
     </div>
 
-    <!--上传图片-->
-    <n-space>
+    <!--规则提示-->
+    <n-space v-if="getHelpText">
       <n-alert title="提示" type="info" v-if="getHelpText" class="flex w-full">
         {{ getHelpText }}
       </n-alert>
@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, computed } from 'vue';
+  import { ref, computed, watch } from 'vue';
   import { EyeOutlined, DeleteOutlined, PlusOutlined } from '@vicons/antd';
   import { basicProps } from './props';
   import { useMessage, useDialog } from 'naive-ui';
@@ -107,11 +107,14 @@
   const imgList = ref([]);
 
   //赋值默认图片显示
-  if (props.value.length) {
-    imgList.value = props.value.map((item) => {
-      return getImgUrl(item);
-    });
-  }
+  watch(
+    () => props.value,
+    () => {
+      imgList.value = props.value.map((item) => {
+        return getImgUrl(item);
+      });
+    }
+  );
 
   //预览
   function preview(url: string) {
