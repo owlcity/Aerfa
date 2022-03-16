@@ -7,7 +7,7 @@
         <FormOutlined />
       </n-icon>
     </div>
-    <div v-show="isEdit" v-click-outside="onClickOutside" class="flex editable-cell-content">
+    <div v-show="isEdit" v-click-outside="onClickOutside" class="editable-cell-content">
       <div class="editable-cell-content-comp">
         <CellComponent
           ref="elRef"
@@ -391,12 +391,14 @@
 <style lang="less">
 .editable-cell {
   &-content {
+    display: flex;
     position: relative;
     overflow-wrap: break-word;
     word-break: break-word;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    align-items: center;
 
     &-comp {
       flex: 1;
@@ -404,12 +406,10 @@
 
     .edit-icon {
       font-size: 14px;
-      //position: absolute;
-      //top: 4px;
-      //right: 0;
       display: none;
       width: 20px;
       cursor: pointer;
+      margin-left: 5px;
     }
 
     &:hover {
