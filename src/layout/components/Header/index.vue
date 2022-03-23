@@ -98,17 +98,17 @@
         </n-tooltip>
       </div>
       <!--消息-->
-      <div class="layout-header-trigger layout-header-trigger-min notifier-plus">
+      <!-- <div class="layout-header-trigger layout-header-trigger-min notifier-plus">
         <NotifierProPlus />
-      </div>
+      </div> -->
       <!-- 个人中心 -->
-      <div class="layout-header-trigger layout-header-trigger-min">
+      <!-- <div class="layout-header-trigger layout-header-trigger-min">
         <n-dropdown :options="avatarOptions" trigger="hover" @select="avatarSelect">
           <div class="avatar">
             <n-avatar round :src="schoolboy" />
           </div>
         </n-dropdown>
-      </div>
+      </div> -->
       <!--设置-->
       <div
         id="setting-trigger"
@@ -311,14 +311,7 @@
       icon: GithubOutlined,
       tips: 'github',
       eventObject: {
-        click: () => window.open('https://github.com/jekip/naive-ui-admin'),
-      },
-    },
-    {
-      icon: LockOutlined,
-      tips: '锁屏',
-      eventObject: {
-        click: () => useLockscreen.setLock(true),
+        click: () => window.open('https://github.com/owlcity/Aerfa'),
       },
     },
   ];

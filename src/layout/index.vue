@@ -63,11 +63,11 @@
   <!--项目配置-->
   <ProjectSetting ref="drawerSetting" />
 
-  <div class="shadow-lg circular" @click="openSetting">
+  <!-- <div class="shadow-lg circular" @click="openSetting">
     <n-icon size="20">
       <SettingOutlined class="transition ease-in-out transform delay-150 hover:animate-spin" />
     </n-icon>
-  </div>
+  </div> -->
 </template>
 
 <script lang="ts" setup>

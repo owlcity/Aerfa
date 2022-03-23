@@ -18,7 +18,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       title: 'Aerfa 频道',
       icon: renderIcon(DesktopOutline),
-      sort: 12,
+      sort: 2,
     },
     children: [
       {

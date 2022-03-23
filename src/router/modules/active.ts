@@ -5,25 +5,25 @@ import { renderIcon } from '@/utils/index';
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/datatrack',
-    name: 'datatrack',
+    path: '/active',
+    name: 'active',
     component: Layout,
     meta: {
-      sort: 6,
+      sort: 3,
       isRoot: true,
-      activeMenu: 'datatrack_index',
+      activeMenu: 'active_index',
       alwaysShow: true,
       icon: renderIcon(ProjectOutlined),
     },
     children: [
       {
         path: 'index',
-        name: `datatrack_index`,
+        name: `active_index`,
         meta: {
-          title: '数据追踪',
-          activeMenu: 'datatrack_index',
+          title: '节目预告',
+          activeMenu: 'active_index',
         },
-        component: () => import('@/views/datatrack/index.vue'),
+        component: () => import('@/views/active/index.vue'),
       },
     ],
   },

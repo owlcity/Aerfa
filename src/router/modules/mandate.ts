@@ -11,7 +11,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       title: '财神道',
       icon: renderIcon(DiamondOutline),
-      sort: 12,
+      sort: 1,
     },
   },
 ];

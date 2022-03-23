@@ -23,6 +23,7 @@ const routes: Array<RouteRecordRaw> = [
     component: Layout,
     meta: {
       title: 'Dashboard',
+      hidden: true,
       icon: renderIcon(DashboardOutlined),
       permissions: ['dashboard_console', 'dashboard_console', 'dashboard_workplace'],
       sort: 0,

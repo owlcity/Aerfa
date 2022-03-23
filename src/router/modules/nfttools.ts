@@ -9,7 +9,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'nfttools',
     component: Layout,
     meta: {
-      sort: 10,
+      sort: 5,
       isRoot: true,
       activeMenu: 'nfttools_index',
       alwaysShow: true,
