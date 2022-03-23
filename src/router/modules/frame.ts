@@ -1,39 +1,49 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { DesktopOutline } from '@vicons/ionicons5';
+import { DesktopOutline, LogoYoutube, LogoTwitter, LogoDiscord } from '@vicons/ionicons5';
+// import { DesktopOutline, LogoYoutube, TwitterSquareFilled, UserAddOutlined } from '@vicons/antd';
 import { renderIcon } from '@/utils/index';
-
-const IFrame = () => import('@/views/iframe/index.vue');
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/frame',
-    name: 'Frame',
-    redirect: '/frame/docs',
+    name: 'https://fortunedao.io',
     component: Layout,
     meta: {
-      title: '外部页面',
-      sort: 9,
+      title: 'Aerfa 频道',
       icon: renderIcon(DesktopOutline),
+      sort: 12,
     },
     children: [
       {
-        path: 'docs',
-        name: 'frame-docs',
+        path: '/frame',
+        name: 'https://fortunedao.io',
+        component: Layout,
         meta: {
-          title: '项目文档(内嵌)',
-          frameSrc: 'https://www.naiveadmin.com',
+          title: 'Youtube',
+          icon: renderIcon(LogoYoutube),
+          sort: 1,
         },
-        component: IFrame,
       },
       {
-        path: 'naive',
-        name: 'frame-naive',
+        path: '/frame',
+        name: 'https://fortunedao.io',
+        component: Layout,
         meta: {
-          title: 'NaiveUi(内嵌)',
-          frameSrc: 'https://www.naiveui.com',
+          title: 'Twitter',
+          icon: renderIcon(LogoTwitter),
+          sort: 2,
         },
-        component: IFrame,
+      },
+      {
+        path: '/frame',
+        name: 'https://fortunedao.io',
+        component: Layout,
+        meta: {
+          title: 'Discord',
+          icon: renderIcon(LogoDiscord),
+          sort: 3,
+        },
       },
     ],
   },

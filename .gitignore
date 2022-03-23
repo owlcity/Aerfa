@@ -24,3 +24,10 @@ pnpm-debug.log*
 *.sln
 *.sw?
 /components.d.ts
+
+/mock
+/src/api
+/src/directories
+/src/plugins
+/src/utils
+/src/components

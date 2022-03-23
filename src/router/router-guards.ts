@@ -16,6 +16,7 @@ export function createRouterGuards(router: Router) {
   const asyncRouteStore = useAsyncRouteStoreWidthOut();
   router.beforeEach(async (to, from, next) => {
     const $loadingBar = window['$loadingBar'];
+    // console.log($loadingBar);
     $loadingBar && $loadingBar.start();
     if (from.path === LOGIN_PATH && to.name === 'errorPage') {
       next(PageEnum.BASE_HOME);
@@ -27,29 +28,29 @@ export function createRouterGuards(router: Router) {
       next();
       return;
     }
+    // 取消验证token
+    // const token = storage.get(ACCESS_TOKEN);
 
-    const token = storage.get(ACCESS_TOKEN);
-
-    if (!token) {
-      // You can access without permissions. You need to set the routing meta.ignoreAuth to true
-      if (to.meta.ignoreAuth) {
-        next();
-        return;
-      }
-      // redirect login page
-      const redirectData: { path: string; replace: boolean; query?: Recordable<string> } = {
-        path: LOGIN_PATH,
-        replace: true,
-      };
-      if (to.path) {
-        redirectData.query = {
-          ...redirectData.query,
-          redirect: to.path,
-        };
-      }
-      next(redirectData);
-      return;
-    }
+    // if (!token) {
+    //   // You can access without permissions. You need to set the routing meta.ignoreAuth to true
+    //   if (to.meta.ignoreAuth) {
+    //     next();
+    //     return;
+    //   }
+    //   // redirect login page
+    //   const redirectData: { path: string; replace: boolean; query?: Recordable<string> } = {
+    //     path: LOGIN_PATH,
+    //     replace: true,
+    //   };
+    //   if (to.path) {
+    //     redirectData.query = {
+    //       ...redirectData.query,
+    //       redirect: to.path,
+    //     };
+    //   }
+    //   next(redirectData);
+    //   return;
+    // }
 
     if (asyncRouteStore.getIsDynamicAddedRoute) {
       next();

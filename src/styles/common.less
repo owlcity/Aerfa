@@ -1,9 +1,12 @@
-#app, body, html {
+#app,
+body,
+html {
   height: 100%;
 }
 
 body {
-  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, "\5FAE\8F6F\96C5\9ED1", Arial, sans-serif;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei,
+    '\5FAE\8F6F\96C5\9ED1', Arial, sans-serif;
   line-height: 1.5;
   color: #515a6e;
   font-size: 14px;
@@ -15,7 +18,7 @@ body {
 //重置样式
 .anticon {
   svg {
-    vertical-align: initial
+    vertical-align: initial;
   }
 }
 a {
@@ -24,10 +27,11 @@ a {
   text-decoration: none;
   outline: none;
   cursor: pointer;
-  transition: color .2s ease;
+  transition: color 0.2s ease;
 }
 
-a:active, a:hover {
+a:active,
+a:hover {
   outline-width: 0;
 }
 
@@ -39,7 +43,8 @@ a:active {
   color: #2b85e4;
 }
 
-a:active, a:hover {
+a:active,
+a:hover {
   outline: 0;
   text-decoration: none;
 }
@@ -72,16 +77,16 @@ a:active, a:hover {
 }
 
 html[data-theme='dark'] {
-  *::-webkit-scrollbar{
+  *::-webkit-scrollbar {
     background-color: rgb(24, 24, 28);
   }
 
-  *::-webkit-scrollbar-track-piece{
+  *::-webkit-scrollbar-track-piece {
     background-color: rgb(24, 24, 28);
   }
 
   *::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.2)
+    background-color: rgba(255, 255, 255, 0.2);
   }
 
   *::-webkit-scrollbar-thumb:hover {
@@ -107,7 +112,7 @@ html[data-theme='dark'] {
 
 //antd 卡片样式定制
 body .n-card {
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 body .n-icon {
@@ -126,13 +131,13 @@ body .proCard {
   }
 }
 
-body .proCard.tabsCard{
+body .proCard.tabsCard {
   .n-card__content {
     padding-top: 0;
   }
 }
 
-body .n-modal{
+body .n-modal {
   border-radius: 6px;
 }
 
@@ -143,8 +148,26 @@ body .n-modal{
 
 .n-layout-page-header {
   margin: 0 -10px;
-  
-  .n-card{
+
+  .n-card {
     border-radius: revert;
+  }
+}
+
+.card-item {
+  margin-bottom: 16px;
+  padding-right: 16px;
+  .n-card__content {
+    border: 1px solid #f0f0f0;
+    padding: 0 8px;
+  }
+  &.n-card.n-card--hoverable:hover {
+    box-shadow: none;
+  }
+  .n-card__content:hover {
+    transform: translateY(-3px);
+    transition-duration: 0.5s;
+    box-shadow: 0 1px 2px -2px rgba(0, 0, 0, 0.08), 0 3px 6px 0 rgba(0, 0, 0, 0.06),
+      0 5px 12px 4px rgba(0, 0, 0, 0.04);
   }
 }

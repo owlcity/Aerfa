@@ -12,7 +12,7 @@
     >
       <div v-if="navMode === 'horizontal'" class="logo">
         <img alt="" src="~@/assets/images/logo.png" />
-        <h2 v-show="!collapsed" class="title">NaiveAdmin</h2>
+        <h2 v-show="!collapsed" class="title">Aerfa-tools</h2>
       </div>
       <AsideMenu v-model:location="getMenuLocation" :inverted="getInverted" mode="horizontal" />
     </div>

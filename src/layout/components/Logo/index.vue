@@ -6,7 +6,7 @@
     }"
   >
     <img src="~@/assets/images/logo.png" alt="" :class="{ 'mr-2': !isCollapsed }" />
-    <h2 v-show="!isCollapsed" class="mt-0 title">NaiveAdmin</h2>
+    <h2 v-show="!isCollapsed" class="mt-0 title">Aerfa-Tools</h2>
   </div>
 </template>
 

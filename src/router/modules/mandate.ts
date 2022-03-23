@@ -6,10 +6,10 @@ import { renderIcon } from '@/utils/index';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/mandate',
-    name: 'https://www.naiveadmin.com/authorize/index',
+    name: 'https://fortunedao.io',
     component: Layout,
     meta: {
-      title: '获取授权',
+      title: '财神道',
       icon: renderIcon(DiamondOutline),
       sort: 12,
     },
