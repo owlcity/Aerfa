@@ -4,6 +4,12 @@ node_modules
 /dist
 dist.zip
 dist_electron
+/mock
+/src/api
+/src/directories
+/src/plugins
+/src/utils
+/src/components 
 
 # local env files
 .env.local
@@ -25,9 +31,4 @@ pnpm-debug.log*
 *.sw?
 /components.d.ts
 
-/mock
-/src/api
-/src/directories
-/src/plugins
-/src/utils
-/src/components
+
