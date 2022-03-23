@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { ProjectOutlined } from '@vicons/antd';
+import { ToolOutlined } from '@vicons/antd';
 import { renderIcon } from '@/utils/index';
 
 const routes: Array<RouteRecordRaw> = [
@@ -13,7 +13,7 @@ const routes: Array<RouteRecordRaw> = [
       isRoot: true,
       activeMenu: 'nfttools_index',
       alwaysShow: true,
-      icon: renderIcon(ProjectOutlined),
+      icon: renderIcon(ToolOutlined),
     },
     children: [
       {

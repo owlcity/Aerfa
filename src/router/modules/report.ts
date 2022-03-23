@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { ProjectOutlined } from '@vicons/antd';
+import { FileSearchOutlined } from '@vicons/antd';
 import { renderIcon } from '@/utils/index';
 
 const routes: Array<RouteRecordRaw> = [
@@ -13,7 +13,7 @@ const routes: Array<RouteRecordRaw> = [
       isRoot: true,
       activeMenu: 'report_index',
       alwaysShow: true,
-      icon: renderIcon(ProjectOutlined),
+      icon: renderIcon(FileSearchOutlined),
     },
     children: [
       {
